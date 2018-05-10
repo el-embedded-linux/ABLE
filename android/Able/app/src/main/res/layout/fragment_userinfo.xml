@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_home">
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="94dp"
+        android:ems="10"
+        android:hint="이름"
+        android:inputType="textPersonName"
+        android:textColor="#D8D8D8" />
+
+    <EditText
+        android:id="@+id/editTextAddr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editTextName"
+        android:layout_below="@+id/editTextName"
+        android:layout_marginTop="17dp"
+        android:ems="10"
+        android:hint="주소(동까지 입력)"
+        android:inputType="textPersonName"
+        android:textColor="#D8D8D8" />
+
+    <EditText
+        android:id="@+id/editTextHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editTextAddr"
+        android:layout_below="@+id/editTextAddr"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:hint="키"
+        android:inputType="textPostalAddress"
+        android:textColor="#D8D8D8" />
+
+    <EditText
+        android:id="@+id/editTextWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editTextHeight"
+        android:layout_below="@+id/editTextHeight"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="몸무게"
+        android:inputType="textPostalAddress"
+        android:textColor="#D8D8D8" />
+
+    <Button
+        android:id="@+id/info_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editTextWeight"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/editTextWeight"
+        android:layout_marginBottom="18dp"
+        android:text="저장" />
+</RelativeLayout>
