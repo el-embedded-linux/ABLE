@@ -42,13 +42,11 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.google.firebase:firebase-storage:11.8.0'
     implementation 'com.google.firebase:firebase-database:11.8.0'
-
     /* Error:Execution failed for task ':app:transformDexArchiveWithExternalLibsDexMergerForDebug'.
-       > java.lang.RuntimeException: com.android.builder.dexing.DexArchiveMergerException: Unable to merge dex
-    compile 'com.github.bumptech.glide:glide:4.7.1'
-    */
-
-
+           > java.lang.RuntimeException: com.android.builder.dexing.DexArchiveMergerException: Unable to merge dex
+        compile 'com.github.bumptech.glide:glide:4.7.1'
+        */
+    implementation files('libs/com.skt.Tmap_1.52.jar')
 }
 apply plugin: 'com.google.gms.google-services'
 
