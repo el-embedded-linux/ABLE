@@ -32,6 +32,10 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 /**
  * Created by impro on 2018-05-08.
+ * 전체 유저의 목록을 데이터베이스로부터 불러와 리사이클러뷰로 보여준다.
+ * 전체 유저라서 본인까지 뜨는 문제.
+ * 예외를 두려면 어떻게 해야할지 고민해야 함.
+ * 이미지뷰도 아직 안넣었음.
  */
 
 public class FragmentUserlist extends android.support.v4.app.Fragment{
@@ -48,12 +52,14 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_userlist,container,false);
         getActivity().setTitle("UserList");
+        //리사이클러뷰 맵핑
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.fragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new UserlistFragmentRecyclerViewAdapter());
         user = FirebaseAuth.getInstance().getCurrentUser();
         uid = user.getUid();
 
+        //리사이클러뷰 클릭이벤트
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -71,9 +77,11 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
         return view;
     }
 
+    //어댑터 클래스
     class UserlistFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-
+        //userModels라는 리스트를 만들고 addValueEventListerner와 DataSnapshot을 이용해 데이터 호출
+        //받아온 값을 userModels에 넣음.
         public UserlistFragmentRecyclerViewAdapter() {
             userModels = new ArrayList<>();
             FirebaseDatabase.getInstance().getReference().child("USER").addValueEventListener(new ValueEventListener() {
@@ -96,6 +104,7 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
 
         }
 
+        //리사이클러뷰 뷰 생성
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_userlist,parent,false);
@@ -103,6 +112,7 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
             return new CustomViewHolder(view);
         }
 
+        //리사이클러뷰의 내용을 넣음.
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             /*Glide.with
@@ -116,11 +126,13 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
 
         }
 
+        //필수, 아이템 갯수
         @Override
         public int getItemCount() {
             return userModels.size();
         }
 
+        //커스텀뷰를 위해 필수
         private class CustomViewHolder extends RecyclerView.ViewHolder {
             public ImageView imageView;
             public TextView textView;

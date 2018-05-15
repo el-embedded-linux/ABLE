@@ -25,6 +25,9 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 /**
  * Created by impro on 2018-05-08.
+ * 설정 - 내 정보 수정 에서 데이터 저장 가능.
+ * 주소를 넣을때 큰 범위에선 특정 위치명만 선택할 수 있도록 바꿀까 고민중.
+ * 이미지 저장 - 스토리지,디비 아직 미구현
  */
 
 public class FragmentInformation extends Fragment{
@@ -56,6 +59,7 @@ public class FragmentInformation extends Fragment{
         uid = user.getUid();
         userModel = new UserModel();
 
+        //user가 있으면 기존에 저장된 값을 호출함.
         if (user != null) {
             // User is signed in
             mDatabase.child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -78,6 +82,7 @@ public class FragmentInformation extends Fragment{
             // No user is signed in
         }
 
+        //저장버튼 클릭시 userModel에 각 텍스트를 넣고, 디비에 저장.
         infoSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

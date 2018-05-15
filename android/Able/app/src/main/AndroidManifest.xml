@@ -7,6 +7,10 @@
    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_OWNER_DATA"></uses-permission>
+    <uses-permission android:name="android.permission.READ_OWNER_DATA"></uses-permission>
+
 
     <application
         android:allowBackup="true"
@@ -27,7 +31,7 @@
             </intent-filter>
         </activity>
 
-        <!-- 페이스북 -->
+        <!-- 페이스북 로그인시 페이스북 계정 선택 뷰를 호출함 -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"

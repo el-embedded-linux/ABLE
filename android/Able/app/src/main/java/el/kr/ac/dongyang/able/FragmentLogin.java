@@ -52,12 +52,16 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 /**
  * Created by impro on 2018-03-30.
+ * 이메일/비밀번호, 구글, 페이스북 로그인
+ * 코드정리의 필요성이 보임
+ *
  */
 
 public class FragmentLogin extends android.support.v4.app.Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "FragmentLogin";
     private static final int RC_SIGN_IN = 9001;
+    //프로그레스 다이얼로그로 로그인이 느릴때 로딩이 뜨게 하려고 했는데 안뜸
     private ProgressDialog mProgressDialog;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -65,18 +69,19 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
     private FirebaseAuth mAuth;
     // [END declare_auth]
 
+    //이메일과 uid를 표시. 추후 삭제.
     private TextView mStatusTextView;
     private TextView mDetailTextView;
 
-    private LoginButton loginButton;
-    private SignInButton signInButton;
+    private LoginButton loginButton;    //페이스북
+    private SignInButton signInButton;  //구글
     private Button signOutButton;
     private Button disconnectButton;
     private CallbackManager mCallbackManager;
 
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private Button emaillogin;
+    private Button emaillogin;          //이메일
 
 
     public FragmentLogin() {
@@ -115,6 +120,7 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
             }
         });
 
+        // 구글 로그인
         // [START configure_signin]
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -130,6 +136,7 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
 
+        //페이스북 로그인
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) view.findViewById(R.id.facebook_login_button);
@@ -169,6 +176,7 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
         return view;
     }
 
+    //이메일, 패스워드로 유저를 생성할때. 지금은 로그인 버튼 클릭시 수행됨.
     private void createUser(final String email, final String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -178,6 +186,8 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(getActivity(), "회원가입 성공", Toast.LENGTH_SHORT).show();
                         } else {
+                            //로그인이 실패될 경우, 즉 이미 해당하는 똑같은 이메일 주소가 있어서 로그인이 안된다는 것.
+                            //그래서 로그인 유저를 통해 로그인함. 레지스터 xml을 따로 만들면 토스트로 안되는 이유에 대한 메세지만 있으면 됨.
                             loginUser(email, password);
                         }
                         // ...
@@ -185,6 +195,7 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
                 });
     }
 
+    //이메일, 패스워드로 로그인
     private void loginUser(String email, String password){
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -195,14 +206,16 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
+                            //이메일과 uid를 받아서 데이터베이스에 저장하는데 사용.
                             String uid = task.getResult().getUser().getUid();
                             UserModel userModel = new UserModel();
                             String email = task.getResult().getUser().getEmail();
                             StringTokenizer tokens = new StringTokenizer(email);
                             userModel.userName = tokens.nextToken("@");
 
+                            //데이터베이스 저장.
                             FirebaseDatabase.getInstance().getReference().child("USER").child(uid).child("userName").setValue(userModel.userName);
-                            updateUI(user);
+                            updateUI(user); //로그인 전의 ui 업데이트.
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -214,6 +227,7 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
                 });
     }
 
+    //페이스북 로그인 기능 수행. 다른 로그인 코드와 비슷.
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
@@ -252,40 +266,9 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
                 });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e);
-                // [START_EXCLUDE]
-                updateUI(null);
-                // [END_EXCLUDE]
-            }
-        }
-    }
-
+    //구글 로그인
+    //사용자가 정상적으로 로그인한 후에 GoogleSignInAccount 개체에서 ID 토큰을 가져와서
+    // Firebase 사용자 인증 정보로 교환하고 Firebase 사용자 인증 정보를 사용해 Firebase에 인증.
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
@@ -326,12 +309,50 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
     }
     // [END auth_with_google]
 
+    //시작할때 로그인 유저의 상태를 가져옴.
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    //구글,페이스북으로부터 로그인 유저 정보 획득.
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //페이스북쪽으로..
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                //파이어베이스 구글쪽으로..
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e);
+                // [START_EXCLUDE]
+                updateUI(null);
+                // [END_EXCLUDE]
+            }
+        }
+    }
+
+    //버튼들 기능
     // [START signIn]
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-
     private void signOut() {
         // Firebase sign out
         mAuth.signOut();
@@ -346,7 +367,6 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
                     }
                 });
     }
-
     private void revokeAccess() {
         // Firebase sign out
         mAuth.signOut();
@@ -360,6 +380,7 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
                 });
     }
 
+    //ui 변경
     private void updateUI(FirebaseUser user) {
 //        mProgressDialog.cancel();
         if (user != null) {
@@ -391,6 +412,8 @@ public class FragmentLogin extends android.support.v4.app.Fragment implements Go
         Toast.makeText(getApplicationContext(), ""+connectionResult, Toast.LENGTH_SHORT).show();
 */
     }
+
+    //백버튼 눌렀을때 메뉴바에 에이블이 뜨도록
     @Override
     public void onDestroyView() {
         super.onDestroyView();
