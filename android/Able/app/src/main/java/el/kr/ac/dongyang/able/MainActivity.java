@@ -146,7 +146,14 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_helthcare) {      //승현
-
+            Fragment fragment = new FragmentHealthcare();
+            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+            Log.i("fagmentTag", fragmentTag);
+            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.main_layout, fragment);
+            ft.addToBackStack(fragmentTag);
+            ft.commit();
 
         } else if (id == R.id.nav_groupriding) {    //지수
 
