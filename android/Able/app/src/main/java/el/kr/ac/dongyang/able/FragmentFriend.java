@@ -31,6 +31,10 @@ import java.util.Map;
 
 /**
  * Created by impro on 2018-05-08.
+ * 친구추가 버튼으로 유저목록으로 넘어감.
+ * 아직 친구에 대한 버튼 이벤트 없음.
+ * 현재 on/off 미구현
+ * 마지막 접속시간 미구현
  */
 
 public class FragmentFriend extends Fragment{
@@ -47,13 +51,14 @@ public class FragmentFriend extends Fragment{
 
     public FragmentFriend() {
     }
-
+    
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend,container,false);
         getActivity().setTitle("Friend");
 
+        //친구 추가 : 유저목록으로 넘어감
         btn = (Button) view.findViewById(R.id.insert_friend);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +83,13 @@ public class FragmentFriend extends Fragment{
         return view;
     }
 
+    /*어댑터
+        우선은 데이터베이스에 friend : uid : {대연 : true, 영훈 : true} 로 저장되어있음.
+        친구 이름이 뜨려면 키값을 따로 디비에서 받아와서 저장해야했으나, 
+        쿼리문으로 키값만 받아올 수가 없음.
+        해시맵 friendMap으로 먼저 키,밸류값을 나누어 저장하고, entry로 키값만 불러
+        리스트 friendList에 저장함.
+    */
     class FriendlistFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public FriendlistFragmentRecyclerViewAdapter() {
             friendMap = new HashMap();
@@ -112,6 +124,8 @@ public class FragmentFriend extends Fragment{
             return new CustomViewHolder(view);
         }
 
+        //Glide 라는 깃허브 오픈 라이브러리를 그대로 따라해봤으나
+        //안됐음. 에러코드는 app수준 빌드.그래들에 있음.ㅠ..
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             /*Glide.with

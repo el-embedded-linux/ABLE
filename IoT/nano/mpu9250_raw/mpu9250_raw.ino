@@ -1,6 +1,4 @@
 
-#include "Wire.h"
-
 // I2Cdev and MPU9250 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
@@ -54,9 +52,6 @@ void setup()
 {
     // join I2C bus (I2Cdev library doesn't do this automatically)
     Wire.begin();
-
-    // initialize serial communication
-    // (38400 chosen because it works as well at 8MHz as it does at 16MHz, but
     // it's really up to you depending on your project)
     Serial.begin(9600);
 
@@ -128,7 +123,7 @@ void loop()
 
 void getHeading(void)
 {
-    heading = 180 * atan2(Mxyz[1], Mxyz[0]) / PI;
+    heading = 180 * atan2(Mxyz[1], Mxyz[0]); //PI;
     if (heading < 0) heading += 360;
 }
 
@@ -140,7 +135,7 @@ void getTiltHeading(void)
     float xh = Mxyz[0] * cos(pitch) + Mxyz[2] * sin(pitch);
     float yh = Mxyz[0] * sin(roll) * sin(pitch) + Mxyz[1] * cos(roll) - Mxyz[2] * sin(roll) * cos(pitch);
     float zh = -Mxyz[0] * cos(roll) * sin(pitch) + Mxyz[1] * sin(roll) + Mxyz[2] * cos(roll) * cos(pitch);
-    tiltheading = 180 * atan2(yh, xh) / PI;
+    tiltheading = 180 * atan2(yh, xh); //PI;
     if (yh < 0)    tiltheading += 360;
 }
 

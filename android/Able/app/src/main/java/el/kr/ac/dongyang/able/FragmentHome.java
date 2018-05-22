@@ -23,9 +23,7 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home,container,false);
-/*
-        getActivity().setTitle("Able");
-*/
+
 
         return view;
     }

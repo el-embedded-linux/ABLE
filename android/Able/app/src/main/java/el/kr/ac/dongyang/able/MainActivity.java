@@ -34,6 +34,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+//기본적으로 프래그먼트홈이 뜨도록 되어있음. content_xml에서 설정됨.
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //drawer 백버튼 클릭시 동작
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    //메뉴 아이템에 무엇을 넣을 것인지, 더 추가도 가능. 현재는 친구목록 : FragmentFriend로 이동
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -115,6 +118,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    //네비게이션 바에서 항목을 클릭해서 넘어가는 부분.
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -142,7 +146,14 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_helthcare) {      //승현
-
+            Fragment fragment = new FragmentHealthcare();
+            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+            Log.i("fagmentTag", fragmentTag);
+            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.main_layout, fragment);
+            ft.addToBackStack(fragmentTag);
+            ft.commit();
 
         } else if (id == R.id.nav_groupriding) {    //지수
 
