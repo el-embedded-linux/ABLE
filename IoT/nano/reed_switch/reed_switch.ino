@@ -19,8 +19,8 @@ void setup(){
  }
 
 void loop(){
-  boolean check = digitalRead(A0); // 리드스위치의 상태를 확인합니다.
-  print(check);
+  boolean check = digitalRead(A0); // 리드스위치의 상태를 확인합니다.(SIG=A0)
+  Serial.print(check);
   if(check == 1 && temp == 0){  // 리드 스위치가 열릴 때(닫힘 -> 열림)
     ckTime = millis();  // 시간을 확인해서 저장합니다.
     temp = 1;  // temp값을 1로 바꿔줍니다.(리드스위치가 열려있는 상태값 저장)

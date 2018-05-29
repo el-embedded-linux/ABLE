@@ -5,6 +5,7 @@
 #endif
 #define PIN 6
 //지자기
+//SDA핀 A4, SCL핀 A5, 나머지 VDD 5V, GND는 GND
 #include "I2Cdev.h"
 #include "MPU9250.h"
 int16_t   mx, my, mz;
