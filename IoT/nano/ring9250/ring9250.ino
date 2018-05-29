@@ -130,7 +130,7 @@ void loop() {
     }
      colorWipe(temp,strip.Color(0, 0, 0), 0); // Green
      colorWipe(i,strip.Color(0, 5, 0), 5); // Green
-  delay(1000);
+  delay(100);
     temp=i;
 }
 
