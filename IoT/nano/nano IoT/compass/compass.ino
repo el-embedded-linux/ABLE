@@ -76,8 +76,6 @@ void setup() {
 //ToDoList
 //1. 값이 갑자기 너무 커지는 경우에는 반응하지 않는다.
 //2. 값이 너무 조금 움이는 경우에는 반응하지 않는다.
-//3. if문을 너무 많이 사용해서 switch문이나 다른 방식으로 바꾼다.
-//4. 지자기센서가 바라보고 있는 위치가 아니라 북극으로 방향을 바꾸어야한다.
 void loop() {
   getCompassDate_calibrated();
   getHeading();
@@ -92,29 +90,29 @@ void loop() {
     }
   switch(head){
     case 0 ... 14: i=0; break;
-    case 15 ... 29: i=23; break;
-    case 30 ... 44: i=22; break;
-    case 45 ... 59: i=21; break;
-    case 60 ... 74: i=20; break;
-    case 75 ... 89: i=19; break;
-    case 90 ... 104: i=18; break;
-    case 105 ... 119: i=17; break;
-    case 120 ... 134: i=16; break;
-    case 135 ... 149: i=15; break;
-    case 150 ... 164: i=14; break;
-    case 165 ... 179: i=13; break;
+    case 15 ... 29: i=1; break;
+    case 30 ... 44: i=2; break;
+    case 45 ... 59: i=3; break;
+    case 60 ... 74: i=4; break;
+    case 75 ... 89: i=5; break;
+    case 90 ... 104: i=6; break;
+    case 105 ... 119: i=7; break;
+    case 120 ... 134: i=8; break;
+    case 135 ... 149: i=9; break;
+    case 150 ... 164: i=10; break;
+    case 165 ... 179: i=11; break;
     case 180 ... 194: i=12; break;
-    case 195 ... 209: i=11; break;
-    case 210 ... 224: i=10; break;
-    case 225 ... 239: i=9; break;
-    case 240 ... 254: i=8; break;
-    case 255 ... 269: i=7; break;
-    case 270 ... 284: i=6; break;
-    case 285 ... 299: i=5; break;
-    case 300 ... 314: i=4; break;
-    case 315 ... 329: i=3; break;
-    case 330 ... 344: i=2; break;
-    case 345 ... 359: i=1; break;
+    case 195 ... 209: i=13; break;
+    case 210 ... 224: i=14; break;
+    case 225 ... 239: i=15; break;
+    case 240 ... 254: i=16; break;
+    case 255 ... 269: i=17; break;
+    case 270 ... 284: i=18; break;
+    case 285 ... 299: i=19; break;
+    case 300 ... 314: i=20; break;
+    case 315 ... 329: i=21; break;
+    case 330 ... 344: i=22; break;
+    case 345 ... 359: i=23; break;
     default: break;
   }
 //    pump=i-temp;
