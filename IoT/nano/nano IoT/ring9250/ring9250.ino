@@ -71,6 +71,10 @@ void setup() {
 
     //  Mxyz_init_calibrated ();
 }
+//ToDoList
+//1. 값이 갑자기 너무 커지는 경우에는 반응하지 않는다.
+//2. 값이 너무 조금 움이는 경우에는 반응하지 않는다.
+//3. if문을 너무 많이 사용해서 switch문이나 다른 방식으로 바꾼다.
 
 void loop() {
   getCompassDate_calibrated();
