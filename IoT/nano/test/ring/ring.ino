@@ -25,13 +25,14 @@ void setup() {
 
 void loop() {
   
-  colorWipe(strip.Color(0, 5, 0), 5); // Green
+  colorWipe(1,strip.Color(0, 5, 0), 5); // Green
 
 }
 
-void colorWipe(uint32_t c, uint8_t wait) {
+
+void colorWipe(int i, uint32_t c, uint8_t wait) {
   
-    strip.setPixelColor(0, c);
+    strip.setPixelColor(i, c);
     strip.show();
     delay(wait);
   

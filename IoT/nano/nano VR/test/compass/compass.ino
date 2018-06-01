@@ -1,5 +1,5 @@
 //RingLED
-#include <Adafruit_NeoPixel.h>
+#include<Adafruit_NeoPixel.h>
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
@@ -11,12 +11,18 @@
 int16_t   mx, my, mz;
 MPU9250 accelgyro;
 I2Cdev   I2C_M;
+
 uint8_t buffer_m[6];
 
-int i;
-int temp;
+float heading;
+float tiltheading;
 int head;
+
+int i;
+int temp_com;
 int pump;
+int test;
+int randNumber;
 
 volatile float mx_sample[3];
 volatile float my_sample[3];
@@ -40,8 +46,8 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(64, PIN, NEO_GRB + NEO_KHZ800);
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
 // and minimize distance between Arduino and first pixel.  Avoid connecting
 // on a live circuit...if you must, connect GND first.
-float heading;
 float Mxyz[3];
+float Axyz[3];
 
 void setup() {
   // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
@@ -72,59 +78,66 @@ void setup() {
     Serial.println("     ");
 
     //  Mxyz_init_calibrated ();
+    
+    //randomSeed의 매개변수로 0번 채널(A0번 핀)에서 읽은 아날로그 값을 전달
+    randomSeed(analogRead(0));
 }
 //ToDoList
 //1. 값이 갑자기 너무 커지는 경우에는 반응하지 않는다.
 //2. 값이 너무 조금 움이는 경우에는 반응하지 않는다.
 void loop() {
-  getCompassDate_calibrated();
-  getHeading();
-  Serial.println("The clockwise angle between the magnetic north and X-Axis:");
-  Serial.print(heading);
-  Serial.println(" ");
-  head = (int)heading;
-  if(head<0){//값이 0~360 범위안에 없는 경우
-      head=head+360;
+randNumber = random(360);//randNumber 변수에 0 ~ 299 값 중 랜덤한 값을 저장
+Serial.println(randNumber);//randNumber 변수의 값을 씨리얼모니터에 한 줄로 출력
+  while(true){
+    getCompassDate_calibrated();
+    getTiltHeading();
+    Serial.println("The clockwise angle between the magnetic north and X-Axis:");
+    Serial.println(" ");
+    head = (int)tiltheading;
+    if(head<0){//값이 0~360 범위안에 없는 경우
+        head=head+360;
     }else if(head>360){
       head= head-360;
     }
-  switch(head){
-    case 0 ... 14: i=0; break;
-    case 15 ... 29: i=1; break;
-    case 30 ... 44: i=2; break;
-    case 45 ... 59: i=3; break;
-    case 60 ... 74: i=4; break;
-    case 75 ... 89: i=5; break;
-    case 90 ... 104: i=6; break;
-    case 105 ... 119: i=7; break;
-    case 120 ... 134: i=8; break;
-    case 135 ... 149: i=9; break;
-    case 150 ... 164: i=10; break;
-    case 165 ... 179: i=11; break;
-    case 180 ... 194: i=12; break;
-    case 195 ... 209: i=13; break;
-    case 210 ... 224: i=14; break;
-    case 225 ... 239: i=15; break;
-    case 240 ... 254: i=16; break;
-    case 255 ... 269: i=17; break;
-    case 270 ... 284: i=18; break;
-    case 285 ... 299: i=19; break;
-    case 300 ... 314: i=20; break;
-    case 315 ... 329: i=21; break;
-    case 330 ... 344: i=22; break;
-    case 345 ... 359: i=23; break;
-    default: break;
+    Serial.println(head);
+    switch(head){
+      case 0 ... 14: i=0; break;
+      case 15 ... 29: i=1; break;
+      case 30 ... 44: i=2; break;
+      case 45 ... 59: i=3; break;
+      case 60 ... 74: i=4; break;
+      case 75 ... 89: i=5; break;
+      case 90 ... 104: i=6; break;
+      case 105 ... 119: i=7; break;
+      case 120 ... 134: i=8; break;
+      case 135 ... 149: i=9; break;
+      case 150 ... 164: i=10; break;
+      case 165 ... 179: i=11; break;
+      case 180 ... 194: i=12; break;
+      case 195 ... 209: i=13; break;
+      case 210 ... 224: i=14; break;
+      case 225 ... 239: i=15; break;
+      case 240 ... 254: i=16; break;
+      case 255 ... 269: i=17; break;
+      case 270 ... 284: i=18; break;
+      case 285 ... 299: i=19; break;
+      case 300 ... 314: i=20; break;
+      case 315 ... 329: i=21; break;
+      case 330 ... 344: i=22; break;
+      case 345 ... 359: i=23; break;
+      default: break;
+    }
+
+        colorWipe(temp_com,strip.Color(0, 0, 0), 0); // 전값을 초기화시키고
+        colorWipe(i,strip.Color(0, 100, 0), 5); // 초록색으로 해당 픽셀 on
+        
+    delay(1000);
+    temp_com=i;
+    //test가 1000이 될 때마다 한 번씩 렌덤하게 각도를 받아온다.
+    test+=1;
+    Serial.println(test);
+    if(test==1000)break;
   }
-//    pump=i-temp;
-//    if(pump>=10||pump<=-10){
-//      colorWipe(i,strip.Color(0, 0, 0), 0);//전값을 제외한 모든 픽셀 off 함수 만들기
-//      colorWipe(temp,strip.Color(0, 5, 0), 5);// 전값을 유지시키고
-//    }else{
-     colorWipe(temp,strip.Color(0, 0, 0), 0); // 전값을 초기화시키고
-     colorWipe(i,strip.Color(0, 100, 0), 5); // 초록색으로 해당 픽셀 on
-//    }
-  delay(1000);
-    temp=i;
 }
 
 void colorWipe(int i, uint32_t c, uint8_t wait) {
@@ -137,9 +150,22 @@ void colorWipe(int i, uint32_t c, uint8_t wait) {
 
 void getHeading(void)
 {
-    heading = 180 * atan2(Mxyz[1], Mxyz[0]); //PI;
-    if (heading < 0) heading += 360;
+    heading = 180 * atan2(Mxyz[1], Mxyz[0])/PI;
+    if (heading < 0)heading += 360;
 }
+
+void getTiltHeading(void)
+{
+    float pitch = asin(-Axyz[0]);
+    float roll = asin(Axyz[1] / cos(pitch));
+
+    float xh = Mxyz[0] * cos(pitch) + Mxyz[2] * sin(pitch);
+    float yh = Mxyz[0] * sin(roll) * sin(pitch) + Mxyz[1] * cos(roll) - Mxyz[2] * sin(roll) * cos(pitch);
+    float zh = -Mxyz[0] * cos(roll) * sin(pitch) + Mxyz[1] * sin(roll) + Mxyz[2] * cos(roll) * cos(pitch);
+    tiltheading = 180 * atan2(yh, xh)/PI;
+    if (yh < 0) tiltheading += 360;
+}
+
 void getCompass_Data(void)
 {
     I2C_M.writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x01); //enable the magnetometer

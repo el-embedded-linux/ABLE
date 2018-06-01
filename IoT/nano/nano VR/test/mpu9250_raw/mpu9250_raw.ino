@@ -123,9 +123,10 @@ void loop()
 
 void getHeading(void)
 {
-    heading = 180 * atan2(Mxyz[1], Mxyz[0]); //PI;
-    if (heading < 0) heading += 360;
+    heading = 180 * atan2(Mxyz[1], Mxyz[0])/PI;
+    if (heading < 0)heading += 360;
 }
+
 
 void getTiltHeading(void)
 {
@@ -135,10 +136,9 @@ void getTiltHeading(void)
     float xh = Mxyz[0] * cos(pitch) + Mxyz[2] * sin(pitch);
     float yh = Mxyz[0] * sin(roll) * sin(pitch) + Mxyz[1] * cos(roll) - Mxyz[2] * sin(roll) * cos(pitch);
     float zh = -Mxyz[0] * cos(roll) * sin(pitch) + Mxyz[1] * sin(roll) + Mxyz[2] * cos(roll) * cos(pitch);
-    tiltheading = 180 * atan2(yh, xh); //PI;
-    if (yh < 0)    tiltheading += 360;
+    tiltheading = 180 * atan2(yh, xh)/PI;
+    if (yh < 0)tiltheading += 360;
 }
-
 
 
 void Mxyz_init_calibrated ()
