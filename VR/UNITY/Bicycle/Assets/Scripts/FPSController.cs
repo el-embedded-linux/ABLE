@@ -1,15 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Firebase;
+using Firebase.Database;
+using Firebase.Unity.Editor;
+using System;
 
 public class FPSController : MonoBehaviour {
-	public float moveSpeed = 10.0f;
+
+    RealTimeDB realTimeDB = new RealTimeDB();
+
+    public float moveSpeed = 10.0f;
 	public float rotSpeed = 20.0f;
+	public string LoadScene;
+	int count=0;
 
 	public Camera fpsCam;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -17,7 +27,7 @@ public class FPSController : MonoBehaviour {
 	void Update () {
 		MoveCtrl ();
 		RotCtrl ();
-	}
+    }
 
 	void MoveCtrl(){
 		if (Input.GetKey (KeyCode.W)) {
@@ -41,5 +51,22 @@ public class FPSController : MonoBehaviour {
 		this.transform.localRotation *= Quaternion.Euler (0, rotY, 0);
 		fpsCam.transform.localRotation *= Quaternion.Euler (-rotX, 0, 0);
 	}
+ 
+    private void OnTriggerEnter(Collider col) {
+        if (col.tag == "endCheck") {
+            Debug.Log("enter EndCheck");
+			count += 1;
+			if (count == 1) {
+				SceneManager.LoadScene (LoadScene);
+                try
+                {
+                    realTimeDB.InitDatabase(this);
+                }catch(NullReferenceException ex)
+                {
+                    Debug.Log("데이터 저장 예외발생");
+                }
+			}
+        }
+    }
 
 }

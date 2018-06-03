@@ -4,6 +4,7 @@ Assets/Scene/Login.unity
 Assets/Scene/Main.unity
 Assets/Scene/mapselect.unity
 Assets/Scene/newScene.unity
+Assets/Scene/End.unity
 SceneListEnd?
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 dbc29a6f2739d277c10da432d73adb6d UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
@@ -82,7 +83,9 @@ c63db43c730fa2cbb8ca07de15898cb6 UnityEngine.UI.dll:UnityEngine.UI.Toggle
 f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 86d36c43c53541d667100dc90b89cfba UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 1b8c02d0aa82fbf036a2b9b2d713eec3 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
+d83ce2ca932c0e6d9e3a94dbb7e14063 Assembly-CSharp.dll:.RealTimeDB
 bfc648b90b8cdac6dc2cd3df4995f16b Assembly-CSharp.dll:.PlayTimeController
+05524b8f659e7bfe5756d1335fec24ba Firebase.Platform.dll:Firebase.Platform.FirebaseMonoBehaviour
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 dbc29a6f2739d277c10da432d73adb6d UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 8144169769d51429c4aedc8b0f92d47b UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
@@ -95,6 +98,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
 31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 df374c01140c2d578bf70cbd60073d1d UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
+90f737e78adf5efbefd5025eb581a414 Assembly-CSharp.dll:.Login
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 60b2bb652410a5867a5ab9a01cd38461 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -121,11 +125,12 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 5e3d07ca6b44b90f8d2b1f929128b3a2 Assembly-CSharp.dll:.ExitButton
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.FinishTimeManager
 b30e0b3acb9bd982eb561c269a3fecb6 Assembly-CSharp.dll:.ExitBtn
-d167509dc485f358b67db633a9c770ec Assembly-CSharp.dll:.FPSController
+6374e259b31c5e6114b7bbd9731ad084 Assembly-CSharp.dll:.FPSController
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp-firstpass.dll:UnityStandardAssets.Water.WaterBasic
 a65c91dd26fe8dba6deb9fac869aefc7 Assembly-CSharp.dll:.HalfPointTrigger
+54a34b3f405d42efa0add33590aaacde Assembly-CSharp.dll:.ButtonBorderController
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 60b2bb652410a5867a5ab9a01cd38461 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -154,8 +159,6 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MenuButton
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ButtonController
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.EndManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Menu
 b30e0b3acb9bd982eb561c269a3fecb6 Assembly-CSharp.dll:.StartButton
-05524b8f659e7bfe5756d1335fec24ba Firebase.Platform.dll:Firebase.Platform.FirebaseMonoBehaviour
-90f737e78adf5efbefd5025eb581a414 Assembly-CSharp.dll:.Login
-254e50153d5e5bd64e4c23b303d3f63c Assembly-CSharp.dll:.RealTimeDB

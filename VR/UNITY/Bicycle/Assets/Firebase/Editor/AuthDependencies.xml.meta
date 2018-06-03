@@ -1,6 +1,9 @@
 fileFormatVersion: 2
-guid: 2bec2bf8d84d4997ba2dd66263781f3d
-time_created: 1480838400
-labels:
-- gvh
-- gvh_v4.5.2
+guid: f147fdc66c8792445b7c15ffdf77c845
+timeCreated: 1527595860
+licenseType: Free
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
