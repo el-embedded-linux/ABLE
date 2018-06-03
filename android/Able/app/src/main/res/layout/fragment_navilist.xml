@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f6f6f6"
+    android:padding="20dp"
+    >
+
+    <RelativeLayout
+        android:id="@+id/naviText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="20dp">
+
+        <EditText
+            android:id="@+id/naviStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:hint="출발지"/>
+
+        <EditText
+            android:id="@+id/naviEnd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/naviStart"
+            android:hint="목적지"
+            />
+
+        <Button
+            android:id="@+id/naviSearch"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignRight="@+id/naviEnd"
+            android:layout_centerVertical="true"
+            android:background="@drawable/magnifier"
+            />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_naviList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/naviText2">
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
