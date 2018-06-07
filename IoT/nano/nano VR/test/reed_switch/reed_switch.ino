@@ -19,7 +19,7 @@ void setup(){
  }
 
 void loop(){
-  boolean check = digitalRead(A0); // 리드스위치의 상태를 확인합니다.(SIG=A0)
+  boolean check = digitalRead(A1); // 리드스위치의 상태를 확인합니다.(SIG=A0)
   Serial.print(check);
   if(check == 1 && temp == 0){  // 리드 스위치가 열릴 때(닫힘 -> 열림)
     ckTime = millis();  // 시간을 확인해서 저장합니다.
@@ -45,5 +45,8 @@ void loop(){
   }
   Serial.print("Speed : ");
   Serial.print(bySpeed);
-  Serial.println(" km/h");             // 시리얼 모니터를 이용하여 속도를 확인합니다.
+  Serial.println(" km/h");// 시리얼 모니터를 이용하여 속도를 확인합니다.
+  Serial.print("Distance : ");
+  Serial.print(distance);
+  Serial.println(" m");
 }
