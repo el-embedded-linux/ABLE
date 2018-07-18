@@ -8,9 +8,9 @@ using UnityEngine.UI;
 public class RealTimeDB : MonoBehaviour
 {   
     public static string playTime;
-    public static string kcal = "50Kcal";
-    public static string totalDist = "1.2km";
-    public string RecordDate = DateTime.Now.ToString("yyyy-MM-dd");
+    public static string kcal;
+    public static string totalDist;
+    public static string RecordDate = DateTime.Now.ToString("yyyy-MM-dd");
 
     FirebaseApp firebaseApp;
     public static DatabaseReference databaseReference;
@@ -51,9 +51,15 @@ public class RealTimeDB : MonoBehaviour
     }
 
     //버튼 눌렀을때 동작
+    public void InitDatabase()
+    {
+        WriteNewUser(Login.user.UserId, PlayTimeController.playTime, Login.user.Email, PlayTimeController.kcal, NewBehaviourScript.totalDist);
+    }
+
+    //게임종료시
     public void InitDatabase(FPSController fPSController)
     {
-        WriteNewUser(Login.user.UserId, playTime, Login.user.Email, kcal, totalDist);
+        WriteNewUser(Login.user.UserId, PlayTimeController.playTime, Login.user.Email, PlayTimeController.kcal, NewBehaviourScript.totalDist);
     }
     //파이어베이스 저장 함수
     private void WriteNewUser(string uid, string playTime, string email, string kcal, string totalDist)
