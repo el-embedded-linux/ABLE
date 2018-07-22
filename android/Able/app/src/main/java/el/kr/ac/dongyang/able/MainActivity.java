@@ -1,8 +1,11 @@
 package el.kr.ac.dongyang.able;
 
+import android.animation.ObjectAnimator;
+import android.animation.StateListAnimator;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -17,6 +20,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -36,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     FragmentTransaction ft;
     String fragmentTag;
     Fragment fragmentNav,fragmentSet;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +53,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         fragmentNav = new FragmentNavigation();
         fragmentSet = new FragmentSetting();
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //checkPermition();
 
@@ -86,7 +94,7 @@ public class MainActivity extends AppCompatActivity
     //drawer 백버튼 클릭시 동작
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -112,14 +120,18 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
-            Fragment fragment = new FragmentFriend();
-            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_layout, fragment);
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
+            if (firebaseUser != null) {
+                Toast.makeText(getApplicationContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            } else {
+                Fragment fragment = new FragmentFriend();
+                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+                Log.i("fagmentTag", fragmentTag);
+                getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.main_layout, fragment);
+                ft.addToBackStack(fragmentTag);
+                ft.commit();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -152,14 +164,18 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_helthcare) {      //승현
-            Fragment fragment = new FragmentHealthcare();
-            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.main_layout, fragment);
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
+            if (firebaseUser != null) {
+                Toast.makeText(getApplicationContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            } else {
+                Fragment fragment = new FragmentHealthcare();
+                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+                Log.i("fagmentTag", fragmentTag);
+                getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.add(R.id.main_layout, fragment);
+                ft.addToBackStack(fragmentTag);
+                ft.commit();
+            }
 
         } else if (id == R.id.nav_groupriding) {    //지수
 

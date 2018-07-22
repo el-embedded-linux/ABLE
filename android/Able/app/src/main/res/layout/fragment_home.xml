@@ -36,112 +36,124 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <ImageView
-        android:id="@+id/weather"
-        android:layout_width="123dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="400dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="135dp"
-        android:src="@drawable/sun"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/Temperature"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/weather"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="110dp"
-        android:layout_marginTop="195dp"
-        android:text="26"
-        android:textColor="#ffffff"
-        android:textSize="66dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/hTemperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/weather"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="75dp"
-        android:layout_marginTop="225dp"
-        android:text="℃"
-        android:textColor="#ffffff"
-        android:textSize="33dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/hUpDown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/hTemperature"
-        android:layout_alignEnd="@+id/hTemperature"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginTop="160dp"
-        android:text="27º / 17º"
-        android:textColor="#d1d1d1"
-        android:textSize="16.7dp"
-        app:layout_constraintBottom_toTopOf="@+id/hTemperature"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hSwitch">
+
+        <ImageView
+            android:id="@+id/weather"
+            android:layout_width="123dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/sun"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/Temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="24dp"
+            android:text="26"
+            android:textColor="#ffffff"
+            android:textSize="66dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/weather" />
+
+        <TextView
+            android:id="@+id/hTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:text="℃"
+            android:textColor="#ffffff"
+            android:textSize="33dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/Temperature" />
+
+        <TextView
+            android:id="@+id/hUpDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/hTemperature"
+            android:layout_alignEnd="@+id/hTemperature"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="8dp"
+            android:text="27º / 17º"
+            android:textColor="#d1d1d1"
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toTopOf="@+id/hTemperature"
+            app:layout_constraintStart_toEndOf="@+id/Temperature" />
+
+    </android.support.constraint.ConstraintLayout>
+
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="155dp"
-        android:layout_marginTop="294dp"
-        android:text="박경린"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="회원"
         android:textColor="#ffffff"
         android:textSize="33.3dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/hText2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/hText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="165dp"
-        android:layout_marginTop="313dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="8dp"
         android:text="님!"
         android:textColor="#ffffff"
         android:textSize="15dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintStart_toEndOf="@+id/name" />
 
     <TextView
         android:id="@+id/hText2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_below="@+id/hText1"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
         android:text="오늘은 어디로"
         android:textColor="#ffffff"
         android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/hText3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/hText3" />
 
     <TextView
         android:id="@+id/hText3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="여행을 떠나실건가요?"
         android:textColor="#ffffff"
         android:textSize="20dp"

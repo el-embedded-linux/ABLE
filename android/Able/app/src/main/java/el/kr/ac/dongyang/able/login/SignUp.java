@@ -61,30 +61,11 @@ public class SignUp extends Fragment{
         View view = inflater.inflate(R.layout.activity_login2, container, false);
         getActivity().setTitle("Login");
 
-        /*mStatusTextView = view.findViewById(R.id.status);
-        mDetailTextView = view.findViewById(R.id.detail);*/
-
         mAuth = FirebaseAuth.getInstance();
 
-        editemailtxt = (EditText) view.findViewById(R.id.emailtxt);
-        editpasswdtxt = (EditText) view.findViewById(R.id.passwdtxt);
-
-        /*signOutButton = view.findViewById(R.id.sign_out_button);
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signOut();
-            }
-        });
-        disconnectButton = view.findViewById(R.id.disconnect_button);
-        disconnectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                revokeAccess();
-            }
-        });*/
-
-        signup = (Button) view.findViewById(R.id.sign_up);
+        editemailtxt = view.findViewById(R.id.emailtxt);
+        editpasswdtxt = view.findViewById(R.id.passwdtxt);
+        signup = view.findViewById(R.id.sign_up);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +81,7 @@ public class SignUp extends Fragment{
             }
         });
 
-        register = (TextView)view.findViewById(R.id.register);
+        register = view.findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,28 +97,6 @@ public class SignUp extends Fragment{
             });
         return view;
     }
-
-    private void revokeAccess() {
-        // Firebase sign out
-        mAuth.signOut();
-    }
-
-    /*private void signOut() {
-        // Firebase sign out
-        mAuth.signOut();
-        *//*
-        //facebook sign out
-        LoginManager.getInstance().logOut();
-
-        // Google sign out
-        mGoogleSignInClient.signOut().addOnCompleteListener(getActivity(),
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
-                    }
-                });*//*
-    }*/
 
     //이메일, 패스워드로 유저를 생성할 때, 지금은 로그인 버튼 클릭시 수행됨
     private void createUser(final String email, final String password) {
@@ -202,38 +161,6 @@ public class SignUp extends Fragment{
                     }
                 });
     }
-
-/*    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-            mStatusTextView.setVisibility(View.GONE);
-            editemailtxt.setVisibility(View.GONE);
-            editpasswdtxt.setVisibility(View.GONE);
-            signup.setVisibility(View.GONE);
-            *//*signInButton.setVisibility(View.GONE);
-            loginButton.setVisibility(View.GONE);*//*
-            signOutButton.setVisibility(View.VISIBLE);
-            disconnectButton.setVisibility(View.VISIBLE);
-        } else {
-            mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
-            editemailtxt.setVisibility(View.VISIBLE);
-            editpasswdtxt.setVisibility(View.VISIBLE);
-            signup.setVisibility(View.VISIBLE);
-            *//*signInButton.setVisibility(View.VISIBLE);
-            loginButton.setVisibility(View.VISIBLE);*//*
-            signOutButton.setVisibility(View.GONE);
-            disconnectButton.setVisibility(View.GONE);
-        }
-    }*/
-
-    /*@Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-*//*
-        Toast.makeText(getApplicationContext(), ""+connectionResult, Toast.LENGTH_SHORT).show();
-*//*
-    }*/
 
     //백버튼 눌렀을때 메뉴바에 에이블이 뜨도록
     @Override

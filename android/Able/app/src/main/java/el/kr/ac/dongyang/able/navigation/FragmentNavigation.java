@@ -47,6 +47,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.support.v4.app.FragmentTransaction;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import el.kr.ac.dongyang.able.BusProvider;
 import el.kr.ac.dongyang.able.R;
@@ -93,6 +96,7 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
 
     private Bus busProvider = BusProvider.getInstance();
     Timer t = new Timer(true);
+    TextView nodeText, beforeText;
 
     public FragmentNavigation() {
     }
@@ -109,6 +113,9 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_navigation,container,false);
         getActivity().setTitle("Navigation");
+
+        nodeText = view.findViewById(R.id.nodetext);
+        beforeText = view.findViewById(R.id.beforeText);
 
         TMapTapi tmaptapi = new TMapTapi(getActivity());
         tmaptapi.setSKTMapAuthentication ("2414ee00-3784-4c78-913d-32bf5fa9c107");
@@ -170,73 +177,6 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
         super.onStart();
         //내 gps를 계속 전달. log에 뜸
         setGps();
-
-        //현 위치의 다음 노드의 좌표값을 라즈베리로 넘김.
-        double latitude = 37.50727379276449;
-        int latitudeint = (int)(latitude * 100000);
-        double longitude = 126.88502567374903;
-        int longitudeint = (int)(longitude * 100000);
-        String nextPoint = "";
-
-        Log.d("geo", "lat : " + Double.toString(latitude) + "lon : " + Double.toString(longitude));
-        //web.loadUrl("javascript:setXY('s','\" + latitude + \"', '\" + longitude + \"')");
-        //web.loadUrl("javascript:geoLo('" + latitude + "', '" + longitude + "')");
-
-        if(!naviList.isEmpty()) {
-            String startPoint = "";
-            //처음 한번만
-            if(startPoint.isEmpty()){
-                try {
-                    startPoint = naviList.get(0);
-                    busProvider.post(startPoint);
-                    Thread.sleep(1000);
-                }   catch (InterruptedException e) {
-                }
-                /*for(int i=1; i< naviList.size(); i++) {
-                    try {
-                        BusProvider.getInstance().post(naviList.get(i));
-                        Thread.sleep(4000);
-                    } catch (InterruptedException e) {
-                    }
-                }*/
-            }
-            for(int i=0; i<naviList.size(); i++) {
-
-                String lonandlat = naviList.get(i);
-                String target = "lon=";
-                int target_num = lonandlat.indexOf(target);
-                String result;
-                result = lonandlat.substring(target_num, (lonandlat.indexOf(",")));
-                String resultlon = result.substring(4);
-
-                String lonandlat2 = naviList.get(i);
-                String target2 = "lat=";
-                int target_num2 = lonandlat2.indexOf(target2);
-                String result2;
-                result2 = lonandlat2.substring(target_num2);
-                String resultlat = result2.substring(4);
-
-                Log.d("처음 lon : ", resultlon);
-                Log.d("처음 lat : ", resultlat);
-
-                int resultlat2p = (int)((Double.parseDouble(resultlat.substring(0,7))+0.00050)*100000);
-                int resultlat2m = (int)((Double.parseDouble(resultlat.substring(0,7))-0.00050)*100000);
-
-                int resultlon2p = (int)((Double.parseDouble(resultlon.substring(0,8))+0.00050)*100000);
-                int resultlon2m = (int)((Double.parseDouble(resultlon.substring(0,8))-0.00050)*100000);
-
-                if(latitudeint >= resultlat2m && latitudeint <= resultlat2p ){
-                    if(longitudeint >= resultlon2m && longitudeint <= resultlon2p ) {
-                        nextPoint = naviList.get(i+1);
-                        //BusProvider.getInstance().post(nextPoint);
-                        busProvider.post(nextPoint);
-                        Log.d("otto_lonlat : ", "" + nextPoint);
-                        break;
-                    }
-                }
-            }
-        }
-
     }
 
     @Override
@@ -271,10 +211,24 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
                 startlist[1] = latitude_r;
                 Log.d("geo", "lat : " + Double.toString(latitude_r) + "lon : " + Double.toString(longitude_r));
                 //현재위치 마커생성했는데 계속 변하는건 맞지
-
                 web.loadUrl("javascript:geoLo('" + latitude_r + "', '" + longitude_r + "')");
-                /*
+
+                String nextPoint = "";
+                int latitudeint = (int)(latitude_r * 100000);
+                int longitudeint = (int)(longitude_r * 100000);
+
                 if(!naviList.isEmpty()) {
+                    String startPoint = "";
+                    //처음 한번만
+                    if(startPoint.isEmpty()){
+                        try {
+                            startPoint = naviList.get(0);
+                            //셋팅에서 돌기 위한건데 흠..
+                            //busProvider.post(startPoint);
+                            Thread.sleep(1000);
+                        }   catch (InterruptedException e) {
+                        }
+                    }
                     for(int i=0; i<naviList.size(); i++) {
 
                         String lonandlat = naviList.get(i);
@@ -294,16 +248,26 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
                         Log.d("처음 lon : ", resultlon);
                         Log.d("처음 lat : ", resultlat);
 
-                        if(latitude >= Double.parseDouble(resultlat.substring(0,8))-0.00050 && latitude <= Double.parseDouble(resultlat.substring(0,8))+0.00050 ){
-                            if(longitude >= Double.parseDouble(resultlon.substring(0,8))-0.00050 && longitude <= Double.parseDouble(resultlat.substring(0,8))+0.00050 ) {
-                                lonlat = resultlon + "," + resultlat;
-                                BusProvider.getInstance().post(lonlat);
-                                Log.d("otto_lonlat : ", "" + lonlat);
+                        int resultlat2p = (int)((Double.parseDouble(resultlat.substring(0,7))+0.00050)*100000);
+                        int resultlat2m = (int)((Double.parseDouble(resultlat.substring(0,7))-0.00050)*100000);
+
+                        int resultlon2p = (int)((Double.parseDouble(resultlon.substring(0,8))+0.00050)*100000);
+                        int resultlon2m = (int)((Double.parseDouble(resultlon.substring(0,8))-0.00050)*100000);
+
+                        if(latitudeint >= resultlat2m && latitudeint <= resultlat2p ){
+                            if(longitudeint >= resultlon2m && longitudeint <= resultlon2p ) {
+                                nextPoint = naviList.get(i+1);
+                                //busProvider.post(nextPoint);
+                                Log.d("otto_lonlat : ", "" + nextPoint);
+                                //테스트용 텍스트뷰
+                                beforeText.setText(naviList.get(i));
+                                nodeText.setText(nextPoint);
                                 break;
                             }
                         }
                     }
-                }*/
+                }
+
             }
         }
         public void onProviderDisabled(String provider) {

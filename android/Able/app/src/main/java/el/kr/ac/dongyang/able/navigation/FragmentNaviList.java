@@ -66,33 +66,6 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new FragmentNaviList.NavilistFragmentRecyclerViewAdapter());
 
-/*        nStart.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //Enter key Action
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    //Enter키 눌렀을 때 처리
-                    requestCode = 1;
-                    final String strDataStart = nStart.getText().toString();
-                    TMapData tMapData = new TMapData();
-                    poiList.clear();
-                    tMapData.findAllPOI(strDataStart, new TMapData.FindAllPOIListenerCallback() {
-                        @Override
-                        public void onFindAllPOI(ArrayList<TMapPOIItem> poiItem) {
-                            for (int i = 0; i < poiItem.size(); i++) {
-                                TMapPOIItem item = poiItem.get(i);
-                                poiList.add(item);
-                                Log.d("주소로찾기", "POI Name: " + item.getPOIName().toString() + ", " +
-                                        "Address: " + item.getPOIAddress().replace("null", "") + ", " +
-                                        "Point: " + item.getPOIPoint().toString());
-                            }
-                        }
-                    });
-
-
-
-        });*/
-
         //터치이벤트
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
