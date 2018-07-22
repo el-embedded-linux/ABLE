@@ -1,0 +1,42 @@
+@import url(http://fonts.googleapis.com/earlyaccess/nanumbrushscript.css);
+
+.mPop{
+    border: 1px;
+    background-color: #FFF;
+    font-size: 12px;
+    border-color: #FF0000;
+    border-style: solid;
+    text-align: center;
+}
+/*공통사용 클래스*/
+.mPopStyle {
+    border: 1px;
+    background-color: #FFF;
+    font-size: 12px;
+    border-color: #FF0000;
+    border-style: solid;
+    text-align:left;
+}
+
+.result {
+    font-size: 2.5rem;
+    margin-top: 10%;
+    font-family: 'Nanum Brush Script', serif;
+}
+
+.submit {
+    margin-top: 10%;
+}
+
+.nav {
+    background-color: rgba(100, 30, 30, 0.0);
+}
+
+#map_div {
+    position: absolute;
+}
+
+body > #map_div {
+    height: 60%;
+}
+
