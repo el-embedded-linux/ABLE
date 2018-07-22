@@ -1,28 +1,36 @@
 ﻿using Firebase;
 using Firebase.Database;
 using Firebase.Unity.Editor;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RealTimeDB : MonoBehaviour
-{
-    public string playTime;
+{   
+    public static string playTime;
+    public static string kcal;
+    public static string totalDist;
+    public static string RecordDate = DateTime.Now.ToString("yyyy-MM-dd");
 
     FirebaseApp firebaseApp;
-    DatabaseReference databaseReference;
+    public static DatabaseReference databaseReference;
 
     public class User
     {
         public string playTime;
         public string email;
+        public string kcal;
+        public string totalDist;
 
         public User()
         { }
 
-        public User(string playTime, string email)
+        public User(string playTime, string email, string kcal, string totalDist)
         {
             this.playTime = playTime;
             this.email = email;
+            this.kcal = kcal;
+            this.totalDist = totalDist;
         }
     }
 
@@ -45,14 +53,20 @@ public class RealTimeDB : MonoBehaviour
     //버튼 눌렀을때 동작
     public void InitDatabase()
     {
-        WriteNewUser(Login.user.UserId, playTime, Login.user.Email);
+        WriteNewUser(Login.user.UserId, PlayTimeController.playTime, Login.user.Email, PlayTimeController.kcal, NewBehaviourScript.totalDist);
+    }
+
+    //게임종료시
+    public void InitDatabase(FPSController fPSController)
+    {
+        WriteNewUser(Login.user.UserId, PlayTimeController.playTime, Login.user.Email, PlayTimeController.kcal, NewBehaviourScript.totalDist);
     }
     //파이어베이스 저장 함수
-    private void WriteNewUser(string uid, string playTime, string email)
+    private void WriteNewUser(string uid, string playTime, string email, string kcal, string totalDist)
     {
-        User user = new User(playTime, email);
+        User user = new User(playTime, email, kcal, totalDist);
         string json = JsonUtility.ToJson(user);
-        databaseReference.Child("PlayData").Child(uid).SetRawJsonValueAsync(json);
+        databaseReference.Child("PlayData").Child(uid).Child(RecordDate).SetRawJsonValueAsync(json);
     }
     // Update is called once per frame
     void Update()
@@ -65,4 +79,5 @@ public class RealTimeDB : MonoBehaviour
 
         playTime = hours + ":" + minutes + ":" + seconds;
     }
+
 }

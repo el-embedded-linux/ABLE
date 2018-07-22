@@ -1,0 +1,2543 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!29 &1
+SceneSettings:
+  m_ObjectHideFlags: 0
+  m_PVSData: 
+  m_PVSObjectsArray: []
+  m_PVSPortalsArray: []
+  m_OcclusionBakeSettings:
+    smallestOccluder: 5
+    smallestHole: 0.25
+    backfaceThreshold: 100
+--- !u!104 &2
+RenderSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 6
+  m_Fog: 0
+  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogMode: 3
+  m_FogDensity: 0.01
+  m_LinearFogStart: 0
+  m_LinearFogEnd: 300
+  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
+  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+  m_AmbientIntensity: 1
+  m_AmbientMode: 0
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_HaloStrength: 0.5
+  m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
+  m_HaloTexture: {fileID: 0}
+  m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
+  m_DefaultReflectionMode: 0
+  m_DefaultReflectionResolution: 128
+  m_ReflectionBounces: 1
+  m_ReflectionIntensity: 1
+  m_CustomReflection: {fileID: 0}
+  m_Sun: {fileID: 0}
+--- !u!157 &3
+LightmapSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 6
+  m_GIWorkflowMode: 0
+  m_LightmapsMode: 1
+  m_GISettings:
+    serializedVersion: 2
+    m_BounceScale: 1
+    m_IndirectOutputScale: 1
+    m_AlbedoBoost: 1
+    m_TemporalCoherenceThreshold: 1
+    m_EnvironmentLightingMode: 0
+    m_EnableBakedLightmaps: 1
+    m_EnableRealtimeLightmaps: 1
+  m_LightmapEditorSettings:
+    serializedVersion: 3
+    m_Resolution: 2
+    m_BakeResolution: 40
+    m_TextureWidth: 1024
+    m_TextureHeight: 1024
+    m_AOMaxDistance: 1
+    m_Padding: 2
+    m_CompAOExponent: 0
+    m_LightmapParameters: {fileID: 0}
+    m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherRayCount: 1024
+    m_ReflectionCompression: 2
+  m_LightingDataAsset: {fileID: 0}
+  m_RuntimeCPUUsage: 25
+--- !u!196 &4
+NavMeshSettings:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_BuildSettings:
+    serializedVersion: 2
+    agentRadius: 0.5
+    agentHeight: 2
+    agentSlope: 45
+    agentClimb: 0.4
+    ledgeDropHeight: 0
+    maxJumpAcrossDistance: 0
+    accuratePlacement: 0
+    minRegionArea: 2
+    cellSize: 0.16666667
+    manualCellSize: 0
+  m_NavMeshData: {fileID: 0}
+--- !u!1 &316526594
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 316526599}
+  - 33: {fileID: 316526598}
+  - 65: {fileID: 316526597}
+  - 23: {fileID: 316526596}
+  - 114: {fileID: 316526595}
+  - 114: {fileID: 316526601}
+  - 114: {fileID: 316526600}
+  m_Layer: 0
+  m_Name: Reactor(Re)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &316526595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 316526594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0168cd0de15bb49059e9aff2b8523319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 780
+    y: 154
+    width: 117
+    height: 97
+  nodes:
+  - name: ReactingTarget
+    text: Reactor(Re)
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Reacting Target
+    rect:
+      serializedVersion: 2
+      x: 780
+      y: 174
+      width: 117
+      height: 18
+    updated: 1
+  - name: getTrigger
+    text: Get Trigger
+    nodeType: 2
+    objectTarget: {fileID: 316526601}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 780
+      y: 192
+      width: 117
+      height: 18
+    updated: 1
+  - name: getCollision
+    text: Get Collision
+    nodeType: 2
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 780
+      y: 210
+      width: 117
+      height: 18
+    updated: 1
+  - name: ColliderReactor
+    text: ColliderReactor
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ColliderReactor
+    rect:
+      serializedVersion: 2
+      x: 780
+      y: 228
+      width: 117
+      height: 18
+    updated: 1
+--- !u!23 &316526596
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 316526594}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 12697e7cef3884da5a8ede04cc6ba049, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!65 &316526597
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 316526594}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &316526598
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 316526594}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &316526599
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 316526594}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+--- !u!114 &316526600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 316526594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5db5eea559f44205b5cbc891af8af8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 476
+    y: 145
+    width: 133
+    height: 115
+  nodes:
+  - name: curveOutput
+    text: Vibration Curve
+    nodeType: 2
+    objectTarget: {fileID: 350536272}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 165
+      width: 133
+      height: 18
+    updated: 1
+  - name: play
+    text: Play
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 183
+      width: 133
+      height: 18
+    updated: 1
+  - name: playOnly
+    text: Play Only
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 201
+      width: 133
+      height: 18
+    updated: 1
+  - name: multiplier
+    text: Play by multiplier
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 219
+      width: 133
+      height: 18
+    updated: 1
+  - name: CurveOutput
+    text: CurveOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: CurveOutput
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 237
+      width: 133
+      height: 18
+    updated: 1
+  startCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.25
+      value: 1
+      inSlope: 9.892584
+      outSlope: 9.892584
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  loopCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0.35664725
+      outSlope: 0.35664725
+      tangentMode: 0
+    - time: 0.15
+      value: 1.02
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.35
+      value: 0.98
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.5
+      value: 1
+      inSlope: 0.37184897
+      outSlope: 0.37184897
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  endCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: -2.5512786
+      outSlope: -2.5512786
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  outputName: Vibration Curve
+  multiplier: 1
+  speed: 1
+  loop: 1
+  OnStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+--- !u!114 &316526601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 316526594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf8e30d5578234ea9a0d9c274403b9eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 636
+    y: 153
+    width: 100
+    height: 97
+  nodes:
+  - name: toneFrequency
+    text: D4
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Tone Frequency
+    rect:
+      serializedVersion: 2
+      x: 636
+      y: 173
+      width: 100
+      height: 18
+    updated: 1
+  - name: frequency
+    text: Frequency
+    nodeType: 2
+    objectTarget: {fileID: 316526600}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 636
+      y: 191
+      width: 100
+      height: 18
+    updated: 1
+  - name: active
+    text: Active
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 636
+      y: 209
+      width: 100
+      height: 18
+    updated: 1
+  - name: ToneOutput
+    text: ToneOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ToneOutput
+    rect:
+      serializedVersion: 2
+      x: 636
+      y: 227
+      width: 100
+      height: 18
+    updated: 1
+  toneFrequency: 294
+--- !u!1 &350536269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 350536271}
+  - 114: {fileID: 350536270}
+  - 114: {fileID: 350536272}
+  m_Layer: 0
+  m_Name: Buzzer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &350536270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 350536269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1a3b984341c24da1a9695f332e24a76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 289
+    y: 77
+    width: 100
+    height: 133
+  nodes:
+  - name: gameObject
+    text: Buzzer
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: GameObject
+    rect:
+      serializedVersion: 2
+      x: 289
+      y: 97
+      width: 100
+      height: 18
+    updated: 1
+  - name: id
+    text: 'ID: 0'
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Controller ID
+    rect:
+      serializedVersion: 2
+      x: 289
+      y: 115
+      width: 100
+      height: 18
+    updated: 1
+  - name: pin
+    text: 'Pin: 2'
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Arduino Digital Pin
+    rect:
+      serializedVersion: 2
+      x: 289
+      y: 133
+      width: 100
+      height: 18
+    updated: 1
+  - name: owner
+    text: Owner
+    nodeType: 2
+    objectTarget: {fileID: 685239990}
+    tooltip: ArdunityApp
+    rect:
+      serializedVersion: 2
+      x: 289
+      y: 151
+      width: 100
+      height: 18
+    updated: 1
+  - name: frequency
+    text: Frequency
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 289
+      y: 169
+      width: 100
+      height: 18
+    updated: 1
+  - name: GenericTone
+    text: GenericTone
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: GenericTone
+    rect:
+      serializedVersion: 2
+      x: 289
+      y: 187
+      width: 100
+      height: 18
+    updated: 1
+  id: 0
+  pin: 2
+  _toneFrequency: 0
+--- !u!4 &350536271
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 350536269}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 685239992}
+  m_RootOrder: 0
+--- !u!114 &350536272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 350536269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e17d0a2208d8b430e9ae7957fe0ca709, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 285
+    y: 228
+    width: 133
+    height: 97
+  nodes:
+  - name: mode
+    text: Combine by Maximum
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Method for Combine
+    rect:
+      serializedVersion: 2
+      x: 285
+      y: 248
+      width: 133
+      height: 18
+    updated: 1
+  - name: result
+    text: Result
+    nodeType: 2
+    objectTarget: {fileID: 350536270}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 285
+      y: 266
+      width: 133
+      height: 18
+    updated: 1
+  - name: source
+    text: Source
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 285
+      y: 284
+      width: 133
+      height: 18
+    updated: 1
+  - name: OutputCombine
+    text: OutputCombine
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: OutputCombine
+    rect:
+      serializedVersion: 2
+      x: 285
+      y: 302
+      width: 133
+      height: 18
+    updated: 1
+  combineMode: 1
+--- !u!1 &437499720
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 437499722}
+  - 108: {fileID: 437499721}
+  m_Layer: 0
+  m_Name: Directional Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &437499721
+Light:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 437499720}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_Type: 1
+  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 2
+    m_Resolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_BounceIntensity: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_AreaSize: {x: 1, y: 1}
+--- !u!4 &437499722
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 437499720}
+  m_LocalRotation: {x: 0.40821794, y: -0.23456973, z: 0.109381676, w: 0.87542605}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+--- !u!1 &685239989
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 685239992}
+  - 114: {fileID: 685239990}
+  - 114: {fileID: 685239991}
+  m_Layer: 0
+  m_Name: Ardunity
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &685239990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 685239989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1389280112, guid: f6f400c45f7404b8785954fd9df78bec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 139
+    y: 78
+    width: 119
+    height: 79
+  nodes:
+  - name: stream
+    text: Serial (115200 bps)
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Arduino Stream Class
+    rect:
+      serializedVersion: 2
+      x: 139
+      y: 98
+      width: 119
+      height: 18
+    updated: 1
+  - name: CommSocket
+    text: CommSocket
+    nodeType: 2
+    objectTarget: {fileID: 685239991}
+    tooltip: CommSocket
+    rect:
+      serializedVersion: 2
+      x: 139
+      y: 116
+      width: 119
+      height: 18
+    updated: 1
+  - name: ArdunityApp
+    text: ArdunityApp
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ArdunityApp
+    rect:
+      serializedVersion: 2
+      x: 139
+      y: 134
+      width: 119
+      height: 18
+    updated: 1
+  timeoutSec: 5
+  streamClass: 0
+  baudrate: 115200
+  rxPin: 0
+  txPin: 0
+  pwmResolution: 256
+  adcResolution: 1024
+  autoConnect: 0
+  debug: 0
+  OnConnected:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnConnectionFailed:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnDisconnected:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnLostConnection:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+--- !u!114 &685239991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 685239989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 919922910c30f4f2da9ed21286f8cdbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 6
+    y: 77
+    width: 102
+    height: 79
+  nodes:
+  - name: baudrate
+    text: 115200 bps
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Serial Baudrate Speed
+    rect:
+      serializedVersion: 2
+      x: 6
+      y: 97
+      width: 102
+      height: 18
+    updated: 1
+  - name: CommSocket
+    text: CommSocket
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: CommSocket
+    rect:
+      serializedVersion: 2
+      x: 6
+      y: 115
+      width: 102
+      height: 18
+    updated: 1
+  - name: CommSerial
+    text: CommSerial
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: CommSerial
+    rect:
+      serializedVersion: 2
+      x: 6
+      y: 133
+      width: 102
+      height: 18
+    updated: 1
+  foundDevices: []
+  device:
+    name: 
+    address: 
+    args: []
+  OnOpen:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnClose:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnOpenFailed:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnErrorClosed:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnStartSearch:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnStopSearch:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnWriteCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnFoundDevice:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Ardunity.CommDeviceEvent, ArdunityCore, Version=1.0.6061.20787, Culture=neutral,
+      PublicKeyToken=null
+  baudrate: 115200
+  dtrReset: 1
+--- !u!4 &685239992
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 685239989}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 350536271}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+--- !u!1 &771161332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 771161337}
+  - 33: {fileID: 771161336}
+  - 65: {fileID: 771161335}
+  - 23: {fileID: 771161334}
+  - 114: {fileID: 771161333}
+  - 114: {fileID: 771161339}
+  - 114: {fileID: 771161338}
+  m_Layer: 0
+  m_Name: Reactor(Do)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &771161333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 771161332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0168cd0de15bb49059e9aff2b8523319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 778
+    y: 23
+    width: 117
+    height: 97
+  nodes:
+  - name: ReactingTarget
+    text: Reactor(Do)
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Reacting Target
+    rect:
+      serializedVersion: 2
+      x: 778
+      y: 43
+      width: 117
+      height: 18
+    updated: 1
+  - name: getTrigger
+    text: Get Trigger
+    nodeType: 2
+    objectTarget: {fileID: 771161339}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 778
+      y: 61
+      width: 117
+      height: 18
+    updated: 1
+  - name: getCollision
+    text: Get Collision
+    nodeType: 2
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 778
+      y: 79
+      width: 117
+      height: 18
+    updated: 1
+  - name: ColliderReactor
+    text: ColliderReactor
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ColliderReactor
+    rect:
+      serializedVersion: 2
+      x: 778
+      y: 97
+      width: 117
+      height: 18
+    updated: 1
+--- !u!23 &771161334
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 771161332}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 12697e7cef3884da5a8ede04cc6ba049, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!65 &771161335
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 771161332}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &771161336
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 771161332}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &771161337
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 771161332}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+--- !u!114 &771161338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 771161332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5db5eea559f44205b5cbc891af8af8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 474
+    y: 18
+    width: 133
+    height: 115
+  nodes:
+  - name: curveOutput
+    text: Vibration Curve
+    nodeType: 2
+    objectTarget: {fileID: 350536272}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 474
+      y: 38
+      width: 133
+      height: 18
+    updated: 1
+  - name: play
+    text: Play
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 474
+      y: 56
+      width: 133
+      height: 18
+    updated: 1
+  - name: playOnly
+    text: Play Only
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 474
+      y: 74
+      width: 133
+      height: 18
+    updated: 1
+  - name: multiplier
+    text: Play by multiplier
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 474
+      y: 92
+      width: 133
+      height: 18
+    updated: 1
+  - name: CurveOutput
+    text: CurveOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: CurveOutput
+    rect:
+      serializedVersion: 2
+      x: 474
+      y: 110
+      width: 133
+      height: 18
+    updated: 1
+  startCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.25
+      value: 1
+      inSlope: 9.892584
+      outSlope: 9.892584
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  loopCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0.35664725
+      outSlope: 0.35664725
+      tangentMode: 0
+    - time: 0.15
+      value: 1.02
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.35
+      value: 0.98
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.5
+      value: 1
+      inSlope: 0.37184897
+      outSlope: 0.37184897
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  endCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: -2.5512786
+      outSlope: -2.5512786
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  outputName: Vibration Curve
+  multiplier: 1
+  speed: 1
+  loop: 1
+  OnStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+--- !u!114 &771161339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 771161332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf8e30d5578234ea9a0d9c274403b9eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 636
+    y: 25
+    width: 100
+    height: 97
+  nodes:
+  - name: toneFrequency
+    text: C4
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Tone Frequency
+    rect:
+      serializedVersion: 2
+      x: 636
+      y: 45
+      width: 100
+      height: 18
+    updated: 1
+  - name: frequency
+    text: Frequency
+    nodeType: 2
+    objectTarget: {fileID: 771161338}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 636
+      y: 63
+      width: 100
+      height: 18
+    updated: 1
+  - name: active
+    text: Active
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 636
+      y: 81
+      width: 100
+      height: 18
+    updated: 1
+  - name: ToneOutput
+    text: ToneOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ToneOutput
+    rect:
+      serializedVersion: 2
+      x: 636
+      y: 99
+      width: 100
+      height: 18
+    updated: 1
+  toneFrequency: 262
+--- !u!1 &892026102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 892026107}
+  - 33: {fileID: 892026106}
+  - 65: {fileID: 892026105}
+  - 23: {fileID: 892026104}
+  - 114: {fileID: 892026103}
+  - 114: {fileID: 892026109}
+  - 114: {fileID: 892026108}
+  m_Layer: 0
+  m_Name: Reactor(Mi)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &892026103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 892026102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0168cd0de15bb49059e9aff2b8523319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 782
+    y: 280
+    width: 117
+    height: 97
+  nodes:
+  - name: ReactingTarget
+    text: Reactor(Mi)
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Reacting Target
+    rect:
+      serializedVersion: 2
+      x: 782
+      y: 300
+      width: 117
+      height: 18
+    updated: 1
+  - name: getTrigger
+    text: Get Trigger
+    nodeType: 2
+    objectTarget: {fileID: 892026109}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 782
+      y: 318
+      width: 117
+      height: 18
+    updated: 1
+  - name: getCollision
+    text: Get Collision
+    nodeType: 2
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 782
+      y: 336
+      width: 117
+      height: 18
+    updated: 1
+  - name: ColliderReactor
+    text: ColliderReactor
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ColliderReactor
+    rect:
+      serializedVersion: 2
+      x: 782
+      y: 354
+      width: 117
+      height: 18
+    updated: 1
+--- !u!23 &892026104
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 892026102}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 12697e7cef3884da5a8ede04cc6ba049, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!65 &892026105
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 892026102}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &892026106
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 892026102}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &892026107
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 892026102}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+--- !u!114 &892026108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 892026102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5db5eea559f44205b5cbc891af8af8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 476
+    y: 270
+    width: 133
+    height: 115
+  nodes:
+  - name: curveOutput
+    text: Vibration Curve
+    nodeType: 2
+    objectTarget: {fileID: 350536272}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 290
+      width: 133
+      height: 18
+    updated: 1
+  - name: play
+    text: Play
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 308
+      width: 133
+      height: 18
+    updated: 1
+  - name: playOnly
+    text: Play Only
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 326
+      width: 133
+      height: 18
+    updated: 1
+  - name: multiplier
+    text: Play by multiplier
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 344
+      width: 133
+      height: 18
+    updated: 1
+  - name: CurveOutput
+    text: CurveOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: CurveOutput
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 362
+      width: 133
+      height: 18
+    updated: 1
+  startCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.25
+      value: 1
+      inSlope: 9.892584
+      outSlope: 9.892584
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  loopCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0.35664725
+      outSlope: 0.35664725
+      tangentMode: 0
+    - time: 0.15
+      value: 1.02
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.35
+      value: 0.98
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.5
+      value: 1
+      inSlope: 0.37184897
+      outSlope: 0.37184897
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  endCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: -2.5512786
+      outSlope: -2.5512786
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  outputName: Vibration Curve
+  multiplier: 1
+  speed: 1
+  loop: 1
+  OnStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+--- !u!114 &892026109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 892026102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf8e30d5578234ea9a0d9c274403b9eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 638
+    y: 280
+    width: 100
+    height: 97
+  nodes:
+  - name: toneFrequency
+    text: E4
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Tone Frequency
+    rect:
+      serializedVersion: 2
+      x: 638
+      y: 300
+      width: 100
+      height: 18
+    updated: 1
+  - name: frequency
+    text: Frequency
+    nodeType: 2
+    objectTarget: {fileID: 892026108}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 638
+      y: 318
+      width: 100
+      height: 18
+    updated: 1
+  - name: active
+    text: Active
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 638
+      y: 336
+      width: 100
+      height: 18
+    updated: 1
+  - name: ToneOutput
+    text: ToneOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ToneOutput
+    rect:
+      serializedVersion: 2
+      x: 638
+      y: 354
+      width: 100
+      height: 18
+    updated: 1
+  toneFrequency: 330
+--- !u!1 &1069871148
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1069871153}
+  - 33: {fileID: 1069871152}
+  - 135: {fileID: 1069871151}
+  - 23: {fileID: 1069871150}
+  - 54: {fileID: 1069871149}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!54 &1069871149
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1069871148}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!23 &1069871150
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1069871148}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!135 &1069871151
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1069871148}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &1069871152
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1069871148}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1069871153
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1069871148}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.74, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+--- !u!1 &1392459239
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1392459244}
+  - 20: {fileID: 1392459243}
+  - 92: {fileID: 1392459242}
+  - 124: {fileID: 1392459241}
+  - 81: {fileID: 1392459240}
+  m_Layer: 0
+  m_Name: Main Camera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &1392459240
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1392459239}
+  m_Enabled: 1
+--- !u!124 &1392459241
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1392459239}
+  m_Enabled: 1
+--- !u!92 &1392459242
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1392459239}
+  m_Enabled: 1
+--- !u!20 &1392459243
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1392459239}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
+--- !u!4 &1392459244
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1392459239}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!1 &1693524579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1693524584}
+  - 33: {fileID: 1693524583}
+  - 65: {fileID: 1693524582}
+  - 23: {fileID: 1693524581}
+  - 114: {fileID: 1693524580}
+  - 114: {fileID: 1693524585}
+  - 114: {fileID: 1693524586}
+  m_Layer: 0
+  m_Name: Reactor(Sol)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1693524580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1693524579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0168cd0de15bb49059e9aff2b8523319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 782
+    y: 537
+    width: 117
+    height: 97
+  nodes:
+  - name: ReactingTarget
+    text: Reactor(Sol)
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Reacting Target
+    rect:
+      serializedVersion: 2
+      x: 782
+      y: 557
+      width: 117
+      height: 18
+    updated: 1
+  - name: getTrigger
+    text: Get Trigger
+    nodeType: 2
+    objectTarget: {fileID: 1693524585}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 782
+      y: 575
+      width: 117
+      height: 18
+    updated: 1
+  - name: getCollision
+    text: Get Collision
+    nodeType: 2
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 782
+      y: 593
+      width: 117
+      height: 18
+    updated: 1
+  - name: ColliderReactor
+    text: ColliderReactor
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ColliderReactor
+    rect:
+      serializedVersion: 2
+      x: 782
+      y: 611
+      width: 117
+      height: 18
+    updated: 1
+--- !u!23 &1693524581
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1693524579}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 12697e7cef3884da5a8ede04cc6ba049, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!65 &1693524582
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1693524579}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &1693524583
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1693524579}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1693524584
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1693524579}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+--- !u!114 &1693524585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1693524579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf8e30d5578234ea9a0d9c274403b9eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 640
+    y: 535
+    width: 100
+    height: 97
+  nodes:
+  - name: toneFrequency
+    text: G4
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Tone Frequency
+    rect:
+      serializedVersion: 2
+      x: 640
+      y: 555
+      width: 100
+      height: 18
+    updated: 1
+  - name: frequency
+    text: Frequency
+    nodeType: 2
+    objectTarget: {fileID: 1693524586}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 640
+      y: 573
+      width: 100
+      height: 18
+    updated: 1
+  - name: active
+    text: Active
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 640
+      y: 591
+      width: 100
+      height: 18
+    updated: 1
+  - name: ToneOutput
+    text: ToneOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ToneOutput
+    rect:
+      serializedVersion: 2
+      x: 640
+      y: 609
+      width: 100
+      height: 18
+    updated: 1
+  toneFrequency: 392
+--- !u!114 &1693524586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1693524579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5db5eea559f44205b5cbc891af8af8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 476
+    y: 526
+    width: 133
+    height: 115
+  nodes:
+  - name: curveOutput
+    text: Vibration Curve
+    nodeType: 2
+    objectTarget: {fileID: 350536272}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 546
+      width: 133
+      height: 18
+    updated: 1
+  - name: play
+    text: Play
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 564
+      width: 133
+      height: 18
+    updated: 1
+  - name: playOnly
+    text: Play Only
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 582
+      width: 133
+      height: 18
+    updated: 1
+  - name: multiplier
+    text: Play by multiplier
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 600
+      width: 133
+      height: 18
+    updated: 1
+  - name: CurveOutput
+    text: CurveOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: CurveOutput
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 618
+      width: 133
+      height: 18
+    updated: 1
+  startCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.25
+      value: 1
+      inSlope: 9.892584
+      outSlope: 9.892584
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  loopCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0.35664725
+      outSlope: 0.35664725
+      tangentMode: 0
+    - time: 0.15
+      value: 1.02
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.35
+      value: 0.98
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.5
+      value: 1
+      inSlope: 0.37184897
+      outSlope: 0.37184897
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  endCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: -2.5512786
+      outSlope: -2.5512786
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  outputName: Vibration Curve
+  multiplier: 1
+  speed: 1
+  loop: 1
+  OnStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+--- !u!1 &1955228522
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1955228527}
+  - 33: {fileID: 1955228526}
+  - 65: {fileID: 1955228525}
+  - 23: {fileID: 1955228524}
+  - 114: {fileID: 1955228523}
+  - 114: {fileID: 1955228529}
+  - 114: {fileID: 1955228528}
+  m_Layer: 0
+  m_Name: Reactor(Fa)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1955228523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1955228522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0168cd0de15bb49059e9aff2b8523319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 781
+    y: 407
+    width: 117
+    height: 97
+  nodes:
+  - name: ReactingTarget
+    text: Reactor(Fa)
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Reacting Target
+    rect:
+      serializedVersion: 2
+      x: 781
+      y: 427
+      width: 117
+      height: 18
+    updated: 1
+  - name: getTrigger
+    text: Get Trigger
+    nodeType: 2
+    objectTarget: {fileID: 1955228529}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 781
+      y: 445
+      width: 117
+      height: 18
+    updated: 1
+  - name: getCollision
+    text: Get Collision
+    nodeType: 2
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 781
+      y: 463
+      width: 117
+      height: 18
+    updated: 1
+  - name: ColliderReactor
+    text: ColliderReactor
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ColliderReactor
+    rect:
+      serializedVersion: 2
+      x: 781
+      y: 481
+      width: 117
+      height: 18
+    updated: 1
+--- !u!23 &1955228524
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1955228522}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 12697e7cef3884da5a8ede04cc6ba049, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!65 &1955228525
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1955228522}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &1955228526
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1955228522}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1955228527
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1955228522}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+--- !u!114 &1955228528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1955228522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5db5eea559f44205b5cbc891af8af8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 476
+    y: 398
+    width: 133
+    height: 115
+  nodes:
+  - name: curveOutput
+    text: Vibration Curve
+    nodeType: 2
+    objectTarget: {fileID: 350536272}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 418
+      width: 133
+      height: 18
+    updated: 1
+  - name: play
+    text: Play
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 436
+      width: 133
+      height: 18
+    updated: 1
+  - name: playOnly
+    text: Play Only
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<Trigger>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 454
+      width: 133
+      height: 18
+    updated: 1
+  - name: multiplier
+    text: Play by multiplier
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 472
+      width: 133
+      height: 18
+    updated: 1
+  - name: CurveOutput
+    text: CurveOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: CurveOutput
+    rect:
+      serializedVersion: 2
+      x: 476
+      y: 490
+      width: 133
+      height: 18
+    updated: 1
+  startCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.25
+      value: 1
+      inSlope: 9.892584
+      outSlope: 9.892584
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  loopCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0.35664725
+      outSlope: 0.35664725
+      tangentMode: 0
+    - time: 0.15
+      value: 1.02
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.35
+      value: 0.98
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 0.5
+      value: 1
+      inSlope: 0.37184897
+      outSlope: 0.37184897
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  endCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: -2.5512786
+      outSlope: -2.5512786
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  outputName: Vibration Curve
+  multiplier: 1
+  speed: 1
+  loop: 1
+  OnStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+--- !u!114 &1955228529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1955228522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf8e30d5578234ea9a0d9c274403b9eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRect:
+    serializedVersion: 2
+    x: 638
+    y: 405
+    width: 100
+    height: 97
+  nodes:
+  - name: toneFrequency
+    text: F4
+    nodeType: 0
+    objectTarget: {fileID: 0}
+    tooltip: Tone Frequency
+    rect:
+      serializedVersion: 2
+      x: 638
+      y: 425
+      width: 100
+      height: 18
+    updated: 1
+  - name: frequency
+    text: Frequency
+    nodeType: 2
+    objectTarget: {fileID: 1955228528}
+    tooltip: Output<float>
+    rect:
+      serializedVersion: 2
+      x: 638
+      y: 443
+      width: 100
+      height: 18
+    updated: 1
+  - name: active
+    text: Active
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: Output<bool>
+    rect:
+      serializedVersion: 2
+      x: 638
+      y: 461
+      width: 100
+      height: 18
+    updated: 1
+  - name: ToneOutput
+    text: ToneOutput
+    nodeType: 1
+    objectTarget: {fileID: 0}
+    tooltip: ToneOutput
+    rect:
+      serializedVersion: 2
+      x: 638
+      y: 479
+      width: 100
+      height: 18
+    updated: 1
+  toneFrequency: 349

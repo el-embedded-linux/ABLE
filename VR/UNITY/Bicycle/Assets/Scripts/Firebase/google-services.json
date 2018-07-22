@@ -8,12 +8,16 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:431616969132:android:703dd9ac51a89097",
+        "mobilesdk_app_id": "1:431616969132:android:466121309f5804d9",
         "android_client_info": {
-          "package_name": "com.el.app"
+          "package_name": "com.able.app"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "431616969132-1p1i3evv7mm5v44p4eov7r2o7sg7abkj.apps.googleusercontent.com",
+          "client_type": 3
+        },
         {
           "client_id": "431616969132-1p1i3evv7mm5v44p4eov7r2o7sg7abkj.apps.googleusercontent.com",
           "client_type": 3

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +8,13 @@ public class ExitButton : MonoBehaviour {
 
     void Start()
     {
-        thisButton.onClick.AddListener(Exit);
+        try {
+            thisButton.onClick.AddListener(Exit);
+        }catch (NullReferenceException ex)
+        {
+            Debug.Log("예외발생");
+        }
+       
     }
 
     public void Exit()

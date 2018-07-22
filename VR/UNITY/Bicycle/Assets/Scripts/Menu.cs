@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,5 +44,10 @@ public class Menu : MonoBehaviour {
     public void OffMenu()
     {
         showFlag = false;
+    }
+
+    public static void SetChecked(string menuItemName, bool setPrefsForUtilities)
+    {
+        throw new NotImplementedException();
     }
 }
