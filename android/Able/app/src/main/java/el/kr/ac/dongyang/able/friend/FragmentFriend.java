@@ -61,7 +61,7 @@ public class FragmentFriend extends Fragment{
         getActivity().setTitle("Friend");
 
         //친구 추가 : 유저목록으로 넘어감
-        btn = (Button) view.findViewById(R.id.insert_friend);
+        btn = view.findViewById(R.id.insert_friend);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,11 +76,13 @@ public class FragmentFriend extends Fragment{
             }
         });
 
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.fragment_recyclerview_friend);
+        RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview_friend);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new FriendlistFragmentRecyclerViewAdapter());
         user = FirebaseAuth.getInstance().getCurrentUser();
-        uid = user.getUid();
+        if(user != null){
+            uid = user.getUid();
+        }
 
         return view;
     }
@@ -101,14 +103,16 @@ public class FragmentFriend extends Fragment{
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     friendList.clear();
-                    for(DataSnapshot snapshot :dataSnapshot.child(uid).getChildren()){
-                        friendMap.clear();
-                        friendMap.put(snapshot.getKey(), snapshot.getValue());
-                        Iterator iterator = friendMap.entrySet().iterator();
-                        while (iterator.hasNext()) {
-                            entry = (Map.Entry)iterator.next();
-                            Log.d("entry","Key: " + entry.getKey() + ", Value: " + entry.getValue());
-                            friendList.add(entry.getKey().toString());
+                    if(user != null) {
+                        for (DataSnapshot snapshot : dataSnapshot.child(uid).getChildren()) {
+                            friendMap.clear();
+                            friendMap.put(snapshot.getKey(), snapshot.getValue());
+                            Iterator iterator = friendMap.entrySet().iterator();
+                            while (iterator.hasNext()) {
+                                entry = (Map.Entry) iterator.next();
+                                Log.d("entry", "Key: " + entry.getKey() + ", Value: " + entry.getValue());
+                                friendList.add(entry.getKey().toString());
+                            }
                         }
                     }
                 notifyDataSetChanged();

@@ -4,6 +4,7 @@ var markerLayer_e = new Tmap.Layer.Markers("end");  // 목적지
 var markerLayer_i = new Tmap.Layer.Markers("iam");  // 현재위치
 var markerLayer = new Tmap.Layer.Markers();
 var routeLayer = new Tmap.Layer.Vector("route");
+var pointLayer = new Tmap.Layer.Vector("point");
 routeLayer.style ={
     fillColor:"#FF0000",
     fillOpacity:0.2,
@@ -30,6 +31,9 @@ var input_s = false;
 var input_e = false;
 
 var prtcl;
+var kmlForm;
+var pointFeature;
+var vectorcode = 0;
 
 // 홈페이지 로딩과 동시에 맵을 호출할 함수
 function initTmap(){
@@ -45,6 +49,8 @@ function initTmap(){
     map.addLayer(markerLayer_e);
     map.addLayer(markerLayer_i);
     map.addLayer(markerLayer);
+    map.addLayer(routeLayer);
+    map.addLayer(pointLayer);
 
     // HTML5의 geolocation으로 사용할 수 있는지 확인합니다. 
     // 현재 위치 정보를 얻어오는 메서드이다. 사용자가 허용을 할 경우 실행된다.
@@ -61,7 +67,6 @@ function geoLocation(location) {
         // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
         lat = position.coords.latitude; // 위도
         lon = position.coords.longitude; // 경도
-
         moveCoordinate(location, lon, lat);
     });
 }
@@ -71,11 +76,8 @@ function moveCoordinate (value, x, y) {
     var PR_4326 = new Tmap.Projection("EPSG:4326");  // WGS84 GEO 좌표계인 EPSG:4326
 
     lonlat = new Tmap.LonLat(x, y).transform(PR_4326, PR_3857);
-
     setXY(value, x, y);
-
     setMarker(value,lonlat);
-
     map.setCenter(lonlat,15); // geolocation으로 얻어온 좌표로 지도의 중심을 설정합니다.
 }
 
@@ -92,7 +94,7 @@ function geoLo(x,y) {
 function onClick(e){
     lonlat = map.getLonLatFromViewPortPx(e.xy).transform("EPSG:3857", "EPSG:4326");
     //클릭 부분의 ViewPortPx를 LonLat 좌표로 변환합니다.
-    var resultlonlat ='클릭한 위치의 좌표는'+lonlat+'입니다.'; 
+    var resultlonlat ='클릭한 위치의 좌표는'+lonlat+'입니다.';
 	var resultDiv = document.getElementById("resultlonlat");
 	resultDiv.innerHTML = resultlonlat;
     x = lonlat.lon;
@@ -213,9 +215,6 @@ function reset () {
     $("#end").val(null);
     removeMarker("s");
     removeMarker("e");
-    endInputS();
-    endInputE();
-    resetResult();
     map.removeLayer(routeLayer);
 }
 
@@ -237,20 +236,71 @@ function sendMessage(arg){
      window.tmap.setMessage(arg);
 }
 
+function sendTimeDistance(arg){
+    window.tmap.setTimeDistance(arg);
+}
+
 //경로탐색
 function distance(startx, starty, endx, endy) {
+    if(vectorcode == 1){
+        map.removeLayer(pointLayer);
+        map.removeLayer(routeLayer);
+        routeLayer.removeAllFeatures();
+        pointLayer.removeAllFeatures();
+    }
     start_x = startx;
     start_y = starty;
-    end_x = end_x;
-    end_y = end_y;
+    end_x = endx;
+    end_y = endy;
 
-    lonlat = new Tmap.LonLat(startx, starty).transform("EPSG:4326", "EPSG:3857");
-    setXY("s", startx, starty);
+    lonlat = new Tmap.LonLat(start_x, start_y).transform("EPSG:4326", "EPSG:3857");
+    setXY("s", start_x, start_y);
     setMarker("s",lonlat);
 
-    lonlat2 = new Tmap.LonLat(endx, endy).transform("EPSG:4326", "EPSG:3857");
-    setXY("e", endx, endy);
+    lonlat2 = new Tmap.LonLat(end_x, end_y).transform("EPSG:4326", "EPSG:3857");
+    setXY("e", end_x, end_y);
     setMarker("e",lonlat2);
+
+    if (start_x != null && end_x != null) {
+            $.ajax({
+                method:"POST",
+                headers:headers,
+                url:"https://api2.sktelecom.com/tmap/routes?version=1",
+                data:{
+                    startX:start_x,
+                    startY:start_y,
+                    endX:end_x,
+                    endY:end_y,
+                    reqCoordType : "WGS84GEO",
+                    resCoordType : "EPSG3857",
+                    angle:"172",
+                    searchOption:0
+                },
+                success:function(data) {
+                    var obj = JSON.stringify(data);
+                    obj = JSON.parse(obj);
+                    var total = obj.features[0].properties;
+
+                    var time = "";
+                    if((total.totalTime*3) > 3600) {
+                        time = Math.floor((total.totalTime*3)/3600) + "시간 " + Math.floor((total.totalTime*3)%3600/60) + "분";
+                    } else {
+                        time = Math.floor((total.totalTime*3)%3600/60) + "분 ";
+                    }
+                    var distance = total.totalDistance/1000;
+                    console.log(time);
+                    console.log(distance);
+
+                    var timeDistance = time + "," + distance + "km";
+                    sendTimeDistance(timeDistance);
+
+                },
+                error:function(request,status,error){
+                    alert("출발지 혹은 도착지를 잘못 지정하였습니다.");
+                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
+        }
 
     if (start_x != null && end_x != null) {
         $.ajax({
@@ -268,39 +318,7 @@ function distance(startx, starty, endx, endy) {
                 searchOption:0
             },
             success:function(response) {
-                /*var obj = JSON.stringify(data);
-                obj = JSON.parse(obj);
-                var total = obj.features[0].properties;
-                var start = 0;
-                var end;
-
-                var time = "";
-                if(total.totalTime > 3600) {
-                    time = Math.floor(total.totalTime/3600) + "시간 " + Math.floor(total.totalTime%3600/60) + "분";
-                } else {
-                    time = Math.floor(total.totalTime%3600/60) + "분 ";
-                }
-
-                map.addLayer(routeLayer);
-                routeLayer.removeAllFeatures();
-                
-
-                var vector_format = new Tmap.Format.GeoJSON().read(data);
-
-                routeLayer.addFeatures(vector_format);
-
-                $("#result").text("소요 시간: " + time);
-                $("#result1").text("거리: " + total.totalDistance/1000+ "km ");
-                //$("#result2").text("통행료: " + total.totalFare);
-                //$("#result3").text("택시비: " + total.taxiFare);
-            },
-            error:function(request,status,error){
-                alert("출발지 혹은 도착지를 잘못 지정하였습니다.");
-                reset();
-                console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-        });*/
-
+                vectorcode = 1;
                 prtcl = response;
 
                 map.addLayer(routeLayer);
@@ -308,7 +326,6 @@ function distance(startx, starty, endx, endy) {
         		// 5. 경로 탐색  결과 Line 그리기
         		//경로 탐색  결과 POINT 찍기
         		/* -------------- Geometry.Point -------------- */
-        		var pointLayer = new Tmap.Layer.Vector("point");
         		var prtclString = new XMLSerializer().serializeToString(prtcl);//xml to String
         		   xmlDoc = $.parseXML( prtclString ),
         		   $xml = $( xmlDoc ),
@@ -327,13 +344,12 @@ function distance(startx, starty, endx, endy) {
         			if(nodeType == "POINT"){
         			    var description;
         			    description = element.getElementsByTagName("description")[0].childNodes[0].nodeValue;
-        			    console.log("code:"+description);//"code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error
+        			    //console.log("code:"+description);//"code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error
 
         				var point = element.getElementsByTagName("coordinates")[0].childNodes[0].nodeValue.split(',');
         				var lonlat = new Tmap.LonLat(point).transform("EPSG:3857", "EPSG:4326");
-        				console.log("code:"+lonlat);
+        				//console.log("code:"+lonlat);
                         sendMessage(lonlat.toString());
-
 
         				var geoPoint =new Tmap.Geometry.Point(point[0],point[1]);
         				var pointFeature = new Tmap.Feature.Vector(geoPoint, null, style_red);
@@ -354,13 +370,11 @@ function distance(startx, starty, endx, endy) {
         		        pointRadius: 2,
         		        title: "this is a blue line"
         		}
-        		var kmlForm = new Tmap.Format.KML().read(prtcl);
+        		kmlForm = new Tmap.Format.KML().read(prtcl);
         		routeLayer.addFeatures(kmlForm);
 
-
-
         		// 6. 경로탐색 결과 반경만큼 지도 레벨 조정
-        		//map.zoomToExtent(routeLayer.getDataExtent());
+        		map.zoomToExtent(routeLayer.getDataExtent());
 
         	},
         	error:function(request,status,error){
@@ -370,7 +384,7 @@ function distance(startx, starty, endx, endy) {
     }
 }
 
-//주소 검색. 검색한 주소를 full 주소로 변경해준다.
+//주소 검색. 검색한 주소를 전체 주소로 변경해준다.
 function searchAdress(input, lat, lon) {
     $.ajax({
         method: "GET",

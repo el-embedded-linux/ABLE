@@ -57,7 +57,9 @@ public class FragmentInformation extends Fragment{
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        uid = user.getUid();
+        if(user != null){
+            uid = user.getUid();
+        }
         userModel = new UserModel();
 
         //user가 있으면 기존에 저장된 값을 호출함.

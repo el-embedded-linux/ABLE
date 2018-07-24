@@ -85,7 +85,6 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
         ConstraintLayout monthConslay = (ConstraintLayout) view.findViewById(R.id.constraintLayoutMonth);
 
         monthNum = (TextView) view.findViewById(R.id.Month);
-        //monthHan = (TextView)view.findViewById(R.id.month);
 
         cal = Calendar.getInstance();
 
@@ -133,7 +132,9 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
         cOnsume = (TextView) view.findViewById(R.id.consume);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        uid = user.getUid();
+        if(user != null){
+            uid = user.getUid();
+        }
         userModel = new UserModel();
         healthModel = new HealthModel();
         Log.d(TAG, "Initalizing Bluetooth adapter...");
@@ -197,21 +198,24 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
         }
         setdate(date);
 
-        mDatabase.child("HEALTH").child(uid).child(date).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                healthModel = dataSnapshot.getValue(HealthModel.class);
-                if(healthModel!=null) {
-                    cal2 = healthModel.kcal;
-                    speed = healthModel.speed;
-                    Log.d(LOG_TAG, "cal2:  " + cal2 + "speed: " + cal2);
+        if(user != null) {
+            mDatabase.child("HEALTH").child(uid).child(date).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    healthModel = dataSnapshot.getValue(HealthModel.class);
+                    if (healthModel != null) {
+                        cal2 = healthModel.kcal;
+                        speed = healthModel.speed;
+                        Log.d(LOG_TAG, "cal2:  " + cal2 + "speed: " + cal2);
+                    }
                 }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
     @Override
     public void onDestroyView() {

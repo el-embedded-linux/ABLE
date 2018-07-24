@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/bg_navigation"
-    android:paddingTop="70dp"
+    android:orientation="vertical"
+    android:paddingBottom="15dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
-    android:paddingBottom="15dp"
-    >
+    android:paddingTop="70dp">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/naviText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp">
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/naviSearch"
@@ -24,27 +28,51 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/magnifier"
-            android:layout_marginTop="5dp"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/naviEnd"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:layout_toRightOf="@+id/naviSearch"
             android:hint="검색"
-            />
+            android:textColor="#ffffff"
+            android:textColorHint="#d5d5d5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/searhAddr"
+            app:layout_constraintStart_toEndOf="@+id/naviSearch"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/searhAddr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="검색"
+            android:background="@drawable/frame"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_naviList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/naviText2"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/frame"
-        android:layout_below="@+id/naviText2">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/naviText2"
+        app:layout_constraintTop_toBottomOf="@+id/naviText2">
     </android.support.v7.widget.RecyclerView>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

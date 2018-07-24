@@ -59,7 +59,9 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new UserlistFragmentRecyclerViewAdapter());
         user = FirebaseAuth.getInstance().getCurrentUser();
-        uid = user.getUid();
+        if(user != null){
+            uid = user.getUid();
+        }
 
         //리사이클러뷰 클릭이벤트
         recyclerView.addOnItemTouchListener(
@@ -90,9 +92,11 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     userModels.clear();
-                    for(DataSnapshot snapshot :dataSnapshot.getChildren()){
-                        userModels.add(snapshot.getValue(UserModel.class));
-                }
+                    if(user != null){
+                        for(DataSnapshot snapshot :dataSnapshot.getChildren()){
+                            userModels.add(snapshot.getValue(UserModel.class));
+                        }
+                    }
                 notifyDataSetChanged();
                 }
 

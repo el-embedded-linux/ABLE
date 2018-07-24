@@ -108,7 +108,9 @@ public class FragmentSetting extends Fragment{
         getActivity().setTitle("Setting");
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        uid = user.getUid();
+        if(user != null){
+            uid = user.getUid();
+        }
 
         userModel = new UserModel();
         healthModel = new HealthModel();

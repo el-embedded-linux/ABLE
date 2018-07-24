@@ -29,6 +29,8 @@ import el.kr.ac.dongyang.able.BusProvider;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.RecyclerItemClickListener;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 
 /**
  * Created by impro on 2018-05-23.
@@ -73,8 +75,10 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
                 nEnd.setText(poiList.get(position).getPOIName());
                 endList.clear();
                 busitem.clear();
+                String address = poiList.get(position).getPOIName().toString();
                 String lon = Double.toString(poiList.get(position).getPOIPoint().getLongitude());
                 String lat = Double.toString(poiList.get(position).getPOIPoint().getLatitude());
+                busitem.add(address);
                 busitem.add(lon);
                 busitem.add(lat);
                 for(int i = 0; i<busitem.size(); i++){
@@ -87,8 +91,13 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
             }
         }));
 
-        nEnd = (EditText) view.findViewById(R.id.naviEnd);
+        nEnd = view.findViewById(R.id.naviEnd);
+        nEnd.setFocusableInTouchMode(true);
+        nEnd.requestFocus();
         nEnd.setInputType ( InputType. TYPE_TEXT_FLAG_NO_SUGGESTIONS );
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
         //목적지 에디트텍스트뷰
         nEnd.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -118,11 +127,11 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
             }
         });
         //서치버튼
-        nSearch = view.findViewById(R.id.naviSearch);
+        nSearch = view.findViewById(R.id.searhAddr);
         nSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                busProvider.post(busitem.get(0) + "," + busitem.get(1));
+                busProvider.post(busitem.get(0) + "," + busitem.get(1) + "," + busitem.get(2));
                 //프래그먼트 종료됨
                 getFragmentManager().beginTransaction().remove(FragmentNaviList.this).commitNow();
             }
