@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,34 +10,73 @@
 
     <Switch
         android:id="@+id/hSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="74dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="70dp"
         android:thumb="@drawable/switch_thumb"
-        android:track="@drawable/switch_track_selector" />
+        android:track="@drawable/switch_track_selector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="78dp"
-        android:text="실내                      실외"
-        android:textColor="#ffffff" />
+        android:text="실내               실외"
+        android:textColor="#ffffff"
+        android:textSize="16.7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <RelativeLayout
-        android:id="@+id/hWether"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/hSwitch">
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hSwitch">
 
-        <ImageView
+        <TextView
             android:id="@+id/weather"
-            android:layout_width="123dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="60dp"
-            android:src="@drawable/cloud_1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="165dp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="90sp"/>
+
+
+
+        <TextView
+            android:id="@+id/Temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="195dp"
+            android:textColor="#ffffff"
+            android:textSize="66dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/weather" />
 
         <TextView
             android:id="@+id/hTemperature"
@@ -45,66 +84,158 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/weather"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="41dp"
-            android:text="10 ℃"
+            android:layout_marginEnd="45dp"
+            android:layout_marginTop="225dp"
+            android:text="℃"
             android:textColor="#ffffff"
-            android:textSize="66dp" />
+            android:textSize="33dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/Temperature" />
+
 
         <TextView
-            android:id="@+id/hUpDown"
+            android:id="@+id/Temp_max"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/hTemperature"
             android:layout_alignEnd="@+id/hTemperature"
-            android:text="5º / 11º"
+            android:layout_marginEnd="120dp"
+            android:layout_marginTop="160dp"
             android:textColor="#d1d1d1"
-            android:textSize="16.7dp" />
-    </RelativeLayout>
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toTopOf="@+id/hTemperature"
+            app:layout_constraintStart_toEndOf="@+id/Temperature"/>
+
+        <TextView
+            android:id="@+id/hTemperature1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="105dp"
+            android:layout_marginTop="160dp"
+            android:text="℃"
+            android:textColor="#d1d1d1"
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toTopOf="@+id/hTemperature"
+            app:layout_constraintStart_toEndOf="@+id/Temperature"/>
+
+        <TextView
+            android:id="@+id/slash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="85dp"
+            android:layout_marginTop="160dp"
+            android:text="/"
+            android:textColor="#d1d1d1"
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toTopOf="@+id/hTemperature"
+            app:layout_constraintStart_toEndOf="@+id/Temperature" />
+
+        <TextView
+            android:id="@+id/Temp_min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/hTemperature"
+            android:layout_alignEnd="@+id/hTemperature"
+            android:layout_marginEnd="60dp"
+            android:layout_marginTop="160dp"
+            android:textColor="#d1d1d1"
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toTopOf="@+id/hTemperature"
+            app:layout_constraintStart_toEndOf="@+id/Temperature" />
+
+        <TextView
+            android:id="@+id/hTemperature2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="45dp"
+            android:layout_marginTop="160dp"
+            android:text="℃"
+            android:textColor="#d1d1d1"
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toTopOf="@+id/hTemperature"
+            app:layout_constraintStart_toEndOf="@+id/Temperature" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="회원"
+        android:textColor="#ffffff"
+        android:textSize="33.3dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/hText2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/hText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/hWether"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="53.7dp"
-        android:text="박경린 님!"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="8dp"
+        android:text="님!"
         android:textColor="#ffffff"
-        android:textSize="33.3dp"
-        android:textStyle="bold" />
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintStart_toEndOf="@+id/name" />
 
     <TextView
         android:id="@+id/hText2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_below="@+id/hText1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="39.3dp"
+        android:layout_marginBottom="8dp"
         android:text="오늘은 어디로"
         android:textColor="#ffffff"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/hText3"
+        app:layout_constraintStart_toStartOf="@+id/hText3" />
 
     <TextView
         android:id="@+id/hText3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/hText2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16.3dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="여행을 떠나실건가요?"
         android:textColor="#ffffff"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/hGoNavi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/hGoNavi"
-        android:layout_width="144.3dp"
+        android:layout_width="144dp"
         android:layout_height="40dp"
-        android:layout_below="@+id/hText3"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"
+        android:layout_marginBottom="128dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/round_button"
         android:text="목적지 설정"
         android:textColor="#ffffff"
-        android:textSize="16.7dp" />
+        android:textSize="16.7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

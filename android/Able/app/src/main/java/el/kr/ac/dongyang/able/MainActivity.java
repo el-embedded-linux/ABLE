@@ -1,41 +1,40 @@
 package el.kr.ac.dongyang.able;
 
-import android.content.Context;
+import android.animation.ObjectAnimator;
+import android.animation.StateListAnimator;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import el.kr.ac.dongyang.able.friend.FragmentFriend;
+import el.kr.ac.dongyang.able.health.FragmentHealthcare;
+import el.kr.ac.dongyang.able.login.ActivityLogin;
+import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
+import el.kr.ac.dongyang.able.setting.FragmentSetting;
 
 
 //기본적으로 프래그먼트홈이 뜨도록 되어있음. content_xml에서 설정됨.
@@ -45,6 +44,10 @@ public class MainActivity extends AppCompatActivity
     private String TAG = "Able";
     FragmentTransaction ft;
     String fragmentTag;
+    Fragment fragmentNav,fragmentSet;
+    FirebaseUser firebaseUser;
+    TextView weatherIcon, temperature,temp_max,temp_min;
+    Icon_Manager icon_manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        fragmentNav = new FragmentNavigation();
+        fragmentSet = new FragmentSetting();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //checkPermition();
 
@@ -64,8 +70,34 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        weatherIcon = (TextView) findViewById(R.id.weather);
+        temperature = (TextView) findViewById(R.id.Temperature);
+        temp_max = (TextView) findViewById(R.id.Temp_max);
+        temp_min = (TextView) findViewById(R.id.Temp_min);
+        icon_manager = new Icon_Manager();
+
+        ((TextView) findViewById(R.id.weather)).setTypeface(icon_manager.get_icons("fonts/weathericons-regular-webfont.ttf", this));
+
+        Function.placeIdTask asyncTask =new Function.placeIdTask(new Function.AsyncResponse() {
+            public void processFinish(String weather_temperature, String weather_temp_max, String weather_temp_min,String updatedOn, String weather_iconText, String sun_rise) {
+
+                weatherIcon.setText(Html.fromHtml(weather_iconText));
+                temperature.setText(weather_temperature);
+                temp_max.setText(weather_temp_max);
+                temp_min.setText(weather_temp_min);
+            }
+        });
+        asyncTask.execute("37.500774", "126.867899"); //  asyncTask.execute("Latitude", "Longitude")
+
         getHashKey();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
     //해시키 구하는 함수
     private void getHashKey() {
         try {
@@ -85,7 +117,7 @@ public class MainActivity extends AppCompatActivity
     //drawer 백버튼 클릭시 동작
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -111,14 +143,18 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
-            Fragment fragment = new FragmentFriend();
-            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_layout, fragment);
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
+            if (firebaseUser != null) {
+                Toast.makeText(getApplicationContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            } else {
+                Fragment fragment = new FragmentFriend();
+                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+                Log.i("fagmentTag", fragmentTag);
+                getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.main_layout, fragment);
+                ft.addToBackStack(fragmentTag);
+                ft.commit();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -132,44 +168,46 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_login) {
-            Fragment fragment = new FragmentLogin();
+            Fragment fragment = new ActivityLogin();
             fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
             Log.i("fagmentTag", fragmentTag);
             getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_layout, fragment);
+            ft.add(R.id.main_layout, fragment);
             ft.addToBackStack(fragmentTag);
             ft.commit();
 
         } else if (id == R.id.nav_navigation) {     //영훈
-            Fragment fragment = new FragmentNavigation();
-            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+            fragmentTag = fragmentNav.getClass().getSimpleName();  //FragmentLogin
             Log.i("fagmentTag", fragmentTag);
             getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_layout, fragment);
+            ft.add(R.id.main_layout, fragmentNav);
             ft.addToBackStack(fragmentTag);
             ft.commit();
 
         } else if (id == R.id.nav_helthcare) {      //승현
-            Fragment fragment = new FragmentHealthcare();
-            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_layout, fragment);
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
+            if (firebaseUser != null) {
+                Toast.makeText(getApplicationContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            } else {
+                Fragment fragment = new FragmentHealthcare();
+                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+                Log.i("fagmentTag", fragmentTag);
+                getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.add(R.id.main_layout, fragment);
+                ft.addToBackStack(fragmentTag);
+                ft.commit();
+            }
 
         } else if (id == R.id.nav_groupriding) {    //지수
 
         } else if (id == R.id.nav_setting) {        //수현
-            Fragment fragment = new FragmentSetting();
-            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+            fragmentTag = fragmentSet.getClass().getSimpleName();  //FragmentLogin
             Log.i("fagmentTag", fragmentTag);
             getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_layout, fragment);
+            ft.add(R.id.main_layout, fragmentSet);
             ft.addToBackStack(fragmentTag);
             ft.commit();
 
