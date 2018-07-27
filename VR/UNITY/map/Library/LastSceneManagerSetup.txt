@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/SnowMountainMap.unity
+- path: Assets/Snow Mountain/Scenes/SnowMountains.unity
   isLoaded: 1
   isActive: 1
