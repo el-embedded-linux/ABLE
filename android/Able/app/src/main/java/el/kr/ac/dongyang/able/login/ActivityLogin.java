@@ -39,12 +39,19 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.StringTokenizer;
 
+import el.kr.ac.dongyang.able.BusProvider;
 import el.kr.ac.dongyang.able.FragmentHome;
+import el.kr.ac.dongyang.able.MainActivity;
 import el.kr.ac.dongyang.able.R;
+import el.kr.ac.dongyang.able.db.Userdb;
+import el.kr.ac.dongyang.able.eventbus.UserEvent;
 import el.kr.ac.dongyang.able.model.UserModel;
 
 
@@ -68,9 +75,12 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
     private Button exist;
     android.support.v4.app.FragmentTransaction ft;
     String fragmentTag;
+    private String userName;
+    private UserModel userModel;
 
     public ActivityLogin() {
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,7 +88,9 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
         getActivity().setTitle("Login");
 
         //google_btn = signInButton
-        google_btn = (SignInButton) view.findViewById(R.id.google_btn);
+        google_btn = view.findViewById(R.id.google_btn);
+        facebook_btn = view.findViewById(R.id.facebook_btn);
+
         google_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +123,6 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
         //페이스북 로그인
         // Initialize Facebook Login button
         mcallbackManager = CallbackManager.Factory.create();
-        facebook_btn = (LoginButton) view.findViewById(R.id.facebook_btn);
         facebook_btn.setReadPermissions("email");
         facebook_btn.setFragment(this);
         facebook_btn.registerCallback(mcallbackManager, new FacebookCallback<LoginResult>() {
@@ -120,10 +131,12 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
+
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
             }
+
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
@@ -174,6 +187,7 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
             }
         });
     }
+
     //구글 로그인
     //사용자가 정상적으로 로그인한 후에 GoogleSignInAccount 개체에서 ID 토큰을 가져와서
     // Firebase 사용자 인증 정보로 교환하고 Firebase 사용자 인증 정보를 사용해 Firebase에 인증.
@@ -215,6 +229,7 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
+
     //구글,페이스북으로부터 로그인 유저 정보 획득.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -269,15 +284,32 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
     //ui 변경
     private void updateUI(FirebaseUser user) {
         if (user != null) {
+
             google_btn.setVisibility(View.GONE);
             facebook_btn.setVisibility(View.GONE);
             exist.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
+            String uid = user.getUid();
+
+            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    userModel = dataSnapshot.getValue(UserModel.class);
+                    if (userModel != null) {
+                        userName = userModel.getUserName();
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
         } else {
             exist.setVisibility(View.VISIBLE);
             google_btn.setVisibility(View.VISIBLE);
             facebook_btn.setVisibility(View.VISIBLE);
             signOutButton.setVisibility(View.GONE);
+            userName = "회원";
         }
     }
 
@@ -285,10 +317,14 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         //Toast.makeText(getApplicationContext(), ""+connectionResult, Toast.LENGTH_SHORT).show();
     }
+
     //백버튼 눌렀을때 메뉴바에 에이블이 뜨도록
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         getActivity().setTitle("Able");
+        BusProvider.getInstance().post(new UserEvent(userName));
+        //FragmentHome fragmentHome = new FragmentHome();
+        //fragmentHome.onResume();
     }
 }

@@ -36,7 +36,7 @@
             android:layout_marginStart="8dp"
             android:src="@drawable/email"
             app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
-            app:layout_constraintStart_toStartOf="@+id/view14" />
+            app:layout_constraintStart_toStartOf="@+id/view3" />
 
         <View
             android:id="@+id/view12"
@@ -46,7 +46,7 @@
             android:layout_marginStart="8dp"
             android:background="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/view14"
+            app:layout_constraintEnd_toStartOf="@+id/view3"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
@@ -61,7 +61,7 @@
             android:inputType="textEmailAddress"
             android:textAlignment="center"
             android:textColorHint="#D5D5D5"
-            app:layout_constraintBottom_toTopOf="@+id/view14"
+            app:layout_constraintBottom_toTopOf="@+id/view3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -72,10 +72,10 @@
             android:layout_marginBottom="8dp"
             android:background="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/view14" />
+            app:layout_constraintStart_toEndOf="@+id/view3" />
 
         <View
-            android:id="@+id/view14"
+            android:id="@+id/view3"
             android:layout_width="260dp"
             android:layout_height="1dp"
             android:layout_marginBottom="8dp"

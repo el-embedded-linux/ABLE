@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity
             Log.i("fagmentTag", fragmentTag);
             getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.main_layout, fragmentNav);
+            ft.add(R.id.main_layout, fragmentNav, "FRAGMENT_NAVIGATION");
             ft.addToBackStack(fragmentTag);
             ft.commit();
 

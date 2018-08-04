@@ -1,331 +1,346 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_home">
-
-    <View
-        android:id="@+id/view9"
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="340dp"
-        android:layout_marginTop="419dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:background="@drawable/bg_home"
+    android:paddingTop="70dp">
 
     <ImageView
         android:id="@+id/el_logo"
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:layout_marginEnd="90dp"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:src="@drawable/el_logo"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--<ImageView
-        android:id="@+id/menu"
-        android:layout_width="19.3dp"
-        android:layout_height="19.3dp"
-        android:layout_marginStart="18.3dp"
-        android:layout_marginTop="39dp"
-        android:src="@drawable/menu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/users"
-        android:layout_width="24dp"
-        android:layout_height="22.3dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="38dp"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/Register"
-        android:layout_width="61dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="164dp"
-        android:layout_marginStart="170dp"
-        android:layout_marginTop="40dp"
-        android:text="Register"
-        android:textColor="#ffffff"
+        <ImageView
+            android:id="@+id/email"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/email"
+            app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
+            app:layout_constraintStart_toStartOf="@+id/view3" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/view3"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/edit_emailtxt"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@null"
+            android:hint="이메일"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            android:textColorHint="#D5D5D5"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toTopOf="@+id/view3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/email" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view3" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="260dp"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
+        app:layout_constraintStart_toStartOf="parent">
 
-    <!--<ImageView
-        android:id="@+id/users1"
-        android:src="@drawable/users"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="38dp"
+        <ImageView
+            android:id="@+id/name"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/email"
+            app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
+            app:layout_constraintStart_toStartOf="@+id/view6" />
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/view6"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/edit_nametxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@null"
+            android:hint="이름"
+            android:textColor="#ffffff"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            android:textColorHint="#D5D5D5"
+            app:layout_constraintBottom_toTopOf="@+id/view6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/name" />
+
+        <View
+            android:id="@+id/view5"
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view6" />
+
+        <View
+            android:id="@+id/view6"
+            android:layout_width="260dp"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>-->
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageView
-        android:id="@+id/email"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="354dp"
-        android:src="@drawable/email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/passwd"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/lock"
+            app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
+            app:layout_constraintStart_toStartOf="@+id/view9" />
 
-    <EditText
-        android:id="@+id/edit_emailtxt"
-        android:layout_width="101dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="50dp"
-        android:background="@null"
-        android:hint="E-mail"
-        android:inputType="textEmailAddress"
-        android:textColorHint="#FFFFFF"
-        android:textSize="11sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/el_logo" />
+        <View
+            android:id="@+id/view7"
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/view9"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <View
-        android:layout_width="260dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="375dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/edit_passwdtxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@null"
+            android:hint="비밀번호"
+            android:textColor="#ffffff"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            android:textColorHint="#D5D5D5"
+            app:layout_constraintBottom_toTopOf="@+id/view9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/passwd" />
 
-    <View
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="340dp"
-        android:layout_marginTop="464dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/view8"
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view9" />
 
-    <View
-        android:id="@+id/view10"
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="340dp"
-        android:layout_marginTop="516dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/view9"
+            android:layout_width="260dp"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <View
-        android:id="@+id/view11"
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="340dp"
-        android:layout_marginTop="465dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
-    <View
-        android:id="@+id/view7"
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="340dp"
-        android:layout_marginTop="366dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/agreetxt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="466dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/passwdcheck"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/lock"
+            app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
+            app:layout_constraintStart_toStartOf="@+id/view12" />
 
-    <View
-        android:id="@+id/view6"
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="515dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/view10"
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/view12"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <View
-        android:id="@+id/view5"
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="417dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/passwdchecktxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@null"
+            android:hint="비밀번호확인"
+            android:textColor="#ffffff"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            android:textColorHint="#D5D5D5"
+            app:layout_constraintBottom_toTopOf="@+id/view12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/passwdcheck" />
 
-    <View
-        android:id="@+id/view4"
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="417dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/view11"
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view12" />
 
-    <View
-        android:id="@+id/view3"
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="366dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/view12"
+            android:layout_width="260dp"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/name"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="404dp"
-        android:src="@drawable/email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edit_nametxt"
-        android:layout_width="101dp"
-        android:layout_height="13dp"
-        android:layout_marginStart="105dp"
-        android:layout_marginTop="404dp"
-        android:background="@null"
-        android:hint="이름"
-        android:textColorHint="#FFFFFF"
-        android:textSize="11sp"
-        app:layout_constraintStart_toEndOf="@+id/name"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:layout_width="260dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="427dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/passwd"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="454dp"
-        android:src="@drawable/lock"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edit_passwdtxt"
-        android:layout_width="101dp"
-        android:layout_height="13dp"
-        android:layout_marginStart="196dp"
-        android:layout_marginTop="453dp"
-        android:background="@null"
-        android:hint="비밀번호"
-        android:textColorHint="#FFFFFF"
-        android:inputType="textPassword"
-        android:textSize="11sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:layout_width="260dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="475dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/passwdcheck"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="504dp"
-        android:src="@drawable/lock"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/passwdchecktxt"
-        android:layout_width="101dp"
-        android:layout_height="13dp"
-        android:layout_marginStart="186dp"
-        android:layout_marginTop="501dp"
-        android:background="@null"
-        android:hint="비밀번호 확인"
-        android:textColorHint="#FFFFFF"
-        android:inputType="textPassword"
-        android:textSize="11sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:layout_width="260dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="525dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/agreetxt"
-        android:layout_width="160dp"
-        android:layout_height="13dp"
-        android:layout_marginStart="138dp"
-        android:layout_marginTop="555dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="개인정보 약관에 동의하십니까?"
         android:textColor="#FFFFFF"
         android:textSize="11sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/sign_up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
         android:id="@+id/check1"
         android:layout_width="25dp"
         android:layout_height="22dp"
-        android:layout_marginStart="283dp"
-        android:layout_marginTop="552dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/agreetxt"
+        app:layout_constraintStart_toEndOf="@+id/agreetxt"
+        app:layout_constraintTop_toTopOf="@+id/agreetxt" />
 
     <Button
         android:id="@+id/sign_up"
         android:layout_width="135dp"
         android:layout_height="30dp"
-        android:layout_marginStart="148dp"
-        android:layout_marginTop="596dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/sign_up_button"
         android:text="회원가입"
         android:textColor="#8C82A8"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

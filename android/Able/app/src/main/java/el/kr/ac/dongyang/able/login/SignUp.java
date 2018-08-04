@@ -31,12 +31,10 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 public class SignUp extends Fragment{
 
-
     private static final String TAG = "FragmentLogin";
     private static final int RC_SIGN_IN = 9001;
 
     private FirebaseAuth mAuth;
-
 
     private TextView mStatusTextView;
     private TextView mDetailTextView;

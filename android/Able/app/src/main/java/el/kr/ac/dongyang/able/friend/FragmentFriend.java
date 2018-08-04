@@ -2,6 +2,7 @@ package el.kr.ac.dongyang.able.friend;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -60,6 +61,8 @@ public class FragmentFriend extends Fragment{
         View view = inflater.inflate(R.layout.fragment_friend,container,false);
         getActivity().setTitle("Friend");
 
+        ConstraintLayout loginConstraintLayout = view.findViewById(R.id.loginConlayout);
+
         //친구 추가 : 유저목록으로 넘어감
         btn = view.findViewById(R.id.insert_friend);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -75,13 +78,19 @@ public class FragmentFriend extends Fragment{
                 ft.commit();
             }
         });
+        btn.setVisibility(View.GONE);
 
         RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview_friend);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new FriendlistFragmentRecyclerViewAdapter());
+        recyclerView.setVisibility(View.GONE);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
             uid = user.getUid();
+            btn.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+            loginConstraintLayout.setVisibility(View.GONE);
         }
 
         return view;

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.location.Location;
@@ -29,21 +30,21 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.skt.Tmap.TMapGpsManager;
-import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 
 import el.kr.ac.dongyang.able.BusProvider;
+import el.kr.ac.dongyang.able.MainActivity;
 import el.kr.ac.dongyang.able.R;
 
 
@@ -60,8 +61,10 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     private Handler mHandler = new Handler();
     String fragmentTag;
     FragmentTransaction ft;
+    FragmentManager fm;
     String bussett;
     Double startlist[] = new Double[2];
+    ProgressBar naviWebLoadingBar;
 
     private Context mContext = null;
     private boolean m_bTrackingMode = true;
@@ -69,21 +72,16 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     private TMapView tMapView = null;
     private static String mApiKey = "2bcf226b-36b6-49da-82cc-5f00acee90a2"; // 발급받은 appKey
     private static int mMarkerID;
-    Fragment FragmentNaviList;
-    FragmentTransaction transaction;
 
     private ArrayList<String> mArrayMarkerID = new ArrayList<String>();
 
-    public ArrayList<TMapPOIItem> startList = new ArrayList<TMapPOIItem>();
     public ArrayList<String> naviList = new ArrayList<String>();
-    public ArrayList<TMapPOIItem> endList = new ArrayList<TMapPOIItem>();
-    public List<String> busset = new ArrayList<>();
-
     private static final String LOG_TAG = "FragmentNavigation";
 
-    Button nSearchlist;
     EditText et1;
+    Button startBtn, currentBtn;
     ConstraintLayout constLocationInfo;
+    double latitude_r,longitude_r;
 
     private Bus busProvider = BusProvider.getInstance();
     Timer t = new Timer(true);
@@ -109,6 +107,20 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
         constLocationInfo = view.findViewById(R.id.constLocationInfo);
         textTime = view.findViewById(R.id.textTime);
         textDistance = view.findViewById(R.id.textDistance);
+        naviWebLoadingBar = view.findViewById(R.id.naviCircleBar);
+        naviWebLoadingBar.setVisibility(View.GONE);
+        startBtn = view.findViewById(R.id.startBtn);
+        startBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fm = getActivity().getSupportFragmentManager();
+                ft = fm.beginTransaction();
+                Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentByTag("FRAGMENT_NAVIGATION");
+                ft.hide(currentFragment);
+                ft.commit();
+                Toast.makeText(getActivity(), "주행이 시작됩니다.", Toast.LENGTH_SHORT).show();;
+            }
+        });
 
         TMapTapi tmaptapi = new TMapTapi(getActivity());
         tmaptapi.setSKTMapAuthentication ("2414ee00-3784-4c78-913d-32bf5fa9c107");
@@ -133,7 +145,19 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
             }
         });
         web = view.findViewById(R.id.web);
-        web.setWebViewClient(new WebViewClient());
+        web.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                naviWebLoadingBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                naviWebLoadingBar.setVisibility(View.GONE);
+            }
+        });
         WebSettings webSet = web.getSettings();
         webSet.setJavaScriptEnabled(true);
         webSet.setUseWideViewPort(true);
@@ -163,6 +187,16 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
 
         web.getSettings().setJavaScriptEnabled(true); //자바스크립트 허용
         web.addJavascriptInterface(new TMapBridge(),"tmap");
+
+        currentBtn = view.findViewById(R.id.currentBtn);
+        currentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(latitude_r != 0) {
+                    web.loadUrl("javascript:geoLo('" + latitude_r + "', '" + longitude_r + "')");
+                }
+            }
+        });
 
         setGps();
 
@@ -217,8 +251,8 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     private final LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             if (location != null) {
-                double latitude_r = location.getLatitude();
-                double longitude_r = location.getLongitude();
+                latitude_r = location.getLatitude();
+                longitude_r = location.getLongitude();
                 String lonlat = "";
                 startlist[0] = longitude_r;
                 startlist[1] = latitude_r;

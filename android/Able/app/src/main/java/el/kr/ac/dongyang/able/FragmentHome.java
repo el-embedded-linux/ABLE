@@ -22,7 +22,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.otto.Subscribe;
 
+import el.kr.ac.dongyang.able.db.Userdb;
+import el.kr.ac.dongyang.able.eventbus.UserEvent;
 import el.kr.ac.dongyang.able.model.UserModel;
 import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
 
@@ -34,14 +37,20 @@ public class FragmentHome extends android.support.v4.app.Fragment{
 
     Button naviBtn;
     TextView textId;
-    FirebaseUser firebaseUser;
-    UserModel userModel;
     FragmentTransaction ft;
     String fragmentTag;
     Fragment fragmentNav;
-    String uid;
+    FirebaseUser user;
+    private UserModel userModel;
+    private String userName;
 
     public FragmentHome() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        BusProvider.getInstance().register(this);
     }
 
     @Nullable
@@ -64,7 +73,26 @@ public class FragmentHome extends android.support.v4.app.Fragment{
             }
         });
         textId = view.findViewById(R.id.name);
-        userModel = new UserModel();
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null) {
+            String uid = user.getUid();
+            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    userModel = dataSnapshot.getValue(UserModel.class);
+                    //왜 userModel 이 null이지
+                    if (userModel != null) {
+                        userName = userModel.getUserName();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+            textId.setText(userName);
+        }
 
         return view;
     }
@@ -72,24 +100,17 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("resume", "resume ok");
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(firebaseUser != null){
-            uid = firebaseUser.getUid();
-            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    userModel = dataSnapshot.getValue(UserModel.class);
-                    if(userModel != null) {
-                        textId.setText(userModel.userName);
-                    }
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-        } else {
-            textId.setText("회원");
-        }
+    }
+
+    @Override
+    public void onDestroy() {
+        BusProvider.getInstance().unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscribe
+    public void finishLoad(UserEvent userEvent){
+        textId.setText(userEvent.getUserId());
+        Log.d("finishLoad", userEvent.getUserId());
     }
 }

@@ -3,6 +3,7 @@ package el.kr.ac.dongyang.able.navigation;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -50,6 +51,7 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
     private ArrayList<TMapPOIItem> startList = new ArrayList<TMapPOIItem>();
     private ArrayList<TMapPOIItem> endList = new ArrayList<TMapPOIItem>();
     public List<String> busitem = new ArrayList<>();
+    ConstraintLayout checkEndPoint;
 
     InputMethodManager imm;
     private int requestCode;
@@ -62,6 +64,8 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_navilist,container,false);
+
+        checkEndPoint = view.findViewById(R.id.checkEndPoint);
 
         //리사이클러뷰 맵핑
         recyclerView = (RecyclerView)view.findViewById(R.id.fragment_naviList);
@@ -104,6 +108,7 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 //Enter key Action
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    checkEndPoint.setVisibility(View.GONE);
                     final String strDataEnd = nEnd.getText().toString();
                     TMapData tMapData = new TMapData();
                     poiList.clear();

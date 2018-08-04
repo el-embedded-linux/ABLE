@@ -92,7 +92,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaPrecompile" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
@@ -100,7 +99,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/splits-support" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
@@ -116,13 +114,15 @@
     <orderEntry type="library" name="Gradle: com.kakao.sdk:util-1.5.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.zxing:core:3.3.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database-connection-license-11.8.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-marketing-4.35.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-storage-common-11.8.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.squareup:javawriter:2.1.1@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.kakao.sdk:s2-lite-1.5.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-common-4.35.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-vector-drawable-27.0.2" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-tasks-license-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-core-utils-27.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-core-4.34.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-login-4.35.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:rules-1.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: javax.inject:javax.inject:1@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-auth-api-phone-license-11.8.0" level="project" />
@@ -131,22 +131,22 @@
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-iid-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:livedata-1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.core:runtime-1.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-places-4.34.0" level="project" />
     <orderEntry type="library" name="Gradle: com.kakao.sdk:network-1.5.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-share-4.35.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics-impl-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.firebaseui:firebase-ui-auth-3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-android-sdk-4.35.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-common-license-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup:otto:1.3.7@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database-connection-11.8.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-messenger-4.34.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-applinks-4.35.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: net.sf.kxml:kxml2:2.3.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-auth-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:runtime-1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-auth-base-11.8.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:runner-1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-v4-27.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-login-4.34.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-common-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics-impl-license-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.parse.bolts:bolts-android:1.4.0@jar" level="project" />
@@ -161,13 +161,12 @@
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:viewmodel-1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-core-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.parse.bolts:bolts-applinks:1.4.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-marketing-4.34.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout-solver:1.1.0-beta5@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:recyclerview-v7-27.0.2" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-media-compat-27.0.2" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-core-ui-27.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-common-4.34.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-iid-license-11.8.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-core-4.35.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-storage-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout-1.1.0-beta5" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement-11.8.0" level="project" />
@@ -185,15 +184,14 @@
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-base-license-11.8.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test.espresso:espresso-idling-resource-3.0.1" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7-27.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-places-4.35.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:livedata-core-1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-tasks-11.8.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-android-sdk-4.34.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-share-4.34.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-integration:1.3@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-library:1.3@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-auth-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.core:common:1.1.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-applinks-4.34.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.android:facebook-messenger-4.35.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-auth-license-11.8.0" level="project" />
     <orderEntry type="library" name="Gradle: android-android-26" level="project" />
   </component>

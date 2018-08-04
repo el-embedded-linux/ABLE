@@ -145,6 +145,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:text="출발"
+            android:textColor="#ffffff"
             android:background="@drawable/bg_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -152,4 +153,26 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <ProgressBar
+        android:id="@+id/naviCircleBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/currentBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/navigationbtn"
+        app:layout_constraintBottom_toBottomOf="@+id/web"
+        app:layout_constraintEnd_toEndOf="@+id/web" />
 </android.support.constraint.ConstraintLayout>
