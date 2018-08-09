@@ -21,6 +21,7 @@
 #define BTLCD 5      //LCD버튼
 
 
+
 Adafruit_ILI9340 tft = Adafruit_ILI9340(_cs, _dc, _rst);
 
 String today;
@@ -39,10 +40,11 @@ int count = 0;  // 리드스위치의 노이즈를 제거하기 위해 카운트
 boolean temp = 0;  // 리드 스위치가 닫혔는지 확인하는 변수
 
 int btLCD;
+int chmod=1;
 void setup() {
   Serial.begin(9600);
   while (!Serial);
-
+  pinMode(BTLCD, INPUT);//LCD버튼
   setTime(01,37,0,10,8,18);
   date();
   Serial.println(today);
@@ -83,9 +85,19 @@ void loop(void) {
       bySpeed = 0;
     }
   }
-  distanceText();
-  delay(1000);
-  speedText();
+  btLCD = digitalRead(BTLCD);
+  if(btLCD == LOW){
+    if(chmod>1001){
+      chmod=1;
+    }else{
+    chmod +=1;
+    }
+  }
+  if(chmod%2==0){
+    distanceText();
+  }else if(chmod%2==1){
+    speedText();
+  }
   delay(1000);
 }
 
