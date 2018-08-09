@@ -1,7 +1,7 @@
 #include <Adafruit_NeoPixel.h>
 
-#define ADAMATRIX 6  // 매트릭스 LED
 #define BARWING 7     // 바 LED
+#define ADAMATRIX 6  // 매트릭스 LED
 //#define LEFTPIN   9   // 바LED 좌측
 //#define RIGHTPIN  8   // 바LED 우측
 #define BTL 3        // 좌측 버튼
@@ -14,7 +14,7 @@
 Adafruit_NeoPixel matrix = Adafruit_NeoPixel(NUMPIXELS, ADAMATRIX, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel bar = Adafruit_NeoPixel(BARPIXELS, BARWING, NEO_GRB + NEO_KHZ800);
 
-int btLeft, btRight;  // 좌우 버튼
+int btLeft, btRight, btLCD;  // 좌우 버튼
 int c = 0;            // 버튼 동시 제어 변수
 int presRead;         // 압력센서
 int presPoint;

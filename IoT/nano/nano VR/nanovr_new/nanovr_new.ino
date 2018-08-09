@@ -20,12 +20,25 @@
 #define _dc 9
 #define _rst 8
 
+#define BARWING 7     // 바 LED
+#define ADAMATRIX 6  // 매트릭스 LED
 #define BTLCD 5      //LCD버튼
+#define BTR 4        // 우측 버튼
+#define BTL 3        // 좌측 버튼
+
+#define NUMPIXELS 64  // 매트릭스 LED개수
+#define BARPIXELS 28  // 바 LED개수
+#define PRESSURE A0
+
+// LED 개수, 아두이노 디지털 핀, 네오픽셀 컬러 타입 + 네오픽셀 클럭
+Adafruit_NeoPixel matrix = Adafruit_NeoPixel(NUMPIXELS, ADAMATRIX, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel bar = Adafruit_NeoPixel(BARPIXELS, BARWING, NEO_GRB + NEO_KHZ800);
 
 ThreadController controll = ThreadController();
 Thread myThread_reed = Thread();
-Thread myThread_BTLCD = Thread();
+Thread myThread_btLCD = Thread();
 Thread myThread_tftLCD = Thread();
+Thread myThread_btn = Thread();
 
 Adafruit_ILI9340 tft = Adafruit_ILI9340(_cs, _dc, _rst);
 
@@ -44,8 +57,115 @@ float lcdDis = 0; // 자전거의 이동 거리를 LCD출력에 맞게 바꿔즌
 int count = 0;  // 리드스위치의 노이즈를 제거하기 위해 카운트를 넣어줍니다.
 boolean temp = 0;  // 리드 스위치가 닫혔는지 확인하는 변수
 
-int btLCD;
-int chmod=1;
+int btLeft, btRight, btLCD;  // 좌우 버튼
+int c = 0;            // 버튼 동시 제어 변수
+int presRead;         // 압력센서
+int presPoint;
+int chmod=1; //lcd모드를 변경해줌
+
+int humi[4][64]={
+  { 0, 0, 0, 1, 0, 0, 0, 0,
+    0, 0, 1, 1, 0, 0, 0, 0,
+    0, 1, 1, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    0, 1, 1, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 0, 0, 0, 0,
+    0, 0, 0, 1, 0, 0, 0, 0
+  }, 
+  { 0, 0, 0, 0, 1, 0, 0, 0,
+    0, 0, 0, 0, 1, 1, 0, 0,
+    0, 0, 0, 0, 0, 1, 1, 0,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    0, 0, 0, 0, 0, 1, 1, 0,
+    0, 0, 0, 0, 1, 1, 0, 0,
+    0, 0, 0, 0, 1, 0, 0, 0
+  },
+  { 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 0, 0, 0, 0, 1, 1,
+    1, 0, 1, 0, 0, 1, 0, 1,
+    1, 0, 0, 1, 1, 0, 0, 1,
+    1, 0, 0, 1, 1, 0, 0, 1,
+    1, 0, 1, 0, 0, 1, 0, 1,
+    1, 1, 0, 0, 0, 0, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1
+  },
+  { 0, 0, 1, 1, 1, 1, 0, 0,
+    0, 1, 1, 0, 0, 1, 1, 0,
+    1, 1, 0, 0, 1, 1, 1, 1,
+    1, 0, 0, 1, 1, 1, 0, 1,
+    1, 0, 1, 1, 1, 0, 0, 1,
+    1, 1, 1, 1, 0, 0, 1, 1,
+    0, 1, 1, 0, 0, 1, 1, 0,
+    0, 0, 1, 1, 1, 1, 0, 0
+  }
+};
+
+int matrixColor[4][3] = {
+  {0, 20, 0},
+  {0, 20, 0},
+  {40, 0, 0},
+  {40, 0, 0},
+};
+
+int barShape[3][28] = {
+  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+};
+
+int barColor[3][3] = {
+  {0, 20, 0}, {0, 20, 0}, {40, 0, 0}
+};
+
+void btnCallback(){
+  btLeft = digitalRead(BTL);
+  btRight = digitalRead(BTR);
+
+  if(btLeft == LOW && btRight==HIGH) {
+    Serial.print("L");
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(humi[0][i]*matrixColor[0][0], humi[0][i]*matrixColor[0][1], humi[0][i]*matrixColor[0][2]));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(barShape[0][i]*barColor[0][0], barShape[0][i]*barColor[0][1], barShape[0][i]*barColor[0][2]));
+    }
+    matrix.show();
+    bar.show();
+  }else if(btLeft == HIGH) {
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(0,0,0));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(0,0,0));
+    }
+    matrix.show();
+    bar.show(); 
+  }
+
+  if(btRight == LOW && btLeft==HIGH) {
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(humi[1][i]*matrixColor[1][0], humi[1][i]*matrixColor[1][1], humi[1][i]*matrixColor[1][2]));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(barShape[1][i]*barColor[0][0], barShape[1][i]*barColor[0][1], barShape[1][i]*barColor[0][2]));
+    }
+    matrix.show();
+    bar.show();
+   }else if(btRight == HIGH) {
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(0,0,0));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(0,0,0));
+    }
+    matrix.show();
+    bar.show();
+  }
+  
+  
+}
 
 void btLCDCallback(){
     btLCD = digitalRead(BTLCD);
@@ -106,14 +226,16 @@ void setup() {
   tft.setRotation(3);
 
   //thread
-  myThread_BTLCD.onRun(btLCDCallback);
+  myThread_btLCD.onRun(btLCDCallback);
   myThread_reed.onRun(reedCallback);
   myThread_tftLCD.onRun(tftLCDCallback);
-  myThread_tftLCD.setInterval(1000);
+  myThread_btn.onRun(btnCallback);
+  myThread_tftLCD.setInterval(1000);//tftLCD의 초기화 주기를 늦추기 위해서
 
-  controll.add(&myThread_BTLCD);
+  controll.add(&myThread_btLCD);
   controll.add(&myThread_reed);
   controll.add(&myThread_tftLCD);
+  controll.add(&myThread_btn);
 
 }
 
@@ -198,4 +320,20 @@ unsigned long speedText() {
    tft.println("km/s");
 
   return micros() - start;
+}
+void showPres(int presRead1, int PRESSURE1, int presPoint1)
+{
+  presRead1 = analogRead(PRESSURE1);
+  presPoint1 = map(presRead1, 0, 1024, 0,255);
+  Serial.println(presPoint1);
+  if(presPoint1 >= 15) {//수정해줘야함
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(humi[2][i]*matrixColor[2][0], humi[2][i]*matrixColor[2][1], humi[2][i]*matrixColor[2][2]));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(barShape[2][i]*barColor[2][0], barShape[2][i]*barColor[2][1], barShape[2][i]*barColor[2][2]));
+    }
+  matrix.show();
+  bar.show();
+  }
 }
