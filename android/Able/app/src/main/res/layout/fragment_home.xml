@@ -52,6 +52,7 @@
 
         <TextView
             android:id="@+id/weather"
+<<<<<<< HEAD
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -64,6 +65,15 @@
             android:textSize="90sp"/>
 
 
+=======
+            android:layout_width="123dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/sun"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 
         <TextView
             android:id="@+id/Temperature"
@@ -71,8 +81,13 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/weather"
             android:layout_alignParentRight="true"
+<<<<<<< HEAD
             android:layout_marginEnd="40dp"
             android:layout_marginTop="195dp"
+=======
+            android:layout_marginStart="24dp"
+            android:text="26"
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
             android:textColor="#ffffff"
             android:textSize="66dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -84,13 +99,19 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/weather"
             android:layout_alignParentRight="true"
+<<<<<<< HEAD
             android:layout_marginEnd="45dp"
             android:layout_marginTop="225dp"
+=======
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
             android:text="℃"
             android:textColor="#ffffff"
             android:textSize="33dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/Temperature" />
+<<<<<<< HEAD
 
 
         <TextView
@@ -133,6 +154,8 @@
             android:textSize="16.7dp"
             app:layout_constraintBottom_toTopOf="@+id/hTemperature"
             app:layout_constraintStart_toEndOf="@+id/Temperature" />
+=======
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 
         <TextView
             android:id="@+id/Temp_min"
@@ -140,6 +163,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/hTemperature"
             android:layout_alignEnd="@+id/hTemperature"
+<<<<<<< HEAD
             android:layout_marginEnd="60dp"
             android:layout_marginTop="160dp"
             android:textColor="#d1d1d1"
@@ -156,12 +180,20 @@
             android:layout_marginEnd="45dp"
             android:layout_marginTop="160dp"
             android:text="℃"
+=======
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="8dp"
+            android:text="27º / 17º"
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
             android:textColor="#d1d1d1"
             android:textSize="16.7dp"
             app:layout_constraintBottom_toTopOf="@+id/hTemperature"
             app:layout_constraintStart_toEndOf="@+id/Temperature" />
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
     </android.support.constraint.ConstraintLayout>
 
 

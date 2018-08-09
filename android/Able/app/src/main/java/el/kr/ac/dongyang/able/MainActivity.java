@@ -16,12 +16,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+<<<<<<< HEAD
 import android.text.Html;
+=======
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+<<<<<<< HEAD
 import android.widget.TextView;
+=======
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,28 +52,33 @@ public class MainActivity extends AppCompatActivity
     String fragmentTag;
     Fragment fragmentNav,fragmentSet;
     FirebaseUser firebaseUser;
+<<<<<<< HEAD
     TextView weatherIcon, temperature,temp_max,temp_min;
     Icon_Manager icon_manager;
+=======
+    NavigationView navigationView;
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragmentNav = new FragmentNavigation();
         fragmentSet = new FragmentSetting();
+<<<<<<< HEAD
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+=======
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 
-        //checkPermition();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         weatherIcon = (TextView) findViewById(R.id.weather);
@@ -93,6 +104,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+<<<<<<< HEAD
+=======
+    protected void onStart() {
+        super.onStart();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
     protected void onDestroy() {
         super.onDestroy();
     }
@@ -143,9 +168,12 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
+<<<<<<< HEAD
             if (firebaseUser != null) {
                 Toast.makeText(getApplicationContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
             } else {
+=======
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
                 Fragment fragment = new FragmentFriend();
                 fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
                 Log.i("fagmentTag", fragmentTag);
@@ -154,7 +182,10 @@ public class MainActivity extends AppCompatActivity
                 ft.replace(R.id.main_layout, fragment);
                 ft.addToBackStack(fragmentTag);
                 ft.commit();
+<<<<<<< HEAD
             }
+=======
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
         }
 
         return super.onOptionsItemSelected(item);
@@ -182,14 +213,21 @@ public class MainActivity extends AppCompatActivity
             Log.i("fagmentTag", fragmentTag);
             getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft = getSupportFragmentManager().beginTransaction();
+<<<<<<< HEAD
             ft.add(R.id.main_layout, fragmentNav);
+=======
+            ft.add(R.id.main_layout, fragmentNav, "FRAGMENT_NAVIGATION");
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
             ft.addToBackStack(fragmentTag);
             ft.commit();
 
         } else if (id == R.id.nav_helthcare) {      //승현
+<<<<<<< HEAD
             if (firebaseUser != null) {
                 Toast.makeText(getApplicationContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
             } else {
+=======
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
                 Fragment fragment = new FragmentHealthcare();
                 fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
                 Log.i("fagmentTag", fragmentTag);
@@ -198,7 +236,10 @@ public class MainActivity extends AppCompatActivity
                 ft.add(R.id.main_layout, fragment);
                 ft.addToBackStack(fragmentTag);
                 ft.commit();
+<<<<<<< HEAD
             }
+=======
+>>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 
         } else if (id == R.id.nav_groupriding) {    //지수
 
@@ -213,42 +254,9 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-   /* private void checkPermition(){
-        int permissionCheck = ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION);
-
-        if(permissionCheck != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)){
-
-            }
-            else{
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}.MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
-
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // 권한 허가
-                    // 해당 권한을 사용해서 작업을 진행할 수 있습니다
-                } else {
-                    // 권한 거부
-                    // 사용자가 해당권한을 거부했을때 해주어야 할 동작을 수행합니다
-                }
-                return;
-        }
-    }*/
 }
 

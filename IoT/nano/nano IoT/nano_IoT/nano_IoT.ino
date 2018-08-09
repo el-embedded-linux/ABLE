@@ -1,10 +1,6 @@
-//압력센서
-//bar
-//matrix
-//버튼
-//버튼연동
-
-int SensorPin = A0;
+//지자기센서
+//심박동측정센서
+//링LED
 
 void setup(){
   Serial.begin(9600);

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.facebook.android:facebook-marketing-4.35.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/facebook-marketing-4.35.0.aar/5e0156716fedfd69798a0fd0b124b1ee/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/facebook-marketing-4.35.0.aar/5e0156716fedfd69798a0fd0b124b1ee/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.android/facebook-marketing/4.35.0/6988003ee89c241d8d66846f2b2cc52d42616f24/facebook-marketing-4.35.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

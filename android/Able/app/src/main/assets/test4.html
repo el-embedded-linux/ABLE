@@ -1,0 +1,50 @@
+<html>
+<head>
+    <link="css/style.css" rel="style" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>simpleMap</title>
+    <script src="https://api2.sktelecom.com/tmap/js?version=1&format=javascript&appKey=2414ee00-3784-4c78-913d-32bf5fa9c107"></script>
+    <p id="result"></p>
+    <script type="text/javascript">
+         function initTmap(){
+            var map = new Tmap.Map({
+               div:'map_div',
+               width : "934px",
+               height : "452px",
+            });
+                map.setCenter(new Tmap.LonLat("126.9850380932383", "37.566567545861645").transform("EPSG:4326", "EPSG:3857"), 15);
+                //설정한 좌표를 "EPSG:3857"로 좌표변환한 좌표값으로 중심점으로 설정합니다.
+
+                var markerLayer = new Tmap.Layer.Markers();
+                map.addLayer(markerLayer);
+
+                var lonlat = new Tmap.LonLat(126.986072 , 37.570028).transform("EPSG:4326", "EPSG:3857");
+                var size = new Tmap.Size(24, 38);
+                var offset = new Tmap.Pixel(-(size.w / 2), -(size.h));
+                var icon = new Tmap.Icon('http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_a.png',size, offset);
+
+                marker = new Tmap.Marker(lonlat, icon);
+                markerLayer.addMarker(marker);
+                }
+
+                function Move(){
+                     var lonlat = new Tmap.LonLat(126.984895,37.566369).transform("EPSG:4326", "EPSG:3857");//좌표 설정
+                     map.setCenter(lonlat, 15);//map의 중심 좌표 설정
+   }
+   // 지정한 좌표값만큼 지도를 움직이게 할 수 있는 함수입니다.
+               function PanTo(){
+                  var lonlat = new Tmap.LonLat(126.976889, 37.571644).transform("EPSG:4326", "EPSG:3857");//좌표 설정
+                  map.panTo(lonlat);   //해당 좌표로 map을 부드럽게 이동
+   }
+        </script>
+
+
+</head>
+<body onload="initTmap()">
+<div id="map_div"></div>
+<button onClick="Move()">처음 위치로 지도 이동</button>
+<button onClick="PanTo()">지도 중심좌표 부드럽게 이동</button>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</html>

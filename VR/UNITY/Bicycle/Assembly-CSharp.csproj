@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{47DCAC2F-55F7-31DE-9E95-F1D15817C26C}</ProjectGuid>
+    <ProjectGuid>{3C00557B-1CC9-2C51-1F7B-078B8BDF7B6A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -51,9 +51,77 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\ARDUnity\Examples\Custom Controller\MyController.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\AxisInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\BitFlagInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\ColorInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\ColorOutput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\CurveOutput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\DragInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\FloatProbe.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\ImpulseInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\InputFilter.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\MappingInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\OutputCombine.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\RTTTLSong.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\ToggleInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\ToneOutput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\TriggerInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Bridge\ValueOutput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\CommSocket\CommBluetooth.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\CommSocket\CommSerial.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\CommSocket\CommWifi.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\CommSocket\HM10.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\AnalogInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\AnalogOutput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\CapSense.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\DHT11.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\DigitalInput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\DigitalOutput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\GenericMotor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\GenericServo.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\GenericStepper.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\GenericTone.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\HCSR04.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\MPR121.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\MPUSeries.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Controller\PulseOutput.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Internal\ControllerDataType.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\AudioSourceReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\ButtonReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\CharacterReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\ColliderReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\DeviceRollReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\DeviceRotationReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\DialSliderReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\DropdownReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\ExplosionReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\ForceReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\LightColorReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\LightIntensityReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\MoveAxisReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\Rotation2DReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\RotationAxisReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\RotationReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\SliderReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\TextReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\ToggleReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Reactor\TorqueReactor.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\ArdunityAppUI.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\CommBluetoothUI.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\CommSerialUI.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\CommSocketUI.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\CommWifiUI.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\DeviceCamera.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\DialSlider.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\HM10UI.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\ListItem.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\ListView.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\SliderSnap.cs" />
+     <Compile Include="Assets\ARDUnity\Scripts\Utility\ToggleEvent.cs" />
+     <Compile Include="Assets\Scripts\Ardunity\NewBehaviourScript.cs" />
      <Compile Include="Assets\Scripts\ButtonBorderController.cs" />
      <Compile Include="Assets\Scripts\ButtonController.cs" />
-     <Compile Include="Assets\Scripts\EndManager.cs" />
      <Compile Include="Assets\Scripts\FinishTimeManager.cs" />
      <Compile Include="Assets\Scripts\Firebase\Login.cs" />
      <Compile Include="Assets\Scripts\Firebase\RealTimeDB.cs" />
@@ -68,12 +136,15 @@
      <Compile Include="Assets\Scripts\MenuButton\ExitBtn.cs" />
      <Compile Include="Assets\Scripts\MenuButton\MapChoiceBtn.cs" />
      <Compile Include="Assets\Scripts\PlayTimeController.cs" />
+     <Compile Include="Assets\Scripts\SpeedController.cs" />
+     <Compile Include="Assets\Scripts\TrackCountController.cs" />
      <None Include="Assets\Firebase\Plugins\link.xml" />
      <None Include="Assets\Firebase\m2repository\com\google\firebase\firebase-app-unity\maven-metadata.xml" />
      <None Include="Assets\race-track-lake\readmore.txt" />
      <None Include="Assets\Firebase\m2repository\com\google\firebase\firebase-auth-unity\maven-metadata.xml" />
+     <None Include="Assets\ARDUnity\Examples\Buzzer\SampleSongs.txt" />
      <None Include="Assets\Firebase\Plugins\Http\link.xml" />
-     <None Include="Assets\SkySerie Freebie\Hdri setup.txt" />
+     <None Include="Assets\ARDUnity\Plugins\Android\AndroidManifest.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -140,70 +211,76 @@
  <Reference Include="UnityEditor.WindowsStandalone.Extensions">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
+ <Reference Include="ArdunityCore">
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/ARDUnity/Scripts/Internal/ArdunityCore.dll</HintPath>
+ </Reference>
+ <Reference Include="ArdunityCoreEditor">
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/ARDUnity/Scripts/Internal/Editor/ArdunityCoreEditor.dll</HintPath>
+ </Reference>
  <Reference Include="Firebase.Editor">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/Firebase/Editor/Firebase.Editor.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/Firebase/Editor/Firebase.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Firebase.App">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/Firebase/Plugins/Firebase.App.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/Firebase/Plugins/Firebase.App.dll</HintPath>
  </Reference>
  <Reference Include="Firebase.Auth">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/Firebase/Plugins/Firebase.Auth.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/Firebase/Plugins/Firebase.Auth.dll</HintPath>
  </Reference>
  <Reference Include="Firebase.Database">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/Firebase/Plugins/Firebase.Database.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/Firebase/Plugins/Firebase.Database.dll</HintPath>
  </Reference>
  <Reference Include="Firebase.Platform">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/Firebase/Plugins/Firebase.Platform.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/Firebase/Plugins/Firebase.Platform.dll</HintPath>
  </Reference>
  <Reference Include="Google.MiniJson">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/Firebase/Plugins/Google.MiniJson.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/Firebase/Plugins/Google.MiniJson.dll</HintPath>
  </Reference>
  <Reference Include="Google.Sharpen">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/Firebase/Plugins/Google.Sharpen.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/Firebase/Plugins/Google.Sharpen.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Compat">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/Parse/Plugins/Unity.Compat.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/Parse/Plugins/Unity.Compat.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Tasks">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/Parse/Plugins/Unity.Tasks.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/Parse/Plugins/Unity.Tasks.dll</HintPath>
  </Reference>
  <Reference Include="Google.IOSResolver_v1.2.64.0">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/PlayServicesResolver/Editor/Google.IOSResolver_v1.2.64.0.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/PlayServicesResolver/Editor/Google.IOSResolver_v1.2.64.0.dll</HintPath>
  </Reference>
  <Reference Include="Google.JarResolver_v1.2.64.0">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/PlayServicesResolver/Editor/Google.JarResolver_v1.2.64.0.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/PlayServicesResolver/Editor/Google.JarResolver_v1.2.64.0.dll</HintPath>
  </Reference>
  <Reference Include="Google.VersionHandler">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/PlayServicesResolver/Editor/Google.VersionHandler.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/PlayServicesResolver/Editor/Google.VersionHandler.dll</HintPath>
  </Reference>
  <Reference Include="Google.VersionHandlerImpl_v1.2.64.0">
- <HintPath>C:/Users/2ghkr/Desktop/Bicycle2/Assets/PlayServicesResolver/Editor/Google.VersionHandlerImpl_v1.2.64.0.dll</HintPath>
+ <HintPath>C:/Users/EL/Desktop/2018EL-master/VR/UNITY/Bicycle/Assets/PlayServicesResolver/Editor/Google.VersionHandlerImpl_v1.2.64.0.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Advertisements">
- <HintPath>C:/Users/2ghkr/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
+ <HintPath>C:/Users/EL/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Advertisements">
- <HintPath>C:/Users/2ghkr/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/Editor/UnityEditor.Advertisements.dll</HintPath>
+ <HintPath>C:/Users/EL/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
- <HintPath>C:/Users/2ghkr/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
+ <HintPath>C:/Users/EL/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Analytics">
- <HintPath>C:/Users/2ghkr/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/Editor/UnityEditor.Analytics.dll</HintPath>
+ <HintPath>C:/Users/EL/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/Editor/UnityEditor.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Purchasing">
- <HintPath>C:/Users/2ghkr/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/UnityEngine.Purchasing.dll</HintPath>
+ <HintPath>C:/Users/EL/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Purchasing">
- <HintPath>C:/Users/2ghkr/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/Editor/UnityEditor.Purchasing.dll</HintPath>
+ <HintPath>C:/Users/EL/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/Editor/UnityEditor.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.StandardEvents">
- <HintPath>C:/Users/2ghkr/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
+ <HintPath>C:/Users/EL/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{59FF9497-17A6-27A8-61B2-C5B2E6237FC4}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+      <Project>{7872C005-76DE-3E42-2220-ABEC532C7269}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
