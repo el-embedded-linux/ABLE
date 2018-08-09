@@ -2,6 +2,8 @@
 #include <TimeLib.h>
 #include <LiquidCrystal.h>
 #include <Adafruit_NeoPixel.h>
+#include <Thread.h>
+#include <ThreadController.h>
 #include "SPI.h"
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9340.h"
@@ -20,7 +22,10 @@
 
 #define BTLCD 5      //LCD버튼
 
-
+ThreadController controll = ThreadController();
+Thread myThread_reed = Thread();
+Thread myThread_BTLCD = Thread();
+Thread myThread_tftLCD = Thread();
 
 Adafruit_ILI9340 tft = Adafruit_ILI9340(_cs, _dc, _rst);
 
@@ -41,26 +46,28 @@ boolean temp = 0;  // 리드 스위치가 닫혔는지 확인하는 변수
 
 int btLCD;
 int chmod=1;
-void setup() {
-  Serial.begin(9600);
-  while (!Serial);
-  pinMode(BTLCD, INPUT);//LCD버튼
-  setTime(01,37,0,10,8,18);
-  date();
-  Serial.println(today);
-  
-  tft.begin();
-  tft.setRotation(3);
 
-  Serial.print(F("Text                     "));
-  Serial.println(distanceText());
-  delay(3000);
-
-  Serial.println(F("Done!"));
+void btLCDCallback(){
+    btLCD = digitalRead(BTLCD);
+  if(btLCD == LOW){
+    if(chmod>1001){
+      chmod=1;
+    }else{
+    chmod +=1;
+    }
+  }
 }
 
-void loop(void) {
-  //걍 테스트용으로 번갈아가면서 출력하게 했음
+void tftLCDCallback(){
+  if(chmod%2==0){
+    distanceText();
+  }else if(chmod%2==1){
+    speedText();
+  }
+  
+}
+
+void reedCallback(){
   boolean check = digitalRead(A1); // 리드스위치의 상태를 확인합니다.(SIG=A0)
   Serial.print(check);
   if(check == 1 && temp == 0){  // 리드 스위치가 열릴 때(닫힘 -> 열림)
@@ -84,21 +91,34 @@ void loop(void) {
     if(count > 150){ // 카운트가 150이 넘어가면(자전거가 멈췄을 때) 속도를 0으로 바꿔줍니다.
       bySpeed = 0;
     }
-  }
-  btLCD = digitalRead(BTLCD);
-  if(btLCD == LOW){
-    if(chmod>1001){
-      chmod=1;
-    }else{
-    chmod +=1;
-    }
-  }
-  if(chmod%2==0){
-    distanceText();
-  }else if(chmod%2==1){
-    speedText();
-  }
-  delay(1000);
+  }  
+}
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial);
+  pinMode(BTLCD, INPUT);//LCD버튼
+  setTime(01,37,0,10,8,18);
+  date();
+  Serial.println(today);
+  
+  tft.begin();
+  tft.setRotation(3);
+
+  //thread
+  myThread_BTLCD.onRun(btLCDCallback);
+  myThread_reed.onRun(reedCallback);
+  myThread_tftLCD.onRun(tftLCDCallback);
+  myThread_tftLCD.setInterval(1000);
+
+  controll.add(&myThread_BTLCD);
+  controll.add(&myThread_reed);
+  controll.add(&myThread_tftLCD);
+
+}
+
+void loop(void) {
+  controll.run();
 }
 
 void date(){
