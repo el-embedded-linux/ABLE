@@ -38,15 +38,7 @@ float lcdDis = 0; // 자전거의 이동 거리를 LCD출력에 맞게 바꿔즌
 int count = 0;  // 리드스위치의 노이즈를 제거하기 위해 카운트를 넣어줍니다.
 boolean temp = 0;  // 리드 스위치가 닫혔는지 확인하는 변수
 
-// LED 개수, 아두이노 디지털 핀, 네오픽셀 컬러 타입 + 네오픽셀 클럭
-Adafruit_NeoPixel matrix = Adafruit_NeoPixel(NUMPIXELS, ADAMATRIX, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel bar = Adafruit_NeoPixel(BARPIXELS, BARWING, NEO_GRB + NEO_KHZ800);
-
-int btLeft, btRight, btLCD;  // 좌우 버튼
-int c = 0;            // 버튼 동시 제어 변수
-int presRead;         // 압력센서
-int presPoint;
-
+int btLCD;
 void setup() {
   Serial.begin(9600);
   while (!Serial);
