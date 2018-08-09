@@ -1,7 +1,7 @@
 #include <Time.h>
 #include <TimeLib.h>
-#include <LiquidCrystal.h>
 #include <Adafruit_NeoPixel.h>
+#include <LiquidCrystal.h>
 #include <Thread.h>
 #include <ThreadController.h>
 #include "SPI.h"
@@ -120,51 +120,9 @@ int barColor[3][3] = {
 };
 
 void btnCallback(){
-  btLeft = digitalRead(BTL);
-  btRight = digitalRead(BTR);
-
-  if(btLeft == LOW && btRight==HIGH) {
-    Serial.print("L");
-    for(int i=0;i<64;i++) {
-      matrix.setPixelColor(i, matrix.Color(humi[0][i]*matrixColor[0][0], humi[0][i]*matrixColor[0][1], humi[0][i]*matrixColor[0][2]));
-    }
-    for(int i=0;i<28;i++) {
-      bar.setPixelColor(i,bar.Color(barShape[0][i]*barColor[0][0], barShape[0][i]*barColor[0][1], barShape[0][i]*barColor[0][2]));
-    }
-    matrix.show();
-    bar.show();
-  }else if(btLeft == HIGH) {
-    for(int i=0;i<64;i++) {
-      matrix.setPixelColor(i, matrix.Color(0,0,0));
-    }
-    for(int i=0;i<28;i++) {
-      bar.setPixelColor(i,bar.Color(0,0,0));
-    }
-    matrix.show();
-    bar.show(); 
-  }
-
-  if(btRight == LOW && btLeft==HIGH) {
-    for(int i=0;i<64;i++) {
-      matrix.setPixelColor(i, matrix.Color(humi[1][i]*matrixColor[1][0], humi[1][i]*matrixColor[1][1], humi[1][i]*matrixColor[1][2]));
-    }
-    for(int i=0;i<28;i++) {
-      bar.setPixelColor(i,bar.Color(barShape[1][i]*barColor[0][0], barShape[1][i]*barColor[0][1], barShape[1][i]*barColor[0][2]));
-    }
-    matrix.show();
-    bar.show();
-   }else if(btRight == HIGH) {
-    for(int i=0;i<64;i++) {
-      matrix.setPixelColor(i, matrix.Color(0,0,0));
-    }
-    for(int i=0;i<28;i++) {
-      bar.setPixelColor(i,bar.Color(0,0,0));
-    }
-    matrix.show();
-    bar.show();
-  }
-  
-  
+  // 매트릭스 LED + 바 LED
+  showMatrix();
+  showPres(presRead, PRESSURE, presPoint);
 }
 
 void btLCDCallback(){
@@ -184,7 +142,6 @@ void tftLCDCallback(){
   }else if(chmod%2==1){
     speedText();
   }
-  
 }
 
 void reedCallback(){
@@ -215,10 +172,15 @@ void reedCallback(){
 }
 
 void setup() {
+  #if defined (__AVR_ATtiny85__) 
+  if (F_CPU == 16000000) clock_prescale_set(clock_div_1); 
+  #endif 
   Serial.begin(9600);
   while (!Serial);
   pinMode(BTLCD, INPUT);//LCD버튼
   setTime(01,37,0,10,8,18);
+  matrix.begin();
+  bar.begin();
   date();
   Serial.println(today);
   
@@ -231,6 +193,7 @@ void setup() {
   myThread_tftLCD.onRun(tftLCDCallback);
   myThread_btn.onRun(btnCallback);
   myThread_tftLCD.setInterval(1000);//tftLCD의 초기화 주기를 늦추기 위해서
+
 
   controll.add(&myThread_btLCD);
   controll.add(&myThread_reed);
@@ -335,5 +298,82 @@ void showPres(int presRead1, int PRESSURE1, int presPoint1)
     }
   matrix.show();
   bar.show();
+  }
+}
+
+void showMatrix()
+{
+  btLeft = digitalRead(BTL);
+  btRight = digitalRead(BTR);
+
+  if(btLeft == LOW && btRight==HIGH) {
+    Serial.print("L");
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(humi[0][i]*matrixColor[0][0], humi[0][i]*matrixColor[0][1], humi[0][i]*matrixColor[0][2]));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(barShape[0][i]*barColor[0][0], barShape[0][i]*barColor[0][1], barShape[0][i]*barColor[0][2]));
+    }
+  matrix.show();
+  bar.show();
+  }else if(btLeft == HIGH) {
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(0,0,0));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(0,0,0));
+    }
+  matrix.show();
+  bar.show(); 
+  }
+
+  if(btRight == LOW && btLeft==HIGH) {
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(humi[1][i]*matrixColor[1][0], humi[1][i]*matrixColor[1][1], humi[1][i]*matrixColor[1][2]));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(barShape[1][i]*barColor[0][0], barShape[1][i]*barColor[0][1], barShape[1][i]*barColor[0][2]));
+    }
+   matrix.show();
+   bar.show();
+   }else if(btRight == HIGH) {
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(0,0,0));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(0,0,0));
+    }
+   matrix.show();
+   bar.show();
+  }
+  if(btRight == LOW && btLeft == LOW){
+   for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(humi[3][i]*matrixColor[3][0], humi[3][i]*matrixColor[3][1], humi[3][i]*matrixColor[3][2]));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(barShape[2][i]*barColor[2][0], barShape[2][i]*barColor[2][1], barShape[2][i]*barColor[2][2]));
+    }
+   matrix.show();
+   bar.show();
+   delay(100);
+    for(int i=0;i<64;i++) {
+    
+      matrix.setPixelColor(i, matrix.Color(0,0,0));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(0,0,0));
+    }
+   matrix.show();
+   bar.show();
+   delay(100);
+  }else if(btRight == HIGH && btLeft == HIGH){
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(0,0,0));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(0,0,0));
+    }
+   matrix.show();
+   bar.show();
   }
 }
