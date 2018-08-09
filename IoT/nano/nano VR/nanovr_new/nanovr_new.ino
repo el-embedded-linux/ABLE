@@ -11,13 +11,14 @@
     #define F(string_literal) string_literal
 #endif
 
-//TFT LCD모니터 연결
 #define _sclk 13
 #define _miso 12
 #define _mosi 11
 #define _cs 10
 #define _dc 9
 #define _rst 8
+
+#define BTLCD 5      //LCD버튼
 
 
 Adafruit_ILI9340 tft = Adafruit_ILI9340(_cs, _dc, _rst);
