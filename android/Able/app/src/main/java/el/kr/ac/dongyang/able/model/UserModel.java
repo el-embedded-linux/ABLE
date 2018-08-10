@@ -8,7 +8,13 @@ import java.util.Date;
  */
 
 public class UserModel {
+    public String email;
+    public String password;
     public String userName;
+    public String profileImageUrl;
+    public String uid;
+    public String pushToken;
+    public String comment;
     public String address;
     public String height;
     public String weight;
@@ -17,31 +23,11 @@ public class UserModel {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getHeight() {
         return height;
     }
 
     public void setHeight(String height) {
         this.height = height;
-    }
-
-    public String getWeight() {
-        return weight;
-    }
-
-    public void setWeight(String weight) {
-        this.weight = weight;
     }
 }

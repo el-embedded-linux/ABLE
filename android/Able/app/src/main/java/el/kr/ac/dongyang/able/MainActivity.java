@@ -1,11 +1,8 @@
 package el.kr.ac.dongyang.able;
 
-import android.animation.ObjectAnimator;
-import android.animation.StateListAnimator;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -16,29 +13,25 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-<<<<<<< HEAD
-import android.text.Html;
-=======
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-<<<<<<< HEAD
-import android.widget.TextView;
-=======
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 import el.kr.ac.dongyang.able.friend.FragmentFriend;
+import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
 import el.kr.ac.dongyang.able.health.FragmentHealthcare;
-import el.kr.ac.dongyang.able.login.ActivityLogin;
+import el.kr.ac.dongyang.able.login.FragmentLogin;
 import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
 import el.kr.ac.dongyang.able.setting.FragmentSetting;
 
@@ -52,12 +45,7 @@ public class MainActivity extends AppCompatActivity
     String fragmentTag;
     Fragment fragmentNav,fragmentSet;
     FirebaseUser firebaseUser;
-<<<<<<< HEAD
-    TextView weatherIcon, temperature,temp_max,temp_min;
-    Icon_Manager icon_manager;
-=======
     NavigationView navigationView;
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +55,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         fragmentNav = new FragmentNavigation();
         fragmentSet = new FragmentSetting();
-<<<<<<< HEAD
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-=======
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -81,31 +65,23 @@ public class MainActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        weatherIcon = (TextView) findViewById(R.id.weather);
-        temperature = (TextView) findViewById(R.id.Temperature);
-        temp_max = (TextView) findViewById(R.id.Temp_max);
-        temp_min = (TextView) findViewById(R.id.Temp_min);
-        icon_manager = new Icon_Manager();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            String uid = user.getUid();
+            passPushTokenToServer(uid);
+        }
+        //getHashKey();
+    }
 
-        ((TextView) findViewById(R.id.weather)).setTypeface(icon_manager.get_icons("fonts/weathericons-regular-webfont.ttf", this));
+    private void passPushTokenToServer(String uid) {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Map<String, Object> map = new HashMap<>();
+        map.put("pushToken", token);
 
-        Function.placeIdTask asyncTask =new Function.placeIdTask(new Function.AsyncResponse() {
-            public void processFinish(String weather_temperature, String weather_temp_max, String weather_temp_min,String updatedOn, String weather_iconText, String sun_rise) {
-
-                weatherIcon.setText(Html.fromHtml(weather_iconText));
-                temperature.setText(weather_temperature);
-                temp_max.setText(weather_temp_max);
-                temp_min.setText(weather_temp_min);
-            }
-        });
-        asyncTask.execute("37.500774", "126.867899"); //  asyncTask.execute("Latitude", "Longitude")
-
-        getHashKey();
+        FirebaseDatabase.getInstance().getReference().child("USER").child(uid).updateChildren(map);
     }
 
     @Override
-<<<<<<< HEAD
-=======
     protected void onStart() {
         super.onStart();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -117,7 +93,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
     protected void onDestroy() {
         super.onDestroy();
     }
@@ -168,24 +143,14 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
-<<<<<<< HEAD
-            if (firebaseUser != null) {
-                Toast.makeText(getApplicationContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
-            } else {
-=======
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
-                Fragment fragment = new FragmentFriend();
-                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-                Log.i("fagmentTag", fragmentTag);
-                getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.main_layout, fragment);
-                ft.addToBackStack(fragmentTag);
-                ft.commit();
-<<<<<<< HEAD
-            }
-=======
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
+            Fragment fragment = new FragmentFriend();
+            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+            Log.i("fagmentTag", fragmentTag);
+            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.main_layout, fragment);
+            ft.addToBackStack(fragmentTag);
+            ft.commit();
         }
 
         return super.onOptionsItemSelected(item);
@@ -199,8 +164,27 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_login) {
-            Fragment fragment = new ActivityLogin();
-            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+            Fragment fragment = new FragmentLogin();
+            fragmentTag = fragment.getClass().getSimpleName();
+            Log.i("fagmentTag", fragmentTag);
+            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.main_layout, fragment);
+            ft.addToBackStack(fragmentTag);
+            ft.commit();
+
+        } else if (id == R.id.nav_navigation) {     //영훈
+            fragmentTag = fragmentNav.getClass().getSimpleName();
+            Log.i("fagmentTag", fragmentTag);
+            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.main_layout, fragmentNav, "FRAGMENT_NAVIGATION");
+            ft.addToBackStack(fragmentTag);
+            ft.commit();
+
+        } else if (id == R.id.nav_helthcare) {      //승현
+            Fragment fragment = new FragmentHealthcare();
+            fragmentTag = fragment.getClass().getSimpleName();
             Log.i("fagmentTag", fragmentTag);
             getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft = getSupportFragmentManager().beginTransaction();
@@ -208,50 +192,24 @@ public class MainActivity extends AppCompatActivity
             ft.addToBackStack(fragmentTag);
             ft.commit();
 
-        } else if (id == R.id.nav_navigation) {     //영훈
-            fragmentTag = fragmentNav.getClass().getSimpleName();  //FragmentLogin
+        } else if (id == R.id.nav_groupriding) {    //지수
+            Fragment fragment = new PeopleFragment();
+            fragmentTag = fragment.getClass().getSimpleName();
             Log.i("fagmentTag", fragmentTag);
             getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft = getSupportFragmentManager().beginTransaction();
-<<<<<<< HEAD
-            ft.add(R.id.main_layout, fragmentNav);
-=======
-            ft.add(R.id.main_layout, fragmentNav, "FRAGMENT_NAVIGATION");
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
+            ft.replace(R.id.main_layout, fragment);
             ft.addToBackStack(fragmentTag);
             ft.commit();
 
-        } else if (id == R.id.nav_helthcare) {      //승현
-<<<<<<< HEAD
-            if (firebaseUser != null) {
-                Toast.makeText(getApplicationContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
-            } else {
-=======
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
-                Fragment fragment = new FragmentHealthcare();
-                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-                Log.i("fagmentTag", fragmentTag);
-                getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.main_layout, fragment);
-                ft.addToBackStack(fragmentTag);
-                ft.commit();
-<<<<<<< HEAD
-            }
-=======
->>>>>>> 4a8fbbf32edb5005b4d5e5f55a7c7885ea3dd6ba
-
-        } else if (id == R.id.nav_groupriding) {    //지수
-
         } else if (id == R.id.nav_setting) {        //수현
-            fragmentTag = fragmentSet.getClass().getSimpleName();  //FragmentLogin
+            fragmentTag = fragmentSet.getClass().getSimpleName();
             Log.i("fagmentTag", fragmentTag);
             getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft = getSupportFragmentManager().beginTransaction();
             ft.add(R.id.main_layout, fragmentSet);
             ft.addToBackStack(fragmentTag);
             ft.commit();
-
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

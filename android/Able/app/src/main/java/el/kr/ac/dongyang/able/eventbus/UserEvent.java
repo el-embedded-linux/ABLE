@@ -1,7 +1,7 @@
 package el.kr.ac.dongyang.able.eventbus;
 
 public class UserEvent {
-    String userId;
+    private String userId;
 
     public UserEvent(String userId) {
         this.userId = userId;

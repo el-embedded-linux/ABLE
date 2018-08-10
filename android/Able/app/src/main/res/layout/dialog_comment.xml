@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:src="@drawable/el_logo"
+        android:background="#FFFFBB33"
+        android:layout_width="match_parent"
+        android:layout_height="64dp" />
+    <EditText
+        android:id="@+id/commentDialog_edittext"
+        android:hint="상태 메세지를 입력하세요"
+        android:layout_margin="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

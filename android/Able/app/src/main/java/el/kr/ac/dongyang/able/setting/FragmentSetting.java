@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,6 +72,8 @@ public class FragmentSetting extends Fragment{
     String date;
     int day, month, year;
 
+    Switch bluetoothSwitch;
+
     Calendar cal;
 
     private ArrayList<String> navigeo = new ArrayList<String>();
@@ -107,9 +110,15 @@ public class FragmentSetting extends Fragment{
         View view = inflater.inflate(R.layout.fragment_setting,container,false);
         getActivity().setTitle("Setting");
 
+        bluetoothSwitch = view.findViewById(R.id.bluetooth_switch);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
             uid = user.getUid();
+        } else {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().remove(FragmentSetting.this).commit();
+            fragmentManager.popBackStack();
         }
 
         userModel = new UserModel();
@@ -128,7 +137,7 @@ public class FragmentSetting extends Fragment{
         }else{
             date = year + "-0" + month + "-0" + day;
         }
-        btsw = (Switch) view.findViewById(R.id.bluetooth_switch);
+        btsw = view.findViewById(R.id.bluetooth_switch);
         btsw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -152,7 +161,7 @@ public class FragmentSetting extends Fragment{
         });
 
 
-        infoModify = (Button)view.findViewById(R.id.info_modify);
+        infoModify = view.findViewById(R.id.info_modify);
         infoModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -421,7 +430,8 @@ public class FragmentSetting extends Fragment{
             return;
         }
 
-        String[] items;
+        final String[] items;
+        final int[] position = new int[1];
         items = new String[pairedDevices.length];
         for (int i=0;i<pairedDevices.length;i++) {
             items[i] = pairedDevices[i].getName();
@@ -430,12 +440,32 @@ public class FragmentSetting extends Fragment{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Select device");
         builder.setCancelable(false);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                position[0] = which;
+                Toast.makeText(getActivity(), items[which], Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(position[0] == -1){
+                    return;
+                }
+                Toast.makeText(getActivity(), items[position[0]], Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-                ConnectTask task = new ConnectTask(pairedDevices[which]);
+                ConnectTask task = new ConnectTask(pairedDevices[position[0]]);
                 task.execute();
+            }
+        });
+
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                bluetoothSwitch.setChecked(false);
+                dialog.cancel();
             }
         });
         builder.create().show();

@@ -1,0 +1,170 @@
+package el.kr.ac.dongyang.able.groupriding;
+
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import el.kr.ac.dongyang.able.R;
+import el.kr.ac.dongyang.able.chat.MessageActivity;
+import el.kr.ac.dongyang.able.model.UserModel;
+
+public class PeopleFragment extends android.support.v4.app.Fragment {
+    FragmentTransaction ft;
+    String fragmentTag;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_people, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.peoplefragment_recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
+        recyclerView.setAdapter(new PeopleFragmentRecyclerViewAdapter());
+
+        //채팅방 리스트
+        final FloatingActionButton actionB = view.findViewById(R.id.action_chatrooms);
+        actionB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionB.setTitle("Action A clicked");
+                Toast.makeText(getActivity(), "actionB", Toast.LENGTH_SHORT).show();
+                Fragment fragment = new ChatFragment();
+                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+                Log.i("fagmentTag", fragmentTag);
+                getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.main_layout, fragment);
+                ft.addToBackStack(fragmentTag);
+                ft.commit();
+
+            }
+        });
+
+        //그룹채팅 유저 추가
+        final FloatingActionButton actionA = view.findViewById(R.id.action_groupchatlist);
+        actionA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionA.setTitle("Action A clicked");
+                Toast.makeText(getActivity(), "actionA", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(view.getContext(),SelectFriendActivity.class));
+            }
+        });
+
+        final FloatingActionsMenu menuMultipleActions = view.findViewById(R.id.multiple_actions);
+
+        return view;
+    }
+
+    class PeopleFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        List<UserModel> userModels;
+
+        public PeopleFragmentRecyclerViewAdapter() {
+            userModels = new ArrayList<>();
+            final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseDatabase.getInstance().getReference().child("USER").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    userModels.clear();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                        UserModel userModel = snapshot.getValue(UserModel.class);
+                        if(userModel.uid.equals(myUid)){
+                            continue;
+                        }
+                        userModels.add(snapshot.getValue(UserModel.class));
+                    }
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d("PeopleFragment", databaseError.getMessage());
+                }
+            });
+        }
+
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_friend, parent, false);
+
+            return new CustomViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+
+            Glide.with(holder.itemView.getContext())
+                    .load(userModels.get(position).profileImageUrl)
+                    .apply(new RequestOptions().circleCrop())
+                    .into(((CustomViewHolder) holder).imageView);
+            ((CustomViewHolder) holder).textView.setText(userModels.get(position).userName);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), MessageActivity.class);
+                    intent.putExtra("destinationUid", userModels.get(position).uid);
+                    //애니메이션 안된다. 왜 안되는건지 모르겠네
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright, R.anim.toleft);
+                        startActivity(intent, activityOptions.toBundle());
+                    }
+                }
+            });
+
+            if(userModels.get(position).comment != null){
+                ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).comment);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return userModels.size();
+        }
+    }
+
+    private class CustomViewHolder extends RecyclerView.ViewHolder {
+        public ImageView imageView;
+        public TextView textView;
+        public TextView textView_comment;
+
+        public CustomViewHolder(View view) {
+            super(view);
+            imageView = view.findViewById(R.id.frienditem_imageview);
+            textView = view.findViewById(R.id.frienditem_textview);
+            textView_comment = view.findViewById(R.id.frienditem_textview_comment);
+        }
+    }
+}
