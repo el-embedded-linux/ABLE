@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_home">
+    android:background="@drawable/home_bg">
 
     <ImageView
         android:id="@+id/el_logo"
@@ -34,7 +34,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/email"
+            android:src="@drawable/login_email"
             app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
             app:layout_constraintStart_toStartOf="@+id/view3" />
 
@@ -123,7 +123,7 @@
             android:layout_height="20dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/lock"
+            android:src="@drawable/login_lock"
             app:layout_constraintBottom_toTopOf="@+id/view16"
             app:layout_constraintStart_toStartOf="@+id/view16" />
 
@@ -178,7 +178,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/sign_up_button"
+        android:background="@drawable/login_sign_up_button"
         android:text="로그인"
         android:textColor="#8C82A8"
         android:textSize="15sp"

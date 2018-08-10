@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_friend"
         android:orderInCategory="100"
-        android:icon="@drawable/teamwork"
+        android:icon="@drawable/main_users"
         android:title="friend"
         app:showAsAction="always" />
 </menu>

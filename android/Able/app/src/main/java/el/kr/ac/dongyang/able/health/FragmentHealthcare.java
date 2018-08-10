@@ -36,7 +36,6 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
  * Created by user on 2018-05-13.
  * <p>
  * 월 텍스트 클릭시 datepicker 나옴. 근데 왜 현재 날짜가 아니라 다른 날짜 기준으로 나오는지는 모르겠음.
- * 기본설정이 앱의 강조색상으로 코딩되어있는듯. 분홍색으로 나옴.
  * 월 숫자는 변경되도록 했지만 요일, 날짜 텍스트 갱신은 아직 미구현.
  * <p>
  * 몸무게 받아와서 칼로리 계산은 성공.
@@ -45,8 +44,7 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
 public class FragmentHealthcare extends android.support.v4.app.Fragment{
     private static final String LOG_TAG = "FragmentNavigation";
 
-    TextView monthHan, monthNum, sun, mon, tue, wed, thu, fri, sat;
-    TextView sunNum, monNum, tueNum, wedNum, ThuNum, friNum, satNum;
+    TextView monthNum;
     Calendar cal;
     int day, month, year;
 

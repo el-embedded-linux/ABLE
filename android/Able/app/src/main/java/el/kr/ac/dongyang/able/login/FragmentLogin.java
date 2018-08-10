@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -47,15 +46,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.StringTokenizer;
 
 import el.kr.ac.dongyang.able.BusProvider;
-import el.kr.ac.dongyang.able.FragmentHome;
-import el.kr.ac.dongyang.able.MainActivity;
 import el.kr.ac.dongyang.able.R;
-import el.kr.ac.dongyang.able.db.Userdb;
 import el.kr.ac.dongyang.able.eventbus.UserEvent;
 import el.kr.ac.dongyang.able.model.UserModel;
 
 
-public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
 
     private static final String TAG = "FagmentLogin";
@@ -78,13 +74,13 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
     private String userName;
     private UserModel userModel;
 
-    public ActivityLogin() {
+    public FragmentLogin() {
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
         getActivity().setTitle("Login");
 
         //google_btn = signInButton
@@ -147,7 +143,7 @@ public class ActivityLogin extends Fragment implements GoogleApiClient.OnConnect
         exist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new SignUp();
+                Fragment fragment = new FragmentLoginEmail();
                 fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
                 Log.i("fragmentTag", fragmentTag);
                 getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);

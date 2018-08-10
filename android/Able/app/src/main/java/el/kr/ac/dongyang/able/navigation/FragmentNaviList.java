@@ -35,7 +35,6 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by impro on 2018-05-23.
- * 네비게이션 프래그먼트 안에 들어가는 자식 프래그먼트
  * 검색해서 리스트 띄워주고 클릭시 설정됨
  * 키보드를 내려줘야 뜸.. 문제..
  * 검색결과에 null도 붙어서 나온다..
@@ -68,7 +67,7 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
         checkEndPoint = view.findViewById(R.id.checkEndPoint);
 
         //리사이클러뷰 맵핑
-        recyclerView = (RecyclerView)view.findViewById(R.id.fragment_naviList);
+        recyclerView = view.findViewById(R.id.fragment_naviList);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new FragmentNaviList.NavilistFragmentRecyclerViewAdapter());
 

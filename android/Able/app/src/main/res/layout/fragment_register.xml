@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_home"
+    android:background="@drawable/home_bg"
     android:paddingTop="70dp">
 
     <ImageView
-        android:id="@+id/el_logo"
+        android:id="@+id/fragment_register_imageview_profile"
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:layout_marginBottom="8dp"
@@ -37,7 +37,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/email"
+            android:src="@drawable/login_email"
             app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
             app:layout_constraintStart_toStartOf="@+id/view3" />
 
@@ -108,7 +108,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/email"
+            android:src="@drawable/login_email"
             app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
             app:layout_constraintStart_toStartOf="@+id/view6" />
 
@@ -179,7 +179,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/lock"
+            android:src="@drawable/login_lock"
             app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
             app:layout_constraintStart_toStartOf="@+id/view9" />
 
@@ -250,7 +250,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/lock"
+            android:src="@drawable/login_lock"
             app:layout_constraintBottom_toBottomOf="@+id/emailtxt"
             app:layout_constraintStart_toStartOf="@+id/view12" />
 
@@ -334,7 +334,7 @@
         android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/sign_up_button"
+        android:background="@drawable/login_sign_up_button"
         android:text="회원가입"
         android:textColor="#8C82A8"
         android:textSize="15sp"

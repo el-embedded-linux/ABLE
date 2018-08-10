@@ -8,7 +8,7 @@
         android:id="@+id/frienditem_imageview"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/users"/>-->
+        android:src="@drawable/drawer_menu_users"/>-->
 
 
     <android.support.v7.widget.CardView

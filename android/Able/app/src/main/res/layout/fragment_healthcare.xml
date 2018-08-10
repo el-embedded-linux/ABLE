@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_helthcare">
+    android:background="@drawable/healthcare_bg">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayoutMonth"
@@ -43,204 +43,6 @@
     </android.support.constraint.ConstraintLayout>
 
 
-    <!--<ImageView
-        android:layout_width="35dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="242dp"
-        android:layout_marginTop="130dp"
-        android:src="@drawable/round_rectangle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    -->
-    <TextView
-        android:id="@+id/sunday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="136dp"
-        android:gravity="center_horizontal"
-        android:text="일"
-        android:textColor="#FFFFFF"
-        android:textSize="8.3sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/thirteen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="144dp"
-        android:text="13"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/fourteen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="144dp"
-        android:text="14"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/thirteen"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-        android:id="@+id/monday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="136dp"
-        android:gravity="center_horizontal"
-        android:text="월"
-        android:textColor="#FFFFFF"
-        android:textSize="8.3sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/sunday"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/fifteen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="144dp"
-        android:text="15"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/fourteen"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tuesday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="136dp"
-        android:gravity="center_horizontal"
-        android:text="화"
-        android:textColor="#FFFFFF"
-        android:textSize="8.3sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/monday"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/sixteen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="39dp"
-        android:layout_marginTop="144dp"
-        android:text="16"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/fifteen"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/wednesday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="136dp"
-        android:gravity="center_horizontal"
-        android:text="수"
-        android:textColor="#FFFFFF"
-        android:textSize="8.3sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/tuesday"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/seventeen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="144dp"
-        android:text="17"
-        android:textColor="#f6a53f"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/sixteen"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/thursday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="136dp"
-        android:gravity="center_horizontal"
-        android:text="목"
-        android:textColor="#f6a53f"
-        android:textSize="8.3sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/wednesday"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/eighteen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="144dp"
-        android:text="18"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/seventeen"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/friday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="136dp"
-        android:gravity="center_horizontal"
-        android:text="금"
-        android:textColor="#FFFFFF"
-        android:textSize="8.3sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/thursday"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/nineteen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="144dp"
-        android:text="19"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/eighteen"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/saturday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="42dp"
-        android:layout_marginTop="136dp"
-        android:gravity="center_horizontal"
-        android:text="토"
-        android:textColor="#FFFFFF"
-        android:textSize="8.3sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/friday"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
@@ -248,12 +50,14 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="150dp"
         android:background="@drawable/rectangle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fifteen">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <ImageView
             android:id="@+id/graph"
@@ -261,8 +65,8 @@
             android:layout_height="233dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/graph"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/healthcare_graph"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
@@ -302,20 +106,20 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="170dp"
             android:gravity="center_horizontal"
+            android:text="목표 완수까지 0km가 남았습니다!"
             android:textColor="#f6a53f"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="목표 완수까지 0km가 남았습니다!" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/pic_km"
-            android:layout_width="25dp"
+            android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="280dp"
-            android:src="@drawable/km"
+            android:layout_marginTop="276dp"
+            android:src="@drawable/healthcare_km"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -323,121 +127,99 @@
             android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="90dp"
-            android:layout_marginTop="270dp"
-            android:text="10.567 km "
+            android:layout_marginStart="8dp"
+            android:text="            km "
             android:textColor="#ef8c0b"
             android:textSize="23.3sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/pic_km"
+            app:layout_constraintStart_toEndOf="@+id/pic_km"
+            app:layout_constraintTop_toTopOf="@+id/pic_km" />
 
         <TextView
             android:id="@+id/km"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="300dp"
+            android:text="이동거리"
             android:textColor="#ffbc7f"
             android:textSize="10sp"
-            app:layout_constraintStart_toEndOf="@+id/pic_km"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="이동거리" />
+            app:layout_constraintBottom_toTopOf="@+id/consume"
+            app:layout_constraintStart_toStartOf="@+id/consume" />
 
         <View
             android:id="@+id/line"
             android:layout_width="300dp"
             android:layout_height="1dp"
-            android:layout_marginBottom="140dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="2dp"
-            android:layout_marginTop="300dp"
+            android:layout_marginTop="10dp"
             android:background="#e5e5e5"
-            app:layout_constraintBottom_toTopOf="@+id/kcal_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/pic_km" />
 
         <ImageView
             android:id="@+id/pic_speed"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="13dp"
-            android:src="@drawable/speed"
-            app:layout_constraintBottom_toTopOf="@+id/pic_kcal"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/healthcare_speed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pic_km" />
+            app:layout_constraintTop_toBottomOf="@+id/line" />
 
         <TextView
             android:id="@+id/speed_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="90dp"
-            android:layout_marginTop="360dp"
-            android:text="21.3 km/h"
+            android:layout_marginStart="8dp"
+            android:text="           km/h"
             android:textColor="#ef8c0b"
             android:textSize="23.3sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/pic_kcal"
+            app:layout_constraintStart_toEndOf="@+id/pic_kcal"
+            app:layout_constraintTop_toTopOf="@+id/pic_kcal" />
 
         <TextView
             android:id="@+id/speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="125dp"
-            android:layout_marginStart="20dp"
             android:text="속도"
             android:textColor="#ffbc7f"
             android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/pic_speed" />
-
-        <View
-            android:id="@+id/line1"
-            android:layout_width="300dp"
-            android:layout_height="1dp"
-            android:background="#e5e5e5"
-            android:layout_marginBottom="100dp"
-            android:layout_marginStart="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@+id/distance"
+            app:layout_constraintStart_toStartOf="@+id/distance" />
 
         <ImageView
             android:id="@+id/pic_kcal"
-            android:layout_width="27dp"
+            android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginBottom="45dp"
             android:layout_marginStart="45dp"
-            android:src="@drawable/kcal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_marginTop="24dp"
+            android:src="@drawable/heathcare_kcal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pic_speed" />
 
         <TextView
             android:id="@+id/consume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
-            android:layout_marginStart="88dp"
+            android:layout_marginStart="8dp"
             android:text="          kcal"
             android:textColor="#ef8c0b"
             android:textSize="23.3sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/pic_speed"
+            app:layout_constraintStart_toEndOf="@+id/pic_speed"
+            app:layout_constraintTop_toTopOf="@+id/pic_speed" />
 
         <TextView
             android:id="@+id/kcal_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="37dp"
-            android:layout_marginStart="16dp"
             android:text="소모한 칼로리"
             android:textColor="#ffbc7f"
             android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/pic_kcal" />
+            app:layout_constraintBottom_toTopOf="@+id/speed_text"
+            app:layout_constraintStart_toStartOf="@+id/speed_text" />
 
     </android.support.constraint.ConstraintLayout>
 

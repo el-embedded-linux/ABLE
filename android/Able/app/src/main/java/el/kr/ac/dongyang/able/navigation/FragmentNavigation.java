@@ -52,8 +52,6 @@ import el.kr.ac.dongyang.able.R;
  * Created by impro on 2018-03-30.
  * 지도 맵 띄움.
  * 출발지 포인트랑 목적지 포인트 받으면 라인이랑 마커 띄움
- * 지도 레벨이 변경될때 마커 크기 유동적으로 바뀌도록 만들어야함
- * 돋보기 버튼 누르면 프래그먼트네비리스트 를 띄움 - 차일드 프래그먼트
  */
 public class FragmentNavigation extends android.support.v4.app.Fragment {
 
@@ -66,8 +64,6 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     Double startlist[] = new Double[2];
     ProgressBar naviWebLoadingBar;
 
-    private Context mContext = null;
-    private boolean m_bTrackingMode = true;
     private TMapGpsManager tmapgps = null;
     private TMapView tMapView = null;
     private static String mApiKey = "2bcf226b-36b6-49da-82cc-5f00acee90a2"; // 발급받은 appKey
@@ -205,13 +201,6 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //내 gps를 계속 전달. log에 뜸
-        /*Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
-        thread.start();*/
     }
 
     @Override
@@ -226,11 +215,9 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
             mHandler.post(new Runnable() {
                 public void run() {
                     naviList.add(i + " : " + arg + "\n");
-                    //Log.d("index - ", naviList.toString());
                     i += 1;
                 }
             });
-            //Log.d("index - ", naviList.toString());
         }
         @JavascriptInterface
         public void setTimeDistance(final String arg){
@@ -324,8 +311,14 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
 
     public void setGps() {
         final LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(getActivity(),
+            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+                ActivityCompat.requestPermissions(getActivity(),
+                new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,mLocationListener);
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자(실내에선 NETWORK_PROVIDER 권장)

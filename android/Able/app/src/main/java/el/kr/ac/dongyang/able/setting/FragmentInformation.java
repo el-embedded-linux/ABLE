@@ -49,11 +49,11 @@ public class FragmentInformation extends Fragment{
         View view = inflater.inflate(R.layout.fragment_userinfo,container,false);
         getActivity().setTitle("내 정보 수정");
 
-        mName = (EditText)view.findViewById(R.id.editTextName);
-        mAddress = (EditText)view.findViewById(R.id.editTextAddr);
-        mHeight = (EditText)view.findViewById(R.id.editTextHeight);
-        mWeight = (EditText)view.findViewById(R.id.editTextWeight);
-        infoSave = (Button)view.findViewById(R.id.info_save);
+        mName = view.findViewById(R.id.editTextName);
+        mAddress = view.findViewById(R.id.editTextAddr);
+        mHeight = view.findViewById(R.id.editTextHeight);
+        mWeight = view.findViewById(R.id.editTextWeight);
+        infoSave = view.findViewById(R.id.info_save);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
 

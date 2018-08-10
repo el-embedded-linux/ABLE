@@ -4,4 +4,9 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#64b5f6</color>
     <color name="transparent">#00ff0000</color>
+    <color name="white">#ffffff</color>
+    <color name="white_pressed">#BDBDBD</color>
+    <color name="green">#92cf89</color>
+    <color name="green_pressed">#198633</color>
+
 </resources>
