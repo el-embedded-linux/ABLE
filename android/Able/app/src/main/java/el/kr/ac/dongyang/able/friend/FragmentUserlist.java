@@ -94,7 +94,12 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
                     userModels.clear();
                     if(user != null){
                         for(DataSnapshot snapshot :dataSnapshot.getChildren()){
-                            userModels.add(snapshot.getValue(UserModel.class));
+                            UserModel userModel = snapshot.getValue(UserModel.class);
+                            if(userModel.uid.equals(uid)){
+                                continue;
+                            }
+                            userModels.add(userModel);
+                            //userModels.add(snapshot.getValue(UserModel.class));
                         }
                     }
                 notifyDataSetChanged();

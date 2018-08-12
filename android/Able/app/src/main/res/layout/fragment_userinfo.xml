@@ -51,7 +51,17 @@
         android:hint="몸무게"
         android:inputType="textPostalAddress"
         android:textColor="#D8D8D8" />
-
+    <EditText
+        android:id="@+id/editTextComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editTextWeight"
+        android:layout_below="@+id/editTextWeight"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="상태 메시지"
+        android:inputType="textPostalAddress"
+        android:textColor="#D8D8D8" />
     <Button
         android:id="@+id/info_save"
         android:layout_width="wrap_content"

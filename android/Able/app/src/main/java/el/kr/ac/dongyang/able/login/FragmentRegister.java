@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ public class FragmentRegister extends android.support.v4.app.Fragment {
     private Button signUpBtn;
     private ImageView profile;
     private Uri imageUri;
+    private CheckBox checkBox;
 
     android.support.v4.app.FragmentTransaction ft;
     String fragmentTag;
@@ -93,6 +95,9 @@ public class FragmentRegister extends android.support.v4.app.Fragment {
                     return;
                 } else if (!emailEditText.getText().toString().trim().matches(emailPattern)) {
                     Toast.makeText(getActivity(), "이메일이 같지 않습니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (!checkBox.isChecked()){
+                    Toast.makeText(getActivity(), "개인정보 약관에 동의하여 주십시오.", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     createUser(emailEditText.getText().toString(), passwordEditText.getText().toString());

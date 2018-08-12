@@ -37,7 +37,7 @@ public class FragmentInformation extends Fragment{
     }
 
     Button infoSave;
-    EditText mName, mAddress, mHeight, mWeight;
+    EditText mName, mAddress, mHeight, mWeight, mComment;
     FirebaseUser user;
     private DatabaseReference mDatabase;
     UserModel userModel;
@@ -53,6 +53,7 @@ public class FragmentInformation extends Fragment{
         mAddress = view.findViewById(R.id.editTextAddr);
         mHeight = view.findViewById(R.id.editTextHeight);
         mWeight = view.findViewById(R.id.editTextWeight);
+        mComment = view.findViewById(R.id.editTextComment);
         infoSave = view.findViewById(R.id.info_save);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -74,6 +75,7 @@ public class FragmentInformation extends Fragment{
                         mAddress.setText(userModel.address);
                         mHeight.setText(userModel.height);
                         mWeight.setText(userModel.weight);
+                        mComment.setText(userModel.comment);
                     }
                 }
                 @Override
@@ -93,10 +95,12 @@ public class FragmentInformation extends Fragment{
                 userModel.address = mAddress.getText().toString();
                 userModel.height = mHeight.getText().toString();
                 userModel.weight = mWeight.getText().toString();
+                userModel.comment = mComment.getText().toString();
                 mDatabase.child("USER").child(uid).child("userName").setValue(userModel.userName);
                 mDatabase.child("USER").child(uid).child("address").setValue(userModel.address);
                 mDatabase.child("USER").child(uid).child("height").setValue(userModel.height);
                 mDatabase.child("USER").child(uid).child("weight").setValue(userModel.weight);
+                mDatabase.child("USER").child(uid).child("comment").setValue(userModel.comment);
                 getActivity().onBackPressed();
             }
         });

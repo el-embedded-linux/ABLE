@@ -8,19 +8,6 @@
     android:clickable="true"
     app:insetForeground="#4000">
 
-    <Switch
-        android:id="@+id/hSwitch"
-        android:layout_width="180dp"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="70dp"
-        android:thumb="@drawable/switch_thumb"
-        android:track="@drawable/switch_track_selector"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -47,8 +34,7 @@
         app:layout_constraintBottom_toTopOf="@+id/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.538"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hSwitch">
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:id="@+id/weather"
