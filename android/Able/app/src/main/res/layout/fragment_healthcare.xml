@@ -159,9 +159,10 @@
                 android:id="@+id/pic_km"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/healthcare_km"
-                tools:layout_editor_absoluteX="45dp"
-                tools:layout_editor_absoluteY="276dp" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="45dp" />
 
             <View
                 android:id="@+id/line"
