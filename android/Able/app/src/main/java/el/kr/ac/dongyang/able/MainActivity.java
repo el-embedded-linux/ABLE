@@ -13,10 +13,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,6 +49,9 @@ public class MainActivity extends AppCompatActivity
     FirebaseUser firebaseUser;
     NavigationView navigationView;
 
+    TextView weatherIcon, temperature,temp_max,temp_min;
+    Icon_Manager icon_manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +69,26 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        weatherIcon = findViewById(R.id.weather);
+        temperature = findViewById(R.id.Temperature);
+        temp_max = findViewById(R.id.Temp_max);
+        temp_min = findViewById(R.id.Temp_min);
+        icon_manager = new Icon_Manager();
+
+        ((TextView) findViewById(R.id.weather)).setTypeface(icon_manager.get_icons("fonts/weathericons-regular-webfont.ttf", this));
+
+        Function.placeIdTask asyncTask =new Function.placeIdTask(new Function.AsyncResponse() {
+            public void processFinish(String weather_temperature, String weather_temp_max, String weather_temp_min,String updatedOn, String weather_iconText, String sun_rise) {
+
+                weatherIcon.setText(Html.fromHtml(weather_iconText));
+                temperature.setText(weather_temperature);
+                temp_max.setText(weather_temp_max);
+                temp_min.setText(weather_temp_min);
+            }
+        });
+
+        asyncTask.execute("37.500774", "126.867899");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){

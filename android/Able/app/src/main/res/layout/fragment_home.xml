@@ -10,26 +10,28 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout4"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
+        <TextView
             android:id="@+id/weather"
-            android:layout_width="123dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/sun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="50dp"
+            android:textColor="#FFFFFF"
+            android:textSize="90sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/Temperature"
@@ -37,11 +39,13 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/weather"
             android:layout_alignParentRight="true"
-            android:layout_marginStart="24dp"
-            android:text="26"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:textColor="#ffffff"
             android:textSize="66dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/weather"
+            app:layout_constraintEnd_toStartOf="@+id/hTemperature"
+            app:layout_constraintHorizontal_bias="0.62"
             app:layout_constraintStart_toEndOf="@+id/weather" />
 
         <TextView
@@ -50,27 +54,81 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/weather"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="72dp"
+            android:layout_marginTop="104dp"
             android:text="℃"
             android:textColor="#ffffff"
             android:textSize="33dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/Temperature" />
+            app:layout_constraintBottom_toBottomOf="@+id/weather"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
-            android:id="@+id/hUpDown"
+            android:id="@+id/Temp_max"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/hTemperature"
             android:layout_alignEnd="@+id/hTemperature"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="8dp"
-            android:text="27º / 17º"
+            android:layout_marginEnd="24dp"
+            android:textColor="#d1d1d1"
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toBottomOf="@+id/hTemperature1"
+            app:layout_constraintEnd_toStartOf="@+id/hTemperature1" />
+
+        <TextView
+            android:id="@+id/hTemperature1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="8dp"
+            android:text="℃"
+            android:textColor="#d1d1d1"
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toBottomOf="@+id/slash"
+            app:layout_constraintEnd_toStartOf="@+id/slash" />
+
+        <TextView
+            android:id="@+id/slash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="48dp"
+            android:text="/"
             android:textColor="#d1d1d1"
             android:textSize="16.7dp"
             app:layout_constraintBottom_toTopOf="@+id/hTemperature"
-            app:layout_constraintStart_toEndOf="@+id/Temperature" />
+            app:layout_constraintEnd_toEndOf="@+id/hTemperature"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/Temp_min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/hTemperature"
+            android:layout_alignEnd="@+id/hTemperature"
+            android:layout_marginStart="8dp"
+            android:textColor="#d1d1d1"
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toBottomOf="@+id/slash"
+            app:layout_constraintStart_toEndOf="@+id/slash" />
+
+        <TextView
+            android:id="@+id/hTemperature2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="24dp"
+            android:text="℃"
+            android:textColor="#d1d1d1"
+            android:textSize="16.7dp"
+            app:layout_constraintBottom_toBottomOf="@+id/slash"
+            app:layout_constraintStart_toEndOf="@+id/Temp_min" />
+
 
     </android.support.constraint.ConstraintLayout>
 
