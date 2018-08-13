@@ -216,8 +216,8 @@ public class FragmentSetting extends Fragment{
             try {
                 Double call = (weight + bykg)*0.001*MET*speed;
                 cal2 = String.format("%.2f", call);
-                healthModel.kcal = cal2;
-                mDatabase.child("HEALTH").child(uid).child(date).child("kcal").setValue(healthModel.kcal);
+                healthModel.setKcal(cal2);
+                mDatabase.child("HEALTH").child(uid).child(date).child("kcal").setValue(healthModel.getKcal());
                 Log.d(TAG, "Thread - " + Double.toString(weight));
                 Log.d(TAG, "cal - " + Double.parseDouble(cal2));
             } catch (Exception e) {
@@ -357,9 +357,9 @@ public class FragmentSetting extends Fragment{
                                 Log.d(TAG, "recv message: " + recvMessage);
                                 for (int j = 0; j < recvMessage.length(); j++) {
                                     speed = Double.parseDouble(recvMessage);
-                                    healthModel.speed = Double.toString(speed);
+                                    healthModel.setSpeed(Double.toString(speed));
                                 }
-                                mDatabase.child("HEALTH").child(uid).child(date).child("speed").setValue(healthModel.speed);
+                                mDatabase.child("HEALTH").child(uid).child(date).child("speed").setValue(healthModel.getSpeed());
                                 calcul = new CalckThread(weight,speed);
                                 calcul.start();
                             }

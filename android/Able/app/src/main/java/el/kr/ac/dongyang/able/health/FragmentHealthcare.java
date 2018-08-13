@@ -1,9 +1,11 @@
 package el.kr.ac.dongyang.able.health;
 
 
-import android.app.DatePickerDialog;
-import android.bluetooth.BluetoothAdapter;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -11,9 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,22 +24,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shrikanthravi.collapsiblecalendarview.data.Day;
+import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
 
-import java.lang.ref.WeakReference;
 import java.lang.String;
-import java.util.Calendar;
 
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-import static com.facebook.login.widget.ProfilePictureView.TAG;
-
 /**
  * Created by user on 2018-05-13.
  * <p>
- * 월 텍스트 클릭시 datepicker 나옴. 근데 왜 현재 날짜가 아니라 다른 날짜 기준으로 나오는지는 모르겠음.
- * 월 숫자는 변경되도록 했지만 요일, 날짜 텍스트 갱신은 아직 미구현.
+ * 클릭시 데이터가 있으면 데이터있는 화면을 표시
+ * 데이터가 없으면 오늘은 운동을 안했다고 표시
+ *
  * <p>
  * 몸무게 받아와서 칼로리 계산은 성공.
  */
@@ -44,90 +46,41 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
 public class FragmentHealthcare extends android.support.v4.app.Fragment{
     private static final String LOG_TAG = "FragmentNavigation";
 
-    TextView monthNum;
-    Calendar cal;
-    int day, month, year;
+    ConstraintLayout constraintLayoutHealth, constraintLayoutNone;
 
-    String date;
-    String speed = "31.5";
-    Double bykg = 10.0;
-    int minute = 60;
-    Double MET = 3.3;
-    TextView sPeed;
-    TextView sPeedText;
-    TextView cOnsume;
+    String date, uid, cal2;
+    TextView speedTextView, kcalTextView, distanceTextView;
     FirebaseUser user;
-    String uid;
     UserModel userModel;
     HealthModel healthModel;
-    String cal2;
-    private int listenerCode;
+
+    ArcProgress arcProgress;
 
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private Handler mHandler;
 
     public FragmentHealthcare() {
     }
-
-    static BluetoothAdapter mBluetoothAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_healthcare, container, false);
         getActivity().setTitle("Health care");
-        //if(getArguments() !=null) {
-        //int speedInt = getArguments().getInt("key");
-        //Log.e("aa", "값 : " + speedInt);
-        //}
-        //월의 숫자와 텍스트 둘다 클릭시 반응하도록 레이아웃 입힘.
-        ConstraintLayout monthConslay = (ConstraintLayout) view.findViewById(R.id.constraintLayoutMonth);
 
-        monthNum = (TextView) view.findViewById(R.id.Month);
+        constraintLayoutHealth = view.findViewById(R.id.constraintLayoutHealth);
+        constraintLayoutHealth.setVisibility(View.GONE);
+        constraintLayoutNone = view.findViewById(R.id.constraintLayoutNone);
+        constraintLayoutNone.setVisibility(View.GONE);
 
-        cal = Calendar.getInstance();
-
-        day = cal.get(Calendar.DAY_OF_MONTH);
-        month = cal.get(Calendar.MONTH)+1;
-        year = cal.get(Calendar.YEAR);
-        if(month>=10 && day<10){
-            date = year + "-" + month + "-0" + day;
-        }else if(month<10 && day>=10){
-            date = year + "-0" + month + "-" + day;
-        } else if (month>=10 && day>=10) {
-            date = year + "-" + month + "-" + day;
-        }else{
-            date = year + "-0" + month + "-0" + day;
-        }
-        setdate(date);
-        Log.d("Today : ", date);
-        monthConslay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        monthOfYear += 1;
-                        if(monthOfYear>=10 && dayOfMonth<10){
-                            date = year + "-" + monthOfYear + "-0" + dayOfMonth;
-                        }else if(monthOfYear<10 && dayOfMonth>=10){
-                            date = year + "-0" + monthOfYear + "-" + dayOfMonth;
-                        } else if (monthOfYear>=10 && dayOfMonth>=10) {
-                            date = year + "-" + monthOfYear + "-" + dayOfMonth;
-                        }else{
-                            date = year + "-0" + monthOfYear + "-0" + dayOfMonth;
-                        }
-                        setdate(date);
-                    }
-                }, year, month-1, day);
-                datePickerDialog.show();
-            }
-        });
+        arcProgress = view.findViewById(R.id.arc_progress);
+        mHandler = new Handler();
 
         //칼로리 부분
 
-        sPeed = (TextView) view.findViewById(R.id.speed);
-        sPeedText = (TextView) view.findViewById(R.id.speed_text);
-        cOnsume = (TextView) view.findViewById(R.id.consume);
+        speedTextView = view.findViewById(R.id.speed_text);
+        kcalTextView = view.findViewById(R.id.burnUpTextView);
+        distanceTextView = view.findViewById(R.id.distanceTextView);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
@@ -135,21 +88,86 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
         }
         userModel = new UserModel();
         healthModel = new HealthModel();
-        Log.d(TAG, "Initalizing Bluetooth adapter...");
+
+        final CollapsibleCalendar collapsibleCalendar = view.findViewById(R.id.collapsibleCalendarView);
+        collapsibleCalendar.setState(0);
+        collapsibleCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
+            @Override
+            public void onDaySelect() {
+                Day day = collapsibleCalendar.getSelectedDay();
+                final String dayFormat = day.getYear() + "-" + (day.getMonth() + 1) + "-" + day.getDay();
+
+                collapsibleCalendar.collapse(0);
+
+                FirebaseDatabase.getInstance().getReference().child("HEALTH").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    HealthModel healthModel = new HealthModel();
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                            healthModel = dataSnapshot.child(dayFormat).getValue(HealthModel.class);
+
+                            if(healthModel != null) {
+                                constraintLayoutNone.setVisibility(View.GONE);
+                                constraintLayoutHealth.setVisibility(View.VISIBLE);
+                                kcalTextView.setText(healthModel.getKcal());
+                                distanceTextView.setText(healthModel.getDistance());
+                                speedTextView.setText(healthModel.getSpeed());
+
+                                Thread t = new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                //수치가 올라가는 코드
+                                                ObjectAnimator anim = ObjectAnimator.ofInt(arcProgress, "progress", 0, 50);
+                                                anim.setInterpolator(new DecelerateInterpolator());
+                                                anim.setDuration(500);
+                                                anim.start();
+
+                                                //페이드인 되는 코드
+                                                /*AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.progress_anim);
+                                                set.setInterpolator(new DecelerateInterpolator());
+                                                set.setTarget(arcProgress);
+                                                set.start();*/
+                                            }
+                                        });
+                                    }
+                                });
+                                t.start();
+                            } else {
+                                constraintLayoutHealth.setVisibility(View.GONE);
+                                constraintLayoutNone.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d("databaseError", databaseError.getMessage());
+                    }
+                });
+            }
+
+            @Override
+            public void onItemClick(View view) {
+
+            }
+            @Override
+            public void onDataUpdate() {
+
+            }
+            @Override
+            public void onMonthChange() {
+
+            }
+            @Override
+            public void onWeekChange(int i) {
+
+            }
+        });
 
         return view;
     }
 
-    protected void setdate(String isdate){
-        //user가 있으면 기존에 저장된 값을 호출함.
-        this.date = isdate;
-        String datetoday = isdate;
-        String year = datetoday.substring(0,4);
-        String month = datetoday.substring(5,7);
-        String day = datetoday.substring(8,10);
-
-        monthNum.setText(year+"." +month+"."+day);
-        listenerCode = 1;
+    public void setdate(String isdate){
         if (user != null) {
             // User is signed in
             if (mDatabase.child("HEALTH").child(uid).getKey() != null) {
@@ -158,8 +176,8 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         healthModel = dataSnapshot.child(date).getValue(HealthModel.class);
                         if (healthModel != null) {
-                            cOnsume.setText(healthModel.kcal + "kcal");
-                            sPeedText.setText(healthModel.speed + "km");
+                            kcalTextView.setText(healthModel.getKcal() + "kcal");
+                            speedTextView.setText(healthModel.getSpeed() + "km");
                         }
                     }
                     @Override
@@ -173,48 +191,32 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
         }
     }
     private void handleMessage(Message msg) { // 핸들러가 gui수정
-        cOnsume.setText(cal2 + "kcal");
-        sPeedText.setText(speed + "km");
+        kcalTextView.setText(cal2 + "kcal");
+        speedTextView.setText(speedTextView + "km");
         Log.d(LOG_TAG, "mhcal2:  " + cal2+"mhspeed: "+cal2);
     }
     public void onStart() {
         super.onStart();
 
-        cal = Calendar.getInstance();
-
-        day = cal.get(Calendar.DAY_OF_MONTH);
-        month = cal.get(Calendar.MONTH)+1;
-        year = cal.get(Calendar.YEAR);
-        if(month>=10 && day<10){
-            date = year + "-" + month + "-0" + day;
-        }else if(month<10 && day>=10){
-            date = year + "-0" + month + "-" + day;
-        } else if (month>=10 && day>=10) {
-            date = year + "-" + month + "-" + day;
-        }else{
-            date = year + "-0" + month + "-0" + day;
-        }
-        setdate(date);
-
         if(user != null) {
-            mDatabase.child("HEALTH").child(uid).child(date).addValueEventListener(new ValueEventListener() {
+            mDatabase.child("HEALTH").child(uid).child("2018-08-13").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     healthModel = dataSnapshot.getValue(HealthModel.class);
                     if (healthModel != null) {
-                        cal2 = healthModel.kcal;
-                        speed = healthModel.speed;
+                        cal2 = healthModel.getKcal();
                         Log.d(LOG_TAG, "cal2:  " + cal2 + "speed: " + cal2);
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    Log.d("databaseError", databaseError.getMessage());
                 }
             });
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

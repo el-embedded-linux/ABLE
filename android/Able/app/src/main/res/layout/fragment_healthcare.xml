@@ -2,89 +2,72 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/healthcare_bg">
+    android:background="@drawable/healthcare_bg"
+    android:paddingTop="65dp"
+    >
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayoutMonth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/Month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="70dp"
-            android:text="5"
-            android:textColor="#FFFFFF"
-            android:textSize="60sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="83dp"
-            android:text="월"
-            android:textColor="#FFFFFF"
-            android:textSize="33sp"
-            android:visibility="gone"
-            app:layout_constraintStart_toEndOf="@+id/Month"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
+    <com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
+        android:id="@+id/collapsibleCalendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:buttonLeft_drawableTintColor="@android:color/white"
+        app:buttonRight_drawableTintColor="@android:color/white"
+        app:expandIconColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:primaryColor="@color/transparent"
+        app:selectedItem_background="@drawable/circle_white_solid_background"
+        app:selectedItem_textColor="#ee8a06"
+        app:textColor="@android:color/white"
+        app:todayItem_background="@drawable/circle_white_stroke_background"
+        app:todayItem_textColor="@android:color/white" />
 
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="391dp"
-        android:layout_height="525dp"
+        android:id="@+id/constraintLayoutHealth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rectangle"
-        tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="150dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/collapsibleCalendarView"
+        app:layout_constraintVertical_bias="0.947">
 
-        <ImageView
-            android:id="@+id/graph"
-            android:layout_width="233dp"
-            android:layout_height="233dp"
+
+        <com.github.lzyzsd.circleprogress.ArcProgress
+            android:id="@+id/arc_progress"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="30dp"
-            android:src="@drawable/healthcare_graph"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            custom:arc_angle="240"
+            custom:arc_bottom_text="오늘의 목표"
+            custom:arc_bottom_text_size="10dp"
+            custom:arc_finished_color="#ee8a06"
+            custom:arc_max="100"
+            custom:arc_progress="25"
+            custom:arc_stroke_width="7dp"
+            custom:arc_suffix_text="%"
 
-        <TextView
-            android:id="@+id/percent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="55dp"
-            android:gravity="center_horizontal"
-            android:text="100"
-            android:textColor="#ef8a09"
-            android:textSize="50dp"
-            app:layout_constraintStart_toStartOf="@+id/graph"
-            app:layout_constraintTop_toTopOf="@+id/graph" />
-
-        <TextView
-            android:id="@+id/Percent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="60dp"
-            android:layout_marginTop="55dp"
-            android:gravity="center_horizontal"
-            android:text="%"
-            android:textColor="#ef8a09"
-            android:textSize="50dp"
-            app:layout_constraintEnd_toEndOf="@+id/graph"
-            app:layout_constraintTop_toTopOf="@+id/graph" />
+            custom:arc_suffix_text_padding="5dp"
+            custom:arc_text_color="#ee8a06"
+            custom:arc_text_size="35sp"
+            custom:arc_unfinished_color="#F2EDFF" />
 
         <TextView
             android:id="@+id/goal_text"
@@ -92,43 +75,44 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="170dp"
             android:gravity="center_horizontal"
-            android:text="목표 완수까지 0km가 남았습니다!"
+            android:text="목표 완수까지 50km가 남았습니다!"
             android:textColor="#f6a53f"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/arc_progress" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="654dp"
+            android:layout_height="0dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/graph">
+            app:layout_constraintTop_toBottomOf="@+id/goal_text">
 
             <TextView
-                android:id="@+id/consume"
+                android:id="@+id/burnUpTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          kcal"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
-                tools:layout_editor_absoluteX="77dp"
-                tools:layout_editor_absoluteY="319dp" />
+                app:layout_constraintBottom_toBottomOf="@+id/pic_speed"
+                app:layout_constraintStart_toEndOf="@+id/pic_speed"
+                app:layout_constraintTop_toTopOf="@+id/pic_speed" />
 
             <TextView
                 android:id="@+id/speed_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="           km/h"
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
                 app:layout_constraintBottom_toBottomOf="@+id/pic_kcal"
@@ -136,11 +120,10 @@
                 app:layout_constraintTop_toTopOf="@+id/pic_kcal" />
 
             <TextView
-                android:id="@+id/distance"
+                android:id="@+id/distanceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="            km "
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
                 app:layout_constraintBottom_toBottomOf="@+id/pic_km"
@@ -151,18 +134,43 @@
                 android:id="@+id/pic_speed"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="30dp"
                 android:src="@drawable/healthcare_speed"
-                tools:layout_editor_absoluteX="45dp"
-                tools:layout_editor_absoluteY="327dp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pic_km" />
 
             <ImageView
                 android:id="@+id/pic_km"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/healthcare_km"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="45dp" />
+                app:layout_constraintVertical_bias="0.3" />
+
+            <ImageView
+                android:id="@+id/pic_kcal"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/heathcare_kcal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pic_speed" />
 
             <View
                 android:id="@+id/line"
@@ -170,11 +178,11 @@
                 android:layout_height="1dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="2dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 android:background="#e5e5e5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pic_km" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/speed"
@@ -183,19 +191,11 @@
                 android:text="속도"
                 android:textColor="#ffbc7f"
                 android:textSize="10sp"
-                app:layout_constraintBottom_toTopOf="@+id/distance"
-                app:layout_constraintStart_toStartOf="@+id/distance" />
-
-            <ImageView
-                android:id="@+id/pic_kcal"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/heathcare_kcal"
-                tools:layout_editor_absoluteX="45dp"
-                tools:layout_editor_absoluteY="375dp" />
+                app:layout_constraintBottom_toTopOf="@+id/distanceTextView"
+                app:layout_constraintStart_toStartOf="@+id/distanceTextView" />
 
             <TextView
-                android:id="@+id/kcal_text"
+                android:id="@+id/kcal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="소모한 칼로리"
@@ -211,11 +211,89 @@
                 android:text="이동거리"
                 android:textColor="#ffbc7f"
                 android:textSize="10sp"
-                app:layout_constraintBottom_toTopOf="@+id/consume"
-                app:layout_constraintStart_toStartOf="@+id/consume" />
+                app:layout_constraintBottom_toTopOf="@+id/burnUpTextView"
+                app:layout_constraintStart_toStartOf="@+id/burnUpTextView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="km"
+                android:textColor="#ef8c0b"
+                android:textSize="23.3sp"
+                app:layout_constraintBottom_toBottomOf="@+id/distanceTextView"
+                app:layout_constraintStart_toEndOf="@+id/distanceTextView"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="kcal"
+                android:textColor="#ef8c0b"
+                android:textSize="23.3sp"
+                app:layout_constraintBottom_toBottomOf="@+id/speed_text"
+                app:layout_constraintStart_toEndOf="@+id/speed_text"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="km/h"
+                android:textColor="#ef8c0b"
+                android:textSize="23.3sp"
+                app:layout_constraintBottom_toBottomOf="@+id/burnUpTextView"
+                app:layout_constraintStart_toEndOf="@+id/burnUpTextView"
+                />
+
         </android.support.constraint.ConstraintLayout>
+
 
     </android.support.constraint.ConstraintLayout>
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayoutNone"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/frame40"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/collapsibleCalendarView"
+        app:layout_constraintVertical_bias="0.947">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="100dp"
+            android:src="@drawable/navigation_magnifier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="기록이 없습니다\n운동을 해주세요"
+            android:textColor="#ffffff"
+            android:textSize="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
