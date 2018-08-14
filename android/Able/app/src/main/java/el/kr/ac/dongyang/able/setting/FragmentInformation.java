@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import el.kr.ac.dongyang.able.R;
+import el.kr.ac.dongyang.able.SharedPref;
 import el.kr.ac.dongyang.able.model.UserModel;
 
 /**
@@ -96,6 +98,7 @@ public class FragmentInformation extends Fragment{
                 if(mName.length() != 0) {
                     userModel.userName = mName.getText().toString();
                     mDatabase.child("USER").child(uid).child("userName").setValue(userModel.userName);
+                    SharedPref.getInstance(getContext()).setData("userName", userModel.userName);
                 }
                 if(mAddress.length() != 0) {
                     userModel.address = mAddress.getText().toString();
