@@ -1,6 +1,7 @@
 //지자기센서
 //심박동측정센서
 //링LED
+int SensorPin = A0;
 
 void setup(){
   Serial.begin(9600);
