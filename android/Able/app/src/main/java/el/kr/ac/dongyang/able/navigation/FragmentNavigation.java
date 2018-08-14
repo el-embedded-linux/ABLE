@@ -100,6 +100,9 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
 
         nodeText = view.findViewById(R.id.nodetext);
         beforeText = view.findViewById(R.id.beforeText);
+        nodeText.setVisibility(View.GONE);
+        beforeText.setVisibility(View.GONE);
+
         constLocationInfo = view.findViewById(R.id.constLocationInfo);
         textTime = view.findViewById(R.id.textTime);
         textDistance = view.findViewById(R.id.textDistance);

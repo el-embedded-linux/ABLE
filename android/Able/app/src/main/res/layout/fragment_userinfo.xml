@@ -1,67 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/home_bg">
+    android:background="@drawable/home_bg"
+    android:paddingLeft="45dp"
+    android:paddingRight="45dp"
+    android:paddingTop="70dp">
 
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/editTextName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="94dp"
-        android:ems="10"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="15dp"
         android:hint="이름"
-        android:inputType="textPersonName"
-        android:textColor="#D8D8D8" />
+        android:textColor="#D8D8D8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight" />
 
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/editTextAddr"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/editTextName"
         android:layout_below="@+id/editTextName"
-        android:layout_marginTop="17dp"
-        android:ems="10"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:hint="주소(동까지 입력)"
-        android:inputType="textPersonName"
-        android:textColor="#D8D8D8" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextName"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight" />
 
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/editTextHeight"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/editTextAddr"
         android:layout_below="@+id/editTextAddr"
-        android:layout_marginTop="25dp"
-        android:ems="10"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:hint="키"
-        android:inputType="textPostalAddress"
-        android:textColor="#D8D8D8" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextAddr"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight" />
 
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/editTextWeight"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/editTextHeight"
         android:layout_below="@+id/editTextHeight"
-        android:layout_marginTop="16dp"
-        android:ems="10"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:hint="몸무게"
-        android:inputType="textPostalAddress"
-        android:textColor="#D8D8D8" />
-    <EditText
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextHeight"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/editTextGoal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editTextHeight"
+        android:layout_below="@+id/editTextHeight"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:hint="목표(km)"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextWeight"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight" />
+
+
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/editTextComment"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/editTextWeight"
         android:layout_below="@+id/editTextWeight"
-        android:layout_marginTop="16dp"
-        android:ems="10"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:hint="상태 메시지"
-        android:inputType="textPostalAddress"
-        android:textColor="#D8D8D8" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextGoal"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight" />
+
     <Button
         android:id="@+id/info_save"
         android:layout_width="wrap_content"
@@ -69,6 +114,12 @@
         android:layout_alignEnd="@+id/editTextWeight"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/editTextWeight"
-        android:layout_marginBottom="18dp"
-        android:text="저장" />
-</RelativeLayout>
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/login_white_btn"
+        android:text="저장"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</android.support.constraint.ConstraintLayout>

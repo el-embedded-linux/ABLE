@@ -18,6 +18,7 @@ public class UserModel {
     public String address;
     public String height;
     public String weight;
+    public String goal;
 
     public String getUserName() {
         return userName;
