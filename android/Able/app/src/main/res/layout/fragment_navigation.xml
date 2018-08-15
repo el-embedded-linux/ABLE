@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:background="@drawable/navigation_bg"
     android:paddingTop="70dp"
+    android:clickable="true"
     >
 
     <android.support.constraint.ConstraintLayout
@@ -58,7 +59,7 @@
         android:src="@drawable/frame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchLayout"></WebView>
+        app:layout_constraintTop_toBottomOf="@+id/searchLayout"/>
 
     <TextView
         android:id="@+id/beforeText"

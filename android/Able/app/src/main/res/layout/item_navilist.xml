@@ -2,14 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <!--<ImageView
-        android:id="@+id/frienditem_imageview"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/drawer_menu_users"/>-->
-
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
@@ -25,22 +19,32 @@
             android:layout_marginTop="10dp"
             >
 
+            <ImageView
+                android:id="@+id/frienditem_imageview"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/navigation_flag"
+                />
+
             <TextView
                 android:id="@+id/naviitem_textview_name"
                 android:text="이름"
                 android:textSize="20dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/frienditem_imageview"/>
 
             <TextView
                 android:id="@+id/naviitem_textview_address"
                 android:text="이름"
                 android:textSize="10dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/naviitem_textview_name"
+                android:layout_toRightOf="@+id/frienditem_imageview"
                 />
         </RelativeLayout>
 

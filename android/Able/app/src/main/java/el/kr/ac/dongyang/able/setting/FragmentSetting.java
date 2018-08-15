@@ -174,13 +174,7 @@ public class FragmentSetting extends Fragment{
             }
         });
 
-        /*mConversationArrayAdapter = new ArrayAdapter<>( getActivity(), android.R.layout.simple_list_item_1 );
-        //mMessageListview.setAdapter(mConversationArrayAdapter);*/
-
         return view;
-    }
-    public void setSpeed(Double speed){
-        this.speed = speed;
     }
 
     @Override
@@ -193,7 +187,7 @@ public class FragmentSetting extends Fragment{
                 userModel = dataSnapshot.getValue(UserModel.class);
                 if (userModel != null && userModel.weight != null) {
                     weight = Double.parseDouble(userModel.weight);
-                    Log.d(TAG, "start - " + Double.toString(weight));
+                    Log.d(TAG, "start - " + weight);
                 }
             }
 

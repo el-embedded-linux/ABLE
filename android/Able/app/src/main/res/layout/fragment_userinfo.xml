@@ -7,7 +7,9 @@
     android:background="@drawable/home_bg"
     android:paddingLeft="45dp"
     android:paddingRight="45dp"
-    android:paddingTop="70dp">
+    android:paddingTop="70dp"
+    android:clickable="true"
+    >
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/editTextName"

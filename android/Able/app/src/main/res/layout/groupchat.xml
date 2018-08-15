@@ -3,7 +3,9 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/home_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clickable="true"
+    >
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/pink_icon"

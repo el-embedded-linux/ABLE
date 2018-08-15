@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/home_bg"
-    android:paddingTop="70dp">
+    android:paddingTop="70dp"
+    android:clickable="true"
+    >
 
     <ImageView
         android:id="@+id/fragment_register_imageview_profile"
