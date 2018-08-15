@@ -1,0 +1,23 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\NewBehaviourScript.cs">
+    <Files>
+      <File FileName="Assets\Scripts\PlayData\PlayTimeController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Btn_Map.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\NewBehaviourScript.cs" Line="123" Column="38" />
+      <File FileName="Assets\Scripts\ButtonSelect.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\ButtonAct.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Btn.cs" Line="1" Column="1" />
+      <File FileName="Assets\Btn_Menu.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayData\TotalDistantceController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayData\KcalTextController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Firebase\RealTimeDB.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Firebase\Login.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Player\MenuButton.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
