@@ -2,6 +2,7 @@ package el.kr.ac.dongyang.able.friend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +32,7 @@ import java.util.List;
 
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.RecyclerItemClickListener;
+import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
 import el.kr.ac.dongyang.able.model.FriendModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
@@ -55,28 +59,11 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
         View view = inflater.inflate(R.layout.fragment_userlist,container,false);
         getActivity().setTitle("UserList");
         //리사이클러뷰 맵핑
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.fragment_recyclerview);
+        RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new UserlistFragmentRecyclerViewAdapter());
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
-            uid = user.getUid();
-        }
-
-        //리사이클러뷰 클릭이벤트
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        FirebaseDatabase.getInstance().getReference().child("FRIEND").child(uid).child(userModels.get(position).userName).setValue("true");
-                        Toast.makeText(getActivity(),position+"번 째 유저 친구추가",Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                        Toast.makeText(getActivity(),position+"번 째 아이템 롱 클릭", Toast.LENGTH_SHORT).show();
-                    }
-                }));
+        if(user != null){ uid = user.getUid(); }
 
         return view;
     }
@@ -88,23 +75,20 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
         //받아온 값을 userModels에 넣음.
         public UserlistFragmentRecyclerViewAdapter() {
             userModels = new ArrayList<>();
+            final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             FirebaseDatabase.getInstance().getReference().child("USER").addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     userModels.clear();
-                    if(user != null){
-                        for(DataSnapshot snapshot :dataSnapshot.getChildren()){
-                            UserModel userModel = snapshot.getValue(UserModel.class);
-                            if(userModel.uid.equals(uid)){
-                                continue;
-                            }
-                            userModels.add(userModel);
-                            //userModels.add(snapshot.getValue(UserModel.class));
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        UserModel userModel = snapshot.getValue(UserModel.class);
+                        if(userModel.uid.equals(myUid)){
+                            continue;
                         }
+                        userModels.add(snapshot.getValue(UserModel.class));
                     }
-                notifyDataSetChanged();
+                    notifyDataSetChanged();
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }
@@ -123,16 +107,22 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
 
         //리사이클러뷰의 내용을 넣음.
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            /*Glide.with
-                    (holder.itemView.getContext())
-                    // .load(userModels.get(position).profieImageUrl)
-                    .load(R.drawable.drawer_menu_users)
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+            Glide.with(holder.itemView.getContext())
+                    .load(userModels.get(position).profileImageUrl)
                     .apply(new RequestOptions().circleCrop())
-                    .into(((CustomViewHolder)holder).imageView);*/
-
+                    .into(((CustomViewHolder) holder).imageView);
             ((CustomViewHolder)holder).textView.setText(userModels.get(position).userName);
-
+            ((CustomViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FirebaseDatabase.getInstance().getReference().child("FRIEND").child(uid).child(userModels.get(position).uid).child("userName").setValue(userModels.get(position).userName);
+                    Toast.makeText(getActivity(), position + "번 째 유저 친구추가", Toast.LENGTH_SHORT).show();
+                }
+            });
+            if(userModels.get(position).comment != null){
+                ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).comment);
+            }
         }
 
         //필수, 아이템 갯수
@@ -145,11 +135,13 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
         private class CustomViewHolder extends RecyclerView.ViewHolder {
             public ImageView imageView;
             public TextView textView;
+            public TextView textView_comment;
 
             public CustomViewHolder(View view) {
                 super(view);
-                //imageView = (ImageView) view.findViewById(R.id.frienditem_imageview);
-                textView = (TextView) view.findViewById(R.id.frienditem_textview);
+                imageView = view.findViewById(R.id.frienditem_imageview);
+                textView = view.findViewById(R.id.frienditem_textview);
+                textView_comment = view.findViewById(R.id.frienditem_textview_comment);
             }
         }
     }

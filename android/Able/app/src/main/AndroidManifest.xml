@@ -60,6 +60,7 @@
         <activity android:name=".chat.GroupMessageActivity"/>
         <activity android:name=".chat.MessageActivity" />
         <activity android:name=".groupriding.SelectFriendActivity"/>
+        <activity android:name=".friend.ProfileActivity"/>
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>

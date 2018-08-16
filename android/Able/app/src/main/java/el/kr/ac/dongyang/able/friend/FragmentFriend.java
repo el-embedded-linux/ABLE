@@ -1,6 +1,10 @@
 package el.kr.ac.dongyang.able.friend;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -16,6 +20,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +36,13 @@ import java.util.List;
 import java.util.Map;
 
 import el.kr.ac.dongyang.able.R;
+import el.kr.ac.dongyang.able.chat.MessageActivity;
 import el.kr.ac.dongyang.able.friend.FragmentUserlist;
+import el.kr.ac.dongyang.able.groupriding.ChatFragment;
+import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
+import el.kr.ac.dongyang.able.model.ChatModel;
+import el.kr.ac.dongyang.able.model.FriendModel;
+import el.kr.ac.dongyang.able.model.UserModel;
 
 /**
  * Created by impro on 2018-05-08.
@@ -40,7 +52,7 @@ import el.kr.ac.dongyang.able.friend.FragmentUserlist;
  * 마지막 접속시간 미구현
  */
 
-public class FragmentFriend extends Fragment{
+public class FragmentFriend extends Fragment {
 
     Button btn;
     FragmentTransaction ft;
@@ -54,11 +66,11 @@ public class FragmentFriend extends Fragment{
 
     public FragmentFriend() {
     }
-    
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friend,container,false);
+        View view = inflater.inflate(R.layout.fragment_friend, container, false);
         getActivity().setTitle("Friend");
 
         ConstraintLayout loginConstraintLayout = view.findViewById(R.id.loginConlayout);
@@ -72,7 +84,7 @@ public class FragmentFriend extends Fragment{
                 fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
                 Log.i("fagmentTag", fragmentTag);
                 getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft=getActivity().getSupportFragmentManager().beginTransaction();
+                ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.main_layout, fragment);
                 ft.addToBackStack(fragmentTag);
                 ft.commit();
@@ -86,7 +98,7 @@ public class FragmentFriend extends Fragment{
         recyclerView.setVisibility(View.GONE);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
+        if (user != null) {
             uid = user.getUid();
             btn.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
@@ -104,69 +116,93 @@ public class FragmentFriend extends Fragment{
         리스트 friendList에 저장함.
     */
     class FriendlistFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        public FriendlistFragmentRecyclerViewAdapter() {
-            friendMap = new HashMap();
-            friendList = new ArrayList<>();
 
+        private List<FriendModel> friendModels = new ArrayList<>();
+        private List<String> keys = new ArrayList<>();
+        private ArrayList<String> friendUsers = new ArrayList<>();
+
+        public FriendlistFragmentRecyclerViewAdapter() {
             FirebaseDatabase.getInstance().getReference().child("FRIEND").addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    friendList.clear();
-                    if(user != null) {
-                        for (DataSnapshot snapshot : dataSnapshot.child(uid).getChildren()) {
-                            friendMap.clear();
-                            friendMap.put(snapshot.getKey(), snapshot.getValue());
-                            Iterator iterator = friendMap.entrySet().iterator();
-                            while (iterator.hasNext()) {
-                                entry = (Map.Entry) iterator.next();
-                                Log.d("entry", "Key: " + entry.getKey() + ", Value: " + entry.getValue());
-                                friendList.add(entry.getKey().toString());
-                            }
-                        }
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    friendModels.clear();
+                    keys.clear();
+                    for (DataSnapshot item : dataSnapshot.child(uid).getChildren()) {
+                        //friendModels.add(item.getValue(FriendModel.class));
+                        keys.add(item.getKey());
                     }
-                notifyDataSetChanged();
+                    notifyDataSetChanged();
                 }
+
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
                 }
             });
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_userlist,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_userlist, parent, false);
 
             return new CustomViewHolder(view);
         }
 
-        //Glide 라는 깃허브 오픈 라이브러리를 그대로 따라해봤으나
-        //안됐음. 에러코드는 app수준 빌드.그래들에 있음.ㅠ..
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            /*Glide.with
-                    (holder.itemView.getContext())
-                    // .load(userModels.get(position).profieImageUrl)
-                    .load(R.drawable.drawer_menu_users)
-                    .apply(new RequestOptions().circleCrop())
-                    .into(((CustomViewHolder)holder).imageView);*/
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+            final CustomViewHolder customViewHolder = (CustomViewHolder) holder;
+            String friendUid = null;
+            // 유저를 체크
+            String user = keys.get(position);
+            friendUid = user;
+            friendUsers.add(friendUid);
 
-            ((CustomViewHolder)holder).textView.setText(friendList.get(position).toString());
+            FirebaseDatabase.getInstance().getReference().child("USER").child(user).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                    Glide.with(customViewHolder.itemView.getContext())
+                            .load(userModel.profileImageUrl)
+                            .apply(new RequestOptions().circleCrop())
+                            .into(customViewHolder.imageView);
 
+                    customViewHolder.textView.setText(userModel.userName);
+
+                    if (userModel.comment != null) {
+                        customViewHolder.textView_comment.setText(userModel.comment);
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), ProfileActivity.class);
+                    intent.putExtra("friendUid", keys.get(position));
+                        startActivity(intent);
+                }
+            });
         }
+
 
         @Override
         public int getItemCount() {
-            return friendList.size();
+            return keys.size();
         }
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
             public ImageView imageView;
             public TextView textView;
+            public TextView textView_comment;
 
             public CustomViewHolder(View view) {
                 super(view);
-                //imageView = (ImageView) view.findViewById(R.id.frienditem_imageview);
-                textView = (TextView) view.findViewById(R.id.frienditem_textview);
+                imageView = view.findViewById(R.id.frienditem_imageview);
+                textView = view.findViewById(R.id.frienditem_textview);
+                textView_comment = view.findViewById(R.id.frienditem_textview_comment);
             }
         }
     }
