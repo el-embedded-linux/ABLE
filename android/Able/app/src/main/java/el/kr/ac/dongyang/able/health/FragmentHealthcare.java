@@ -119,9 +119,13 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         userModel = dataSnapshot.getValue(UserModel.class);
-                                        if(userModel.goal == null){
+                                        if(userModel.goal == null) {
                                             currentGoal = 0;
                                             goalTextView.setText("먼저 내정보 설정에서 목표를 설정해주세요");
+                                        }else if(healthModel.getDistance().equals("")){
+                                            currentGoal = 0;
+                                            goalTextView.setText("목표 완수까지 " + userModel.goal + "km가 남았습니다!");
+
                                         } else if(Float.parseFloat(healthModel.getDistance()) < Float.parseFloat(userModel.goal)) {
                                             currentGoal = (Float.parseFloat(healthModel.getDistance()) / Float.parseFloat(userModel.goal)) * 100;
                                             float remainDistance = Float.parseFloat(userModel.goal)-Float.parseFloat(healthModel.getDistance());

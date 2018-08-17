@@ -26,7 +26,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="a55824fa99f1031fc4b2638f730b8806"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -35,6 +35,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity"/>
 
         <!-- 페이스북 로그인시 페이스북 계정 선택 뷰를 호출함 -->
         <meta-data
@@ -67,6 +69,8 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".friend.HorizontalBarChartActivity"/>
 
     </application>
 
