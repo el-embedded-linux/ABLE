@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/healthcare_bg"
     android:paddingTop="65dp"
+    android:clickable="true"
     >
 
     <com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
@@ -104,9 +105,10 @@
                 android:layout_marginTop="8dp"
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
-                app:layout_constraintBottom_toBottomOf="@+id/pic_speed"
-                app:layout_constraintStart_toEndOf="@+id/pic_speed"
-                app:layout_constraintTop_toTopOf="@+id/pic_speed" />
+                app:layout_constraintBottom_toBottomOf="@+id/pic_kcal"
+                app:layout_constraintStart_toEndOf="@+id/pic_kcal"
+                app:layout_constraintTop_toTopOf="@+id/pic_kcal"
+                 />
 
             <TextView
                 android:id="@+id/speed_text"
@@ -115,9 +117,9 @@
                 android:layout_marginStart="8dp"
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
-                app:layout_constraintBottom_toBottomOf="@+id/pic_kcal"
-                app:layout_constraintStart_toEndOf="@+id/pic_kcal"
-                app:layout_constraintTop_toTopOf="@+id/pic_kcal" />
+                app:layout_constraintBottom_toBottomOf="@+id/pic_speed"
+                app:layout_constraintStart_toEndOf="@+id/pic_speed"
+                app:layout_constraintTop_toTopOf="@+id/pic_speed" />
 
             <TextView
                 android:id="@+id/distanceTextView"
@@ -191,8 +193,9 @@
                 android:text="속도"
                 android:textColor="#ffbc7f"
                 android:textSize="10sp"
-                app:layout_constraintBottom_toTopOf="@+id/distanceTextView"
-                app:layout_constraintStart_toStartOf="@+id/distanceTextView" />
+                app:layout_constraintBottom_toTopOf="@+id/speed_text"
+                app:layout_constraintStart_toStartOf="@+id/speed_text"
+                 />
 
             <TextView
                 android:id="@+id/kcal"
@@ -201,8 +204,9 @@
                 android:text="소모한 칼로리"
                 android:textColor="#ffbc7f"
                 android:textSize="10sp"
-                app:layout_constraintBottom_toTopOf="@+id/speed_text"
-                app:layout_constraintStart_toStartOf="@+id/speed_text" />
+                app:layout_constraintBottom_toTopOf="@+id/burnUpTextView"
+                app:layout_constraintStart_toStartOf="@+id/burnUpTextView"
+                 />
 
             <TextView
                 android:id="@+id/km"
@@ -211,8 +215,8 @@
                 android:text="이동거리"
                 android:textColor="#ffbc7f"
                 android:textSize="10sp"
-                app:layout_constraintBottom_toTopOf="@+id/burnUpTextView"
-                app:layout_constraintStart_toStartOf="@+id/burnUpTextView" />
+                app:layout_constraintBottom_toTopOf="@+id/distanceTextView"
+                app:layout_constraintStart_toStartOf="@+id/distanceTextView"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -232,8 +236,8 @@
                 android:text="kcal"
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
-                app:layout_constraintBottom_toBottomOf="@+id/speed_text"
-                app:layout_constraintStart_toEndOf="@+id/speed_text"
+                app:layout_constraintBottom_toBottomOf="@+id/burnUpTextView"
+                app:layout_constraintStart_toEndOf="@+id/burnUpTextView"
                 />
 
             <TextView
@@ -243,8 +247,8 @@
                 android:text="km/h"
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
-                app:layout_constraintBottom_toBottomOf="@+id/burnUpTextView"
-                app:layout_constraintStart_toEndOf="@+id/burnUpTextView"
+                app:layout_constraintBottom_toBottomOf="@+id/speed_text"
+                app:layout_constraintStart_toEndOf="@+id/speed_text"
                 />
 
         </android.support.constraint.ConstraintLayout>

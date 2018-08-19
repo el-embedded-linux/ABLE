@@ -55,8 +55,6 @@ import static java.lang.System.exit;
 public class FragmentSetting extends Fragment{
 
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-    FragmentHealthcare f = new FragmentHealthcare();
     Double speed;
     Switch btsw;
     Double weight;
@@ -176,13 +174,7 @@ public class FragmentSetting extends Fragment{
             }
         });
 
-        /*mConversationArrayAdapter = new ArrayAdapter<>( getActivity(), android.R.layout.simple_list_item_1 );
-        //mMessageListview.setAdapter(mConversationArrayAdapter);*/
-
         return view;
-    }
-    public void setSpeed(Double speed){
-        this.speed = speed;
     }
 
     @Override
@@ -193,11 +185,12 @@ public class FragmentSetting extends Fragment{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userModel = dataSnapshot.getValue(UserModel.class);
-                if(!userModel.weight.equals("")) {
+                if (userModel != null && userModel.weight != null) {
                     weight = Double.parseDouble(userModel.weight);
-                    Log.d(TAG, "start - " + Double.toString(weight));
+                    Log.d(TAG, "start - " + weight);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }

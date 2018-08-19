@@ -76,23 +76,25 @@ public class FragmentHome extends android.support.v4.app.Fragment{
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null) {
-            String uid = user.getUid();
-            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            final String uid = user.getUid();
+            userModel = new UserModel();
+            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     userModel = dataSnapshot.getValue(UserModel.class);
-                    //왜 userModel 이 null이지
                     if (userModel != null) {
                         userName = userModel.getUserName();
+                        textId.setText(userName);
                     }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
-            textId.setText(userName);
         }
+
+        //String name = SharedPref.getInstance(getContext()).getData("userName");
+        //textId.setText(name);
 
         return view;
     }

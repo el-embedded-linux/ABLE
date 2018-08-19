@@ -9,7 +9,8 @@
     android:paddingBottom="15dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
-    android:paddingTop="70dp">
+    android:paddingTop="70dp"
+    android:clickable="true">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/naviText2"
@@ -76,7 +77,7 @@
     </android.support.v7.widget.RecyclerView>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/checkEndPoint"
+        android:id="@+id/checkEndPointlayout"
         android:layout_width="350dp"
         android:layout_height="350dp"
         android:layout_marginBottom="8dp"
@@ -114,5 +115,20 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/naviListStartBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/navigation_bg_button"
+        android:text="목적지 설정"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_naviList"
+        app:layout_constraintEnd_toEndOf="@+id/fragment_naviList"
+        app:layout_constraintStart_toStartOf="@+id/fragment_naviList" />
 
 </android.support.constraint.ConstraintLayout>

@@ -53,8 +53,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.github.lzyzsd:circleprogress:1.2.1'
     implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.0'
-
-
-
+    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.airbnb.android:lottie:2.6.0-beta19'
 }
 apply plugin: 'com.google.gms.google-services'

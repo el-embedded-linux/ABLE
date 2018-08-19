@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import el.kr.ac.dongyang.able.R;
+import el.kr.ac.dongyang.able.SharedPref;
 import el.kr.ac.dongyang.able.model.UserModel;
 
 /**
@@ -37,7 +39,7 @@ public class FragmentInformation extends Fragment{
     }
 
     Button infoSave;
-    EditText mName, mAddress, mHeight, mWeight, mComment;
+    EditText mName, mAddress, mHeight, mWeight, mComment, mGoal;
     FirebaseUser user;
     private DatabaseReference mDatabase;
     UserModel userModel;
@@ -54,6 +56,7 @@ public class FragmentInformation extends Fragment{
         mHeight = view.findViewById(R.id.editTextHeight);
         mWeight = view.findViewById(R.id.editTextWeight);
         mComment = view.findViewById(R.id.editTextComment);
+        mGoal = view.findViewById(R.id.editTextGoal);
         infoSave = view.findViewById(R.id.info_save);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -76,6 +79,7 @@ public class FragmentInformation extends Fragment{
                         mHeight.setText(userModel.height);
                         mWeight.setText(userModel.weight);
                         mComment.setText(userModel.comment);
+                        mGoal.setText(userModel.goal);
                     }
                 }
                 @Override
@@ -91,16 +95,31 @@ public class FragmentInformation extends Fragment{
         infoSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userModel.userName = mName.getText().toString();
-                userModel.address = mAddress.getText().toString();
-                userModel.height = mHeight.getText().toString();
-                userModel.weight = mWeight.getText().toString();
-                userModel.comment = mComment.getText().toString();
-                mDatabase.child("USER").child(uid).child("userName").setValue(userModel.userName);
-                mDatabase.child("USER").child(uid).child("address").setValue(userModel.address);
-                mDatabase.child("USER").child(uid).child("height").setValue(userModel.height);
-                mDatabase.child("USER").child(uid).child("weight").setValue(userModel.weight);
-                mDatabase.child("USER").child(uid).child("comment").setValue(userModel.comment);
+                if(mName.length() != 0) {
+                    userModel.userName = mName.getText().toString();
+                    mDatabase.child("USER").child(uid).child("userName").setValue(userModel.userName);
+                    SharedPref.getInstance(getContext()).setData("userName", userModel.userName);
+                }
+                if(mAddress.length() != 0) {
+                    userModel.address = mAddress.getText().toString();
+                    mDatabase.child("USER").child(uid).child("address").setValue(userModel.address);
+                }
+                if(mHeight.length() != 0) {
+                    userModel.height = mHeight.getText().toString();
+                    mDatabase.child("USER").child(uid).child("height").setValue(userModel.height);
+                }
+                if(mWeight.length() != 0) {
+                    userModel.weight = mWeight.getText().toString();
+                    mDatabase.child("USER").child(uid).child("weight").setValue(userModel.weight);
+                }
+                if(mComment.length() != 0) {
+                    userModel.comment = mComment.getText().toString();
+                    mDatabase.child("USER").child(uid).child("comment").setValue(userModel.comment);
+                }
+                if(mGoal.length() != 0) {
+                    userModel.goal = mGoal.getText().toString();
+                    mDatabase.child("USER").child(uid).child("goal").setValue(userModel.goal);
+                }
                 getActivity().onBackPressed();
             }
         });
