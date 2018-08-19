@@ -37,19 +37,22 @@
         android:layout_alignParentLeft="true"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_toLeftOf="@+id/messageActivity_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/messageActivity_button"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/login_white_btn"/>
+        android:background="@drawable/login_white_btn" />
+
 
     <Button
         android:id="@+id/messageActivity_button"
         android:layout_width="45dp"
-        android:layout_height="47dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/ic_chevron_right_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

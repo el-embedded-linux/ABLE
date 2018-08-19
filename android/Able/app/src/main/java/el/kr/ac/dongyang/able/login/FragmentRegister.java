@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import el.kr.ac.dongyang.able.R;
+import el.kr.ac.dongyang.able.SharedPref;
 import el.kr.ac.dongyang.able.model.UserModel;
 
 import static android.app.Activity.RESULT_OK;
@@ -132,6 +133,7 @@ public class FragmentRegister extends android.support.v4.app.Fragment {
                             FirebaseDatabase.getInstance().getReference().child("USER").child(uid).setValue(userModel);
 
                             passPushTokenToServer();
+                            SharedPref.getInstance(getContext()).setData("userName", userModel.userName);
 
                             FirebaseStorage.getInstance().getReference().child("userImages").child(uid).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                 @Override

@@ -17,9 +17,8 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/playstore_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:name=".login.KakaoLoginApplication"
         android:theme="@style/AppTheme">
@@ -27,16 +26,17 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="a55824fa99f1031fc4b2638f730b8806"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity"/>
 
         <!-- 페이스북 로그인시 페이스북 계정 선택 뷰를 호출함 -->
         <meta-data
@@ -60,14 +60,17 @@
         </activity>
 
         <activity android:name=".chat.GroupMessageActivity"/>
-        <activity android:name=".chat.MessageActivity"/>
+        <activity android:name=".chat.MessageActivity" />
         <activity android:name=".groupriding.SelectFriendActivity"/>
+        <activity android:name=".friend.ProfileActivity"/>
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".friend.HorizontalBarChartActivity"/>
 
     </application>
 

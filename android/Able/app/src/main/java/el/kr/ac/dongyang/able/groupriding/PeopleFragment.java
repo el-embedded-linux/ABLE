@@ -55,7 +55,6 @@ public class PeopleFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View view) {
                 actionB.setTitle("Action A clicked");
-                Toast.makeText(getActivity(), "actionB", Toast.LENGTH_SHORT).show();
                 Fragment fragment = new ChatFragment();
                 fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
                 Log.i("fagmentTag", fragmentTag);
@@ -74,7 +73,6 @@ public class PeopleFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View view) {
                 actionA.setTitle("Action A clicked");
-                Toast.makeText(getActivity(), "actionA", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(view.getContext(),SelectFriendActivity.class));
             }
         });

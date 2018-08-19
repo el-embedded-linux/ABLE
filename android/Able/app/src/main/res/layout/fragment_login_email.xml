@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/home_bg">
+    android:background="@drawable/home_bg"
+    android:clickable="true"
+    >
 
     <ImageView
         android:id="@+id/el_logo"

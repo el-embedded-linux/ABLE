@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -69,6 +70,8 @@ public class GroupMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_message);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         destinationRoom = getIntent().getStringExtra("destinationRoom");
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         editText = findViewById(R.id.groupMessageActivity_editText);
