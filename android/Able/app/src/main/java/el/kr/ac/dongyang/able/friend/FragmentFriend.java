@@ -1,8 +1,6 @@
 package el.kr.ac.dongyang.able.friend;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,18 +28,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import el.kr.ac.dongyang.able.R;
-import el.kr.ac.dongyang.able.chat.MessageActivity;
-import el.kr.ac.dongyang.able.friend.FragmentUserlist;
-import el.kr.ac.dongyang.able.groupriding.ChatFragment;
-import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
-import el.kr.ac.dongyang.able.model.ChatModel;
-import el.kr.ac.dongyang.able.model.FriendModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
 /**
@@ -54,15 +43,11 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 public class FragmentFriend extends Fragment {
 
-    Button btn;
+    Button btn, gobtn;
     FragmentTransaction ft;
     String fragmentTag;
-
-    HashMap friendMap;
-    List<String> friendList;
     FirebaseUser user;
     String uid;
-    Map.Entry entry;
 
     public FragmentFriend() {
     }
@@ -74,6 +59,15 @@ public class FragmentFriend extends Fragment {
         getActivity().setTitle("Friend");
 
         ConstraintLayout loginConstraintLayout = view.findViewById(R.id.loginConlayout);
+
+        gobtn = view.findViewById(R.id.go_rank);
+        gobtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), HorizontalBarChartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //친구 추가 : 유저목록으로 넘어감
         btn = view.findViewById(R.id.insert_friend);
@@ -108,16 +102,8 @@ public class FragmentFriend extends Fragment {
         return view;
     }
 
-    /*어댑터
-        우선은 데이터베이스에 friend : uid : {대연 : true, 영훈 : true} 로 저장되어있음.
-        친구 이름이 뜨려면 키값을 따로 디비에서 받아와서 저장해야했으나, 
-        쿼리문으로 키값만 받아올 수가 없음.
-        해시맵 friendMap으로 먼저 키,밸류값을 나누어 저장하고, entry로 키값만 불러
-        리스트 friendList에 저장함.
-    */
     class FriendlistFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private List<FriendModel> friendModels = new ArrayList<>();
         private List<String> keys = new ArrayList<>();
         private ArrayList<String> friendUsers = new ArrayList<>();
 
@@ -125,10 +111,8 @@ public class FragmentFriend extends Fragment {
             FirebaseDatabase.getInstance().getReference().child("FRIEND").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    friendModels.clear();
                     keys.clear();
                     for (DataSnapshot item : dataSnapshot.child(uid).getChildren()) {
-                        //friendModels.add(item.getValue(FriendModel.class));
                         keys.add(item.getKey());
                     }
                     notifyDataSetChanged();
