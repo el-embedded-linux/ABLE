@@ -68,6 +68,7 @@ public class FragmentFriend extends Fragment {
                 startActivity(intent);
             }
         });
+        gobtn.setVisibility(View.GONE);
 
         //친구 추가 : 유저목록으로 넘어감
         btn = view.findViewById(R.id.insert_friend);
@@ -100,6 +101,7 @@ public class FragmentFriend extends Fragment {
                 ft.commit();
             }
         });
+        delbtn.setVisibility(View.GONE);
 
         RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview_friend);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
@@ -110,6 +112,8 @@ public class FragmentFriend extends Fragment {
         if (user != null) {
             uid = user.getUid();
             btn.setVisibility(View.VISIBLE);
+            gobtn.setVisibility(View.VISIBLE);
+            delbtn.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
             loginConstraintLayout.setVisibility(View.GONE);
         }
