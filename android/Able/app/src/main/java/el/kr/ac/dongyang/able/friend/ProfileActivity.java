@@ -65,9 +65,9 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         HealthModel healthModel = new HealthModel();
                         healthModel = dataSnapshot.getValue(HealthModel.class);
-                        distance.setText(healthModel.getDistance());
-                        kcal.setText(healthModel.getKcal());
-                        speed.setText(healthModel.getSpeed());
+                        distance.setText(healthModel.getDistance() + " km");
+                        kcal.setText(healthModel.getKcal() + " kcal");
+                        speed.setText(healthModel.getSpeed() + " km/h");
                     }
 
                     @Override
