@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Recode"
+        android:text="친구 프로필"
         android:textColor="@color/white"
         android:textSize="25dp"
         android:textStyle="bold"

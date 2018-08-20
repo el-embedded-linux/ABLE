@@ -67,7 +67,7 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_healthcare, container, false);
-        getActivity().setTitle("Health care");
+        getActivity().setTitle("EL 헬스케어");
 
         constraintLayoutHealth = view.findViewById(R.id.constraintLayoutHealth);
         constraintLayoutHealth.setVisibility(View.GONE);
