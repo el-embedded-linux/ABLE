@@ -6,6 +6,10 @@
 #include "SPI.h"
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9340.h"
+#include <Wire.h>
+#include "MAX30105.h"
+#include "heartRate.h"
+
 #define BTLCD 5      //LCD버튼
 
 #if defined(__SAM3X8E__)
@@ -39,11 +43,53 @@ boolean temp = 0;  // 리드 스위치가 닫혔는지 확인하는 변수
 int btLCD;
 int chmod=1; //lcd모드를 변경해줌
 
+MAX30105 particleSensor;
+
+const byte RATE_SIZE = 4; //Increase this for more averaging. 4 is good.
+byte rates[RATE_SIZE]; //Array of heart rates
+byte rateSpot = 0;
+long lastBeat = 0; //Time at which the last beat occurred
+
+float beatsPerMinute;
+int beatAvg;
+
 ThreadController controll = ThreadController();
 Thread myThread_reed = Thread();
 Thread myThread_btLCD = Thread();
 Thread myThread_tftLCD = Thread();
+Thread myThread_heart = Thread();
 
+void heartCallback(){
+  long irValue = particleSensor.getIR();
+
+  if (checkForBeat(irValue) == true)
+  {
+    //We sensed a beat!
+    long delta = millis() - lastBeat;
+    lastBeat = millis();
+
+    beatsPerMinute = 60 / (delta / 1000.0);
+
+    if (beatsPerMinute < 255 && beatsPerMinute > 20)
+    {
+      rates[rateSpot++] = (byte)beatsPerMinute; //Store this reading in the array
+      rateSpot %= RATE_SIZE; //Wrap variable
+
+      //Take average of readings
+      beatAvg = 0;
+      for (byte x = 0 ; x < RATE_SIZE ; x++)
+        beatAvg += rates[x];
+      beatAvg /= RATE_SIZE;
+    }
+  }
+
+  Serial.print(", BPM=");
+  Serial.print(", Avg BPM=");
+  Serial.print(beatAvg);
+
+  if (irValue < 50000)
+    Serial.print(" No finger?");
+}
 void btLCDCallback(){
     btLCD = digitalRead(BTLCD);
   if(btLCD == LOW){
@@ -56,10 +102,12 @@ void btLCDCallback(){
 }
 
 void tftLCDCallback(){
-  if(chmod%2==0){
+  if(chmod%3==0){
     distanceText();
-  }else if(chmod%2==1){
+  }else if(chmod%3==1){
     speedText();
+  }else if(chmod%3==2){
+    heartText();
   }
 }
 
@@ -96,24 +144,39 @@ void setup() {
   if (F_CPU == 16000000) clock_prescale_set(clock_div_1); 
   #endif 
   Serial.begin(9600);
+  Serial.println("Initializing...");
   while (!Serial);
   pinMode(BTLCD, INPUT);//LCD버튼
   setTime(01,37,0,10,8,18);
   date();
   Serial.println(today);
+
+  if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
+  {
+    Serial.println("MAX30105 was not found. Please check wiring/power. ");
+    while (1);
+  }
+  
+  particleSensor.setup(); //Configure sensor with default settings
+  particleSensor.setPulseAmplitudeRed(0x0A); //Turn Red LED to low to indicate sensor is running
+  particleSensor.setPulseAmplitudeGreen(0); //Turn off Green LED
+  
+  Serial.println("Place your index finger on the sensor with steady pressure.");
   
   tft.begin();
   tft.setRotation(3);
 
   //thread
-  myThread_btLCD.onRun(btLCDCallback);
   myThread_reed.onRun(reedCallback);
+  myThread_btLCD.onRun(btLCDCallback);
+  myThread_heart.onRun(heartCallback);
   myThread_tftLCD.onRun(tftLCDCallback);
   myThread_tftLCD.setInterval(2000);//tftLCD의 초기화 주기를 늦추기 위해서
-
+  
 
   controll.add(&myThread_btLCD);
   controll.add(&myThread_reed);
+  controll.add(&myThread_heart);
   controll.add(&myThread_tftLCD);
 }
 
@@ -199,3 +262,34 @@ unsigned long speedText() {
 
   return micros() - start;
 }
+unsigned int heartText(){
+  tft.fillScreen(ILI9340_BLACK);
+  unsigned long start = micros();
+  
+  tft.setCursor(85, 40);
+  tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(3);
+  tft.println(today);
+
+  tft.setCursor(85, 70);
+  tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(3);
+  tft.println("Heart Rate");
+  tft.println("");
+
+  //심박도 출력
+  if(beatsPerMinute <100){
+    tft.setCursor(60, 110);
+  }
+  else if (beatsPerMinute >=100){
+    tft.setCursor(70, 110);
+  }
+
+   tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(8);
+   tft.println(beatsPerMinute);
+
+   tft.setCursor(120, 180);
+   tft.setTextSize(3);
+   tft.println("BPM");
+   //손가락이 있는지 없는지 감지하는 부분 안넣었다.
+   return micros() - start;
+}
+
