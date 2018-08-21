@@ -1,3 +1,7 @@
+#include <heartRate.h>
+
+#include <spo2_algorithm.h>
+
 #include <Time.h>
 #include <TimeLib.h>
 #include <LiquidCrystal.h>
@@ -84,11 +88,13 @@ void heartCallback(){
   }
 
   Serial.print(", BPM=");
+  Serial.print(beatsPerMinute);
   Serial.print(", Avg BPM=");
   Serial.print(beatAvg);
 
   if (irValue < 50000)
     Serial.print(" No finger?");
+  Serial.println();
 }
 void btLCDCallback(){
     btLCD = digitalRead(BTLCD);

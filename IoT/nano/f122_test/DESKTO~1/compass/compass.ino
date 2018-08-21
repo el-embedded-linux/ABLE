@@ -24,6 +24,9 @@ int pump;
 int test;
 int randNumber;
 
+//intial num : 5000
+#define sample_num_mdate  500
+
 volatile float mx_sample[3];
 volatile float my_sample[3];
 volatile float mz_sample[3];
@@ -72,23 +75,22 @@ void setup() {
     Serial.println("Testing device connections...");
     Serial.println(accelgyro.testConnection() ? "MPU9250 connection successful" : "MPU9250 connection failed");
 
-
-
     delay(1000);
     Serial.println("     ");
 
-    //  Mxyz_init_calibrated ();
+    // Mxyz_init_calibrated ();
+    get_calibration_Data (); 
     
-    //randomSeed의 매개변수로 0번 채널(A0번 핀)에서 읽은 아날로그 값을 전달
 }
 //ToDoList
 //1. 값이 갑자기 너무 커지는 경우에는 반응하지 않는다.
 //2. 값이 너무 조금 움이는 경우에는 반응하지 않는다.
 void loop() {
   
-    getCompassDate_calibrated();
+    getCompassDate_calibrated(); 
     getTiltHeading();
     Serial.println("The clockwise angle between the magnetic north and X-Axis:");
+    Serial.println(tiltheading); //주석
     Serial.println(" ");
     head = (int)tiltheading;
     if(head<0){//값이 0~360 범위안에 없는 경우
@@ -98,6 +100,7 @@ void loop() {
     }
     Serial.println(head);
     switch(head){
+
       case 0 ... 14: i=0; break;
       case 15 ... 29: i=1; break;
       case 30 ... 44: i=2; break;
@@ -124,11 +127,9 @@ void loop() {
       case 345 ... 359: i=23; break;
       default: break;
     }
-
         colorWipe(temp_com,strip.Color(0, 0, 0), 0); // 전값을 초기화시키고
         colorWipe(i,strip.Color(0, 100, 0), 5); // 초록색으로 해당 픽셀 on
-        
-    delay(1000);
+    delay(100);
     temp_com=i;
 }
 
@@ -139,12 +140,13 @@ void colorWipe(int i, uint32_t c, uint8_t wait) {
     delay(wait);
   
 }
-
+/*
 void getHeading(void)
 {
     heading = 180 * atan2(Mxyz[1], Mxyz[0])/PI;
     if (heading < 0)heading += 360;
 }
+*/
 
 void getTiltHeading(void)
 {
@@ -179,4 +181,78 @@ void getCompassDate_calibrated ()
     Mxyz[0] = Mxyz[0] - mx_centre;
     Mxyz[1] = Mxyz[1] - my_centre;
     Mxyz[2] = Mxyz[2] - mz_centre;
+}
+
+/*
+void Mxyz_init_calibrated ()
+{
+
+    Serial.println(F("Before using 9DOF,we need to calibrate the compass frist,It will takes about 2 minutes."));
+    Serial.print("  ");
+    Serial.println(F("During  calibratting ,you should rotate and turn the 9DOF all the time within 2 minutes."));
+    Serial.print("  ");
+    Serial.println(F("If you are ready ,please sent a command data 'ready' to start sample and calibrate."));
+    while (!Serial.find("ready"));
+    Serial.println("  ");
+    Serial.println("ready");
+    Serial.println("Sample starting......");
+    Serial.println("waiting ......");
+
+    get_calibration_Data ();
+
+    Serial.println("     ");
+    Serial.println("compass calibration parameter ");
+    Serial.print(mx_centre);
+    Serial.print("     ");
+    Serial.print(my_centre);
+    Serial.print("     ");
+    Serial.println(mz_centre);
+    Serial.println("    ");
+}
+*/
+
+void get_calibration_Data ()
+{
+    for (int i = 0; i < sample_num_mdate; i++)
+    {
+        get_one_sample_date_mxyz();
+        /*
+        Serial.print(mx_sample[2]);
+        Serial.print(" ");
+        Serial.print(my_sample[2]);                            //you can see the sample data here .
+        Serial.print(" ");
+        Serial.println(mz_sample[2]);
+        */
+        if (mx_sample[2] >= mx_sample[1])mx_sample[1] = mx_sample[2];
+        if (my_sample[2] >= my_sample[1])my_sample[1] = my_sample[2]; //find max value
+        if (mz_sample[2] >= mz_sample[1])mz_sample[1] = mz_sample[2];
+
+        if (mx_sample[2] <= mx_sample[0])mx_sample[0] = mx_sample[2];
+        if (my_sample[2] <= my_sample[0])my_sample[0] = my_sample[2]; //find min value
+        if (mz_sample[2] <= mz_sample[0])mz_sample[0] = mz_sample[2];
+
+    }
+
+    mx_max = mx_sample[1];
+    my_max = my_sample[1];
+    mz_max = mz_sample[1];
+
+    mx_min = mx_sample[0];
+    my_min = my_sample[0];
+    mz_min = mz_sample[0];
+
+
+
+    mx_centre = (mx_max + mx_min) / 2;
+    my_centre = (my_max + my_min) / 2;
+    mz_centre = (mz_max + mz_min) / 2;
+
+}
+
+void get_one_sample_date_mxyz()
+{
+    getCompass_Data();
+    mx_sample[2] = Mxyz[0];
+    my_sample[2] = Mxyz[1];
+    mz_sample[2] = Mxyz[2];
 }
