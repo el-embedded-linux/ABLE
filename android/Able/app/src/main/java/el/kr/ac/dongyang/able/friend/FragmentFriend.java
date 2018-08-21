@@ -43,7 +43,7 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 public class FragmentFriend extends Fragment {
 
-    Button btn, gobtn;
+    Button btn, gobtn ,delbtn, rankBtn;
     FragmentTransaction ft;
     String fragmentTag;
     FirebaseUser user;
@@ -64,10 +64,11 @@ public class FragmentFriend extends Fragment {
         gobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), HorizontalBarChartActivity.class);
+                Intent intent = new Intent(view.getContext(), BarChartActivity.class);
                 startActivity(intent);
             }
         });
+        gobtn.setVisibility(View.GONE);
 
         //친구 추가 : 유저목록으로 넘어감
         btn = view.findViewById(R.id.insert_friend);
@@ -86,6 +87,22 @@ public class FragmentFriend extends Fragment {
         });
         btn.setVisibility(View.GONE);
 
+        delbtn = view.findViewById(R.id.delete_friend);
+        delbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new FragmentDelFriend();
+                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
+                Log.i("fagmentTag", fragmentTag);
+                getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.main_layout, fragment);
+                ft.addToBackStack(fragmentTag);
+                ft.commit();
+            }
+        });
+        delbtn.setVisibility(View.GONE);
+
         RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview_friend);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new FriendlistFragmentRecyclerViewAdapter());
@@ -95,6 +112,8 @@ public class FragmentFriend extends Fragment {
         if (user != null) {
             uid = user.getUid();
             btn.setVisibility(View.VISIBLE);
+            gobtn.setVisibility(View.VISIBLE);
+            delbtn.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
             loginConstraintLayout.setVisibility(View.GONE);
         }

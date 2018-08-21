@@ -69,8 +69,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <activity android:name=".friend.HorizontalBarChartActivity"/>
+        <activity android:name=".friend.BarChartActivity"/>
 
     </application>
 

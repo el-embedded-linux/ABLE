@@ -16,37 +16,50 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/insert_friend"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/insert_friend"></android.support.v7.widget.RecyclerView>
+        app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.RecyclerView>
 
     <Button
         android:id="@+id/insert_friend"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
         android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/round_button"
+        android:background="@drawable/login_white_btn"
         android:text="친구 추가"
-        android:textColor="#ffffff"
+        app:layout_constraintBottom_toTopOf="@+id/delete_friend"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/delete_friend"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/login_white_btn"
+        android:text="친구 삭제"
+        app:layout_constraintBottom_toTopOf="@+id/go_rank"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/go_rank"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="랭킹"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/recode_btn"
+        android:text="친구 기록"
+        android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintLeft_toRightOf="@+id/delete_friend"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/loginConlayout"
