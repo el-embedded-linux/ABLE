@@ -2,6 +2,7 @@ package el.kr.ac.dongyang.able.navigation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -112,9 +114,11 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideFragment();
                 Toast.makeText(getActivity(), "주행이 시작됩니다.", Toast.LENGTH_SHORT).show();
                 startNotification();
+                fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().remove(FragmentNavigation.this).commit();
+                fragmentManager.popBackStack();
             }
         });
 
@@ -154,6 +158,20 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     }
 
     private void startNotification() {
+        String id = "my_channel_01";
+        CharSequence name = "test";
+
+        notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        int importance = NotificationManager.IMPORTANCE_LOW;
+        NotificationChannel mChannel;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(id, name, importance);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(mChannel);
+        }
         Intent intent2 = new Intent(getActivity(), MainActivity.class);
         PendingIntent pintent2 = PendingIntent.getActivity(getActivity(), 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -163,9 +181,9 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
         mBuilder = new NotificationCompat.Builder(getContext())
                 .setSmallIcon(R.drawable.playstore_icon_null)
                 .setContent(contentView)
+                .setChannelId(id)
                 .setContentIntent(pintent2);
 
-        notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, mBuilder.build());
     }
 
