@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -37,7 +36,7 @@ import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.chat.MessageActivity;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-public class PeopleFragment extends android.support.v4.app.Fragment {
+public class PeopleFragment extends Fragment {
     FragmentTransaction ft;
     String fragmentTag;
 

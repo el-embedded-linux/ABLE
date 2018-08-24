@@ -38,8 +38,9 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     Button naviBtn;
     TextView textId;
     FragmentTransaction ft;
+    FragmentManager manager;
     String fragmentTag;
-    Fragment fragmentNav;
+    FragmentNavigation fragmentNavigation;
     FirebaseUser user;
     private UserModel userModel;
     private String userName;
@@ -56,20 +57,14 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home,container,false);
+        View view = inflater.inflate(R.layout.fragment_home, container,false);
 
-        fragmentNav = new FragmentNavigation();
+        fragmentNavigation = new FragmentNavigation();
         naviBtn = view.findViewById(R.id.hGoNavi);
         naviBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentTag = fragmentNav.getClass().getSimpleName();  //FragmentLogin
-                Log.i("fagmentTag", fragmentTag);
-                getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.main_layout, fragmentNav);
-                ft.addToBackStack(fragmentTag);
-                ft.commit();
+                addFragment(fragmentNavigation);
             }
         });
         textId = view.findViewById(R.id.name);
@@ -114,5 +109,22 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     public void finishLoad(UserEvent userEvent){
         textId.setText(userEvent.getUserId());
         Log.d("finishLoad", userEvent.getUserId());
+    }
+
+    public void addFragment(Fragment fragment) {
+        if (!fragment.isVisible()) {
+            if (fragment instanceof FragmentNavigation) {
+                ft = manager.beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.main_layout, fragment, "FRAGMENT_NAVIGATION");
+                Log.d("navigationok", "okokokok");
+                ft.commit();
+            } else {
+                ft = manager.beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.main_layout, fragment);
+                ft.commit();
+            }
+        }
     }
 }

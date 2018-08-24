@@ -1,14 +1,12 @@
 package el.kr.ac.dongyang.able.health;
 
-
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +41,7 @@ import el.kr.ac.dongyang.able.model.UserModel;
  * 몸무게 받아와서 칼로리 계산은 성공.
  */
 
-public class FragmentHealthcare extends android.support.v4.app.Fragment{
+public class FragmentHealthcare extends Fragment {
     private static final String LOG_TAG = "FragmentNavigation";
 
     ConstraintLayout constraintLayoutHealth, constraintLayoutNone;

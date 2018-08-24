@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,9 +84,8 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
     private Button signOutButton, existLoginBtn, signupBtn, registerSignUpBtn;
     private LoginButton facebook_btn; //페이스북으로 로그인
     private SignInButton google_btn; //구글로 로그인
-    private CallbackManager mcallbackManager;
-    private EditText passwordEditText, emailEditText, registerEmailEditText, userNameEditText, registerPwEditText, registerPwcheckEditText;
-    private TextView registerTextView;
+    private CallbackManager mcallBackManager;
+    private EditText passwordEditText, emailEditText, registerEmailEditText, userNameEditText, registerPwEditText, registerPwCheckEditText;
     private CheckBox checkBox;
     private ImageView profile;
     private Uri imageUri;
@@ -149,10 +147,10 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
 
         //페이스북 로그인
         // Initialize Facebook Login button
-        mcallbackManager = CallbackManager.Factory.create();
+        mcallBackManager = CallbackManager.Factory.create();
         facebook_btn.setReadPermissions("email");
         facebook_btn.setFragment(this);
-        facebook_btn.registerCallback(mcallbackManager, new FacebookCallback<LoginResult>() {
+        facebook_btn.registerCallback(mcallBackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
@@ -191,7 +189,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
             }
         });
 
-        registerTextView = view.findViewById(R.id.register);
+        TextView registerTextView = view.findViewById(R.id.register);
         registerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,7 +203,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
         registerEmailEditText = registerView.findViewById(R.id.edit_emailtxt);
         userNameEditText = registerView.findViewById(R.id.edit_nametxt);
         registerPwEditText = registerView.findViewById(R.id.edit_passwdtxt);
-        registerPwcheckEditText = registerView.findViewById(R.id.passwdchecktxt);
+        registerPwCheckEditText = registerView.findViewById(R.id.passwdchecktxt);
         checkBox = registerView.findViewById(R.id.check1);
 
         profile = registerView.findViewById(R.id.fragment_register_imageview_profile);
@@ -222,10 +220,10 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
         registerSignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (registerEmailEditText.getText().toString() == null || userNameEditText.getText().toString() == null || registerPwEditText.getText().toString() == null || registerPwcheckEditText.getText().toString() == null || imageUri == null) {
+                if (registerEmailEditText.getText().toString() == null || userNameEditText.getText().toString() == null || registerPwEditText.getText().toString() == null || registerPwCheckEditText.getText().toString() == null || imageUri == null) {
                     Toast.makeText(getContext(), "모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (!registerPwEditText.getText().toString().equals(registerPwcheckEditText.getText().toString())) {
+                } else if (!registerPwEditText.getText().toString().equals(registerPwCheckEditText.getText().toString())) {
                     Toast.makeText(getActivity(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (registerPwEditText.getText().toString().trim().length() < 6) {
@@ -328,7 +326,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //페이스북쪽으로..
-        mcallbackManager.onActivityResult(requestCode, resultCode, data);
+        mcallBackManager.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);

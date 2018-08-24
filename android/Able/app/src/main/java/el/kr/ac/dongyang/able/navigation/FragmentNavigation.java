@@ -59,7 +59,7 @@ import el.kr.ac.dongyang.able.R;
  * 지도 맵 띄움.
  * 출발지 포인트랑 목적지 포인트 받으면 라인이랑 마커 띄움
  */
-public class FragmentNavigation extends android.support.v4.app.Fragment {
+public class FragmentNavigation extends Fragment {
 
     private String bussett;
     private static final String LOG_TAG = "FragmentNavigation";
