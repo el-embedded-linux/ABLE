@@ -25,7 +25,6 @@
 
 #include <Wire.h>
 #include "MAX30105.h"
-
 #include "heartRate.h"
 
 MAX30105 particleSensor;

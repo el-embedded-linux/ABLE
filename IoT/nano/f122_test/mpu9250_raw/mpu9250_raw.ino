@@ -1,31 +1,32 @@
-//RingLED
-#include<Adafruit_NeoPixel.h>
-#ifdef __AVR__
-  #include <avr/power.h>
-#endif
-#define PIN 6
-//지자기
-//GND는 GND, VDD는 3V, SDA핀 A4, SCL핀 A5, 
+
+// I2Cdev and MPU9250 must be installed as libraries, or else the .cpp/.h files
+// for both classes must be in the include path of your project
 #include "I2Cdev.h"
 #include "MPU9250.h"
-int16_t   mx, my, mz;
+
+// class default I2C address is 0x68
+// specific I2C addresses may be passed as a parameter here
+// AD0 low = 0x68 (default for InvenSense evaluation board)
+// AD0 high = 0x69
+//SDA핀 A4, SCL핀 A5, 나머지 VDD 5V, GND는 GND
 MPU9250 accelgyro;
 I2Cdev   I2C_M;
 
 uint8_t buffer_m[6];
 
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
+int16_t   mx, my, mz;
+
 float heading;
 float tiltheading;
-int head;
 
-int i;
-int temp_com;
-int pump;
-int test;
-int randNumber;
+float Axyz[3];
+float Gxyz[3];
+float Mxyz[3];
 
-//intial num : 5000
-#define sample_num_mdate  500
+//initially 5000
+#define sample_num_mdate  50
 
 volatile float mx_sample[3];
 volatile float my_sample[3];
@@ -43,26 +44,14 @@ volatile int mx_min = 0;
 volatile int my_min = 0;
 volatile int mz_min = 0;
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(64, PIN, NEO_GRB + NEO_KHZ800);
+float temperature;
+float pressure;
+float atm;
+float altitude;
 
-// IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
-// pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
-// and minimize distance between Arduino and first pixel.  Avoid connecting
-// on a live circuit...if you must, connect GND first.
-float Mxyz[3];
-float Axyz[3];
-
-void setup() {
-  // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
-  #if defined (__AVR_ATtiny85__)
-    if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
-  #endif
-  // End of trinket special code
-  
-  strip.begin();
-  strip.show(); // Initialize all pixels to 'off'
- 
-  // join I2C bus (I2Cdev library doesn't do this automatically)
+void setup()
+{
+    // join I2C bus (I2Cdev library doesn't do this automatically)
     Wire.begin();
     // it's really up to you depending on your project)
     Serial.begin(9600);
@@ -75,78 +64,70 @@ void setup() {
     Serial.println("Testing device connections...");
     Serial.println(accelgyro.testConnection() ? "MPU9250 connection successful" : "MPU9250 connection failed");
 
+
+
     delay(1000);
     Serial.println("     ");
 
-    // Mxyz_init_calibrated ();
-    get_calibration_Data (); 
-    
+    Mxyz_init_calibrated ();
 }
-//ToDoList
-//1. 값이 갑자기 너무 커지는 경우에는 반응하지 않는다.
-//2. 값이 너무 조금 움이는 경우에는 반응하지 않는다.
-void loop() {
-  
-    getCompassDate_calibrated(); 
+
+
+
+void loop()
+{
+
+    getAccel_Data();
+    getGyro_Data();
+    getCompassDate_calibrated(); // compass data has been calibrated here
+    getHeading();               //before we use this function we should run 'getCompassDate_calibrated()' frist, so that we can get calibrated data ,then we can get correct angle .
     getTiltHeading();
+
+    Serial.println("calibration parameter: ");
+    Serial.print(mx_centre);
+    Serial.print("         ");
+    Serial.print(my_centre);
+    Serial.print("         ");
+    Serial.println(mz_centre);
+    Serial.println("     ");
+
+
+    Serial.println("Acceleration(g) of X,Y,Z:");
+    Serial.print(Axyz[0]);
+    Serial.print(",");
+    Serial.print(Axyz[1]);
+    Serial.print(",");
+    Serial.println(Axyz[2]);
+    Serial.println("Gyro(degress/s) of X,Y,Z:");
+    Serial.print(Gxyz[0]);
+    Serial.print(",");
+    Serial.print(Gxyz[1]);
+    Serial.print(",");
+    Serial.println(Gxyz[2]);
+    Serial.println("Compass Value of X,Y,Z:");
+    Serial.print(Mxyz[0]);
+    Serial.print(",");
+    Serial.print(Mxyz[1]);
+    Serial.print(",");
+    Serial.println(Mxyz[2]);
     Serial.println("The clockwise angle between the magnetic north and X-Axis:");
-    Serial.println(tiltheading); //주석
+    Serial.print(heading);
     Serial.println(" ");
-    head = (int)tiltheading;
-    if(head<0){//값이 0~360 범위안에 없는 경우
-        head=head+360;
-    }else if(head>360){
-      head= head-360;
-    }
-    Serial.println(head);
-    switch(head){
+    Serial.println("The clockwise angle between the magnetic north and the projection of the positive X-Axis in the horizontal plane:");
+    Serial.println(tiltheading);
+    Serial.println("   ");
+    Serial.println();
+    delay(1000);
 
-      case 0 ... 14: i=0; break;
-      case 15 ... 29: i=1; break;
-      case 30 ... 44: i=2; break;
-      case 45 ... 59: i=3; break;
-      case 60 ... 74: i=4; break;
-      case 75 ... 89: i=5; break;
-      case 90 ... 104: i=6; break;
-      case 105 ... 119: i=7; break;
-      case 120 ... 134: i=8; break;
-      case 135 ... 149: i=9; break;
-      case 150 ... 164: i=10; break;
-      case 165 ... 179: i=11; break;
-      case 180 ... 194: i=12; break;
-      case 195 ... 209: i=13; break;
-      case 210 ... 224: i=14; break;
-      case 225 ... 239: i=15; break;
-      case 240 ... 254: i=16; break;
-      case 255 ... 269: i=17; break;
-      case 270 ... 284: i=18; break;
-      case 285 ... 299: i=19; break;
-      case 300 ... 314: i=20; break;
-      case 315 ... 329: i=21; break;
-      case 330 ... 344: i=22; break;
-      case 345 ... 359: i=23; break;
-      default: break;
-    }
-        colorWipe(temp_com,strip.Color(0, 0, 0), 0); // 전값을 초기화시키고
-        colorWipe(i,strip.Color(0, 100, 0), 5); // 초록색으로 해당 픽셀 on
-    delay(100);
-    temp_com=i;
 }
 
-void colorWipe(int i, uint32_t c, uint8_t wait) {
-  
-    strip.setPixelColor(i, c);
-    strip.show();
-    delay(wait);
-  
-}
-/*
+
 void getHeading(void)
 {
     heading = 180 * atan2(Mxyz[1], Mxyz[0])/PI;
     if (heading < 0)heading += 360;
 }
-*/
+
 
 void getTiltHeading(void)
 {
@@ -157,33 +138,10 @@ void getTiltHeading(void)
     float yh = Mxyz[0] * sin(roll) * sin(pitch) + Mxyz[1] * cos(roll) - Mxyz[2] * sin(roll) * cos(pitch);
     float zh = -Mxyz[0] * cos(roll) * sin(pitch) + Mxyz[1] * sin(roll) + Mxyz[2] * cos(roll) * cos(pitch);
     tiltheading = 180 * atan2(yh, xh)/PI;
-    if (yh < 0) tiltheading += 360;
+    if (yh < 0)tiltheading += 360;
 }
 
-void getCompass_Data(void)
-{
-    I2C_M.writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x01); //enable the magnetometer
-    delay(10);
-    I2C_M.readBytes(MPU9150_RA_MAG_ADDRESS, MPU9150_RA_MAG_XOUT_L, 6, buffer_m);
 
-    mx = ((int16_t)(buffer_m[1]) << 8) | buffer_m[0] ;
-    my = ((int16_t)(buffer_m[3]) << 8) | buffer_m[2] ;
-    mz = ((int16_t)(buffer_m[5]) << 8) | buffer_m[4] ;
-
-    Mxyz[0] = (double) mx * 1200 / 4096;
-    Mxyz[1] = (double) my * 1200 / 4096;
-    Mxyz[2] = (double) mz * 1200 / 4096;
-}
-
-void getCompassDate_calibrated ()
-{
-    getCompass_Data();
-    Mxyz[0] = Mxyz[0] - mx_centre;
-    Mxyz[1] = Mxyz[1] - my_centre;
-    Mxyz[2] = Mxyz[2] - mz_centre;
-}
-
-/*
 void Mxyz_init_calibrated ()
 {
 
@@ -209,7 +167,7 @@ void Mxyz_init_calibrated ()
     Serial.println(mz_centre);
     Serial.println("    ");
 }
-*/
+
 
 void get_calibration_Data ()
 {
@@ -223,6 +181,9 @@ void get_calibration_Data ()
         Serial.print(" ");
         Serial.println(mz_sample[2]);
         */
+
+
+
         if (mx_sample[2] >= mx_sample[1])mx_sample[1] = mx_sample[2];
         if (my_sample[2] >= my_sample[1])my_sample[1] = my_sample[2]; //find max value
         if (mz_sample[2] >= mz_sample[1])mz_sample[1] = mz_sample[2];
@@ -249,6 +210,11 @@ void get_calibration_Data ()
 
 }
 
+
+
+
+
+
 void get_one_sample_date_mxyz()
 {
     getCompass_Data();
@@ -256,3 +222,61 @@ void get_one_sample_date_mxyz()
     my_sample[2] = Mxyz[1];
     mz_sample[2] = Mxyz[2];
 }
+
+
+void getAccel_Data(void)
+{
+    accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
+    Axyz[0] = (double) ax / 16384;
+    Axyz[1] = (double) ay / 16384;
+    Axyz[2] = (double) az / 16384;
+}
+
+
+void getGyro_Data(void)
+{
+    accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
+
+    Gxyz[0] = (double) gx * 250 / 32768;
+    Gxyz[1] = (double) gy * 250 / 32768;
+    Gxyz[2] = (double) gz * 250 / 32768;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+void getCompass_Data(void)
+{
+    I2C_M.writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x01); //enable the magnetometer
+    delay(10);
+    I2C_M.readBytes(MPU9150_RA_MAG_ADDRESS, MPU9150_RA_MAG_XOUT_L, 6, buffer_m);
+
+
+
+
+    mx = ((int16_t)(buffer_m[1]) << 8) | buffer_m[0] ;
+    my = ((int16_t)(buffer_m[3]) << 8) | buffer_m[2] ;
+    mz = ((int16_t)(buffer_m[5]) << 8) | buffer_m[4] ;
+
+
+    Mxyz[0] = (double) mx * 1200 / 4096;
+    Mxyz[1] = (double) my * 1200 / 4096;
+    Mxyz[2] = (double) mz * 1200 / 4096;
+}
+
+void getCompassDate_calibrated ()
+{
+    getCompass_Data();
+    Mxyz[0] = Mxyz[0] - mx_centre;
+    Mxyz[1] = Mxyz[1] - my_centre;
+    Mxyz[2] = Mxyz[2] - mz_centre;
+}
+
