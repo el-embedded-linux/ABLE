@@ -119,8 +119,8 @@
                 android:src="@drawable/profile_speedmeter"
                 app:layout_constraintBottom_toBottomOf="@+id/friendProfileSpeed"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.90"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/friendProfileSpeed" />
 
             <ImageView
@@ -130,8 +130,8 @@
                 android:src="@drawable/profile_fire"
                 app:layout_constraintBottom_toBottomOf="@+id/friendProfileKcal"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.90"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/friendProfileKcal" />
 
             <ImageView
@@ -141,8 +141,8 @@
                 android:src="@drawable/profile_distance"
                 app:layout_constraintBottom_toBottomOf="@+id/friendProfileDistance"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.90"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/friendProfileDistance" />
 
             <TextView
@@ -151,11 +151,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="60dp"
                 android:text="키"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toTopOf="@+id/friendProfileGoal"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -165,11 +166,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
                 android:text="목표"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toTopOf="@+id/friendProfileSpeed"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/friendProfileHeight" />
 
@@ -179,11 +181,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
                 android:text="평균속도"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toTopOf="@+id/friendProfileKcal"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/friendProfileGoal" />
 
@@ -193,11 +196,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
                 android:text="누적소모칼로리"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toTopOf="@+id/friendProfileDistance"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/friendProfileSpeed" />
 
@@ -207,11 +211,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
                 android:text="누적운동거리"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/friendProfileKcal" />
 
@@ -228,13 +233,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="60dp"
-                tools:text="키"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="@+id/friendProfileHeight"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/friendProfileHeight"
+                tools:text="키" />
 
             <TextView
                 android:id="@+id/friendProfileGoalTextView"
@@ -242,13 +247,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                tools:text="목표"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="@+id/friendProfileGoal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/friendProfileHeightTextView" />
+                app:layout_constraintTop_toTopOf="@+id/friendProfileGoal"
+                tools:text="목표" />
 
             <TextView
                 android:id="@+id/friendProfileSpeedTextView"
@@ -256,13 +261,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                tools:text="평균속도"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="@+id/friendProfileSpeed"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/friendProfileGoalTextView" />
+                app:layout_constraintTop_toTopOf="@+id/friendProfileSpeed"
+                tools:text="평균속도" />
 
             <TextView
                 android:id="@+id/friendProfileKcalTextView"
@@ -270,13 +275,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                tools:text="누적소모칼로리"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="@+id/friendProfileKcal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/friendProfileSpeedTextView" />
+                app:layout_constraintTop_toTopOf="@+id/friendProfileKcal"
+                tools:text="누적소모칼로리" />
 
             <TextView
                 android:id="@+id/friendProfileDistanceTextView"
@@ -284,13 +289,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                tools:text="누적운동거리"
                 android:textColor="@color/white"
                 android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="@+id/friendProfileDistance"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/friendProfileKcalTextView" />
+                app:layout_constraintTop_toTopOf="@+id/friendProfileDistance"
+                tools:text="누적운동거리" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline2"

@@ -1,7 +1,11 @@
 package el.kr.ac.dongyang.able.setting;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.UserManager;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,8 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,10 +32,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
 
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.SharedPref;
 import el.kr.ac.dongyang.able.model.UserModel;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by impro on 2018-05-08.
@@ -35,21 +50,36 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 public class FragmentInformation extends Fragment{
 
+    private static final int PICK_FROM_ALBUM = 10;
+    private Uri imageUri;
+
     public FragmentInformation() {
     }
 
     Button infoSave;
     EditText mName, mAddress, mHeight, mWeight, mComment, mGoal;
     FirebaseUser user;
+
     private DatabaseReference mDatabase;
     UserModel userModel;
     String uid;
+    ImageView infoImg;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_userinfo,container,false);
         getActivity().setTitle("내 정보 수정");
+
+        infoImg = view.findViewById(R.id.infoImg);
+        infoImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                startActivityForResult(intent, PICK_FROM_ALBUM);
+            }
+        });
 
         mName = view.findViewById(R.id.editTextName);
         mAddress = view.findViewById(R.id.editTextAddr);
@@ -72,8 +102,15 @@ public class FragmentInformation extends Fragment{
             mDatabase.child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
                     userModel = dataSnapshot.getValue(UserModel.class);
                     if(userModel != null) {
+                        if(userModel.getProfileImageUrl() != null) {
+                            Glide.with(getActivity())
+                                    .load(userModel.getProfileImageUrl())
+                                    .apply(new RequestOptions().circleCrop())
+                                    .into(infoImg);
+                        }
                         mName.setText(userModel.getUserName());
                         mAddress.setText(userModel.getAddress());
                         mHeight.setText(userModel.getHeight());
@@ -95,6 +132,28 @@ public class FragmentInformation extends Fragment{
         infoSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(imageUri != null){
+                    FirebaseStorage.getInstance().getReference()
+                            .child("userImages")
+                            .child(uid)
+                            .putFile(imageUri)
+                            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            final String imagePath = task.getResult().getStorage().getPath();
+                            FirebaseStorage.getInstance().getReference()
+                                    .child(imagePath)
+                                    .getDownloadUrl()
+                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    //데이터베이스 저장
+                                    mDatabase.child("USER").child(uid).child("profileImageUrl").setValue(uri.toString());
+                                }
+                            });
+                        }
+                    });
+                }
                 if(mName.length() != 0) {
                     userModel.setUserName(mName.getText().toString());
                     mDatabase.child("USER").child(uid).child("userName").setValue(userModel.getUserName());
@@ -131,6 +190,15 @@ public class FragmentInformation extends Fragment{
     public void onDestroyView() {
         super.onDestroyView();
         getActivity().setTitle("Able");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK) {
+            infoImg.setImageURI(data.getData());    //가운데 뷰를 바꿈
+            imageUri = data.getData();  // 이미지 경로 원본
+        }
     }
 }
 

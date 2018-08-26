@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -77,9 +78,6 @@ public class FragmentSetting extends Fragment{
     private ArrayList<String> navigeo = new ArrayList<String>();
     public String lonlat = "msg";
 
-    public FragmentSetting() {
-    }
-
     Timer t = new Timer(true);
 
     Button infoModify;
@@ -95,6 +93,8 @@ public class FragmentSetting extends Fragment{
     static boolean isConnectionError = false;
     private static final String TAG = "BluetoothClient";
 
+    public FragmentSetting() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

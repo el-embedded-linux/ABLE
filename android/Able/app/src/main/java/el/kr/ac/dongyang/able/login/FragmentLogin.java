@@ -48,6 +48,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -75,6 +76,8 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
     private static final int PICK_FROM_ALBUM = 10;
 
     private GoogleSignInClient mGoogleSignInClient; //구글 로그인 부분
+    private DatabaseReference reference;
+    public UserProfileChangeRequest profileChangeRequest;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -106,6 +109,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
 
         final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
+        reference = FirebaseDatabase.getInstance().getReference();
         //뷰
         emailView = view.findViewById(R.id.loginEmailXml);
         emailView.setVisibility(View.GONE);
@@ -260,7 +264,10 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
                     String email = task.getResult().getUser().getEmail();
                     StringTokenizer tokens = new StringTokenizer(email);
                     userModel.setUserName(tokens.nextToken("@"));
-                    FirebaseDatabase.getInstance().getReference().child("USER").child(uid).child("userName").setValue(userModel.getUserName());
+                    profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(tokens.nextToken("@")).build();
+                    task.getResult().getUser().updateProfile(profileChangeRequest);
+                    reference.child("USER").child(uid).child("userName").setValue(userModel.getUserName());
+                    reference.child("USER").child(uid).child("uid").setValue(uid);
                     updateUI(user);
                 } else {
                     // If sign in fails, display a message to the user.
@@ -292,8 +299,10 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
                     String email = task.getResult().getUser().getEmail();
                     StringTokenizer tokens = new StringTokenizer(email);
                     userModel.setUserName(tokens.nextToken("@"));
-                    FirebaseDatabase.getInstance().getReference().child("USER")
-                            .child(uid).child("userName").setValue(userModel.getUserName());
+                    profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(tokens.nextToken("@")).build();
+                    task.getResult().getUser().updateProfile(profileChangeRequest);
+                    reference.child("USER").child(uid).child("userName").setValue(userModel.getUserName());
+                    reference.child("USER").child(uid).child("uid").setValue(uid);
                     updateUI(user);
                 } else {
                     // If sign in fails, display a message to the user.
@@ -355,7 +364,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
         Map<String, Object> map = new HashMap<>();
         map.put("pushToken", token);
 
-        FirebaseDatabase.getInstance().getReference().child("USER").child(uid).updateChildren(map);
+        reference.child("USER").child(uid).updateChildren(map);
     }
 
     //버튼들 기능
@@ -398,7 +407,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
             loginView.setVisibility(View.VISIBLE);
 
             String uid = user.getUid();
-            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     userModel = dataSnapshot.getValue(UserModel.class);
@@ -453,8 +462,8 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
                             //Toast.makeText(getActivity(), "회원가입 성공", Toast.LENGTH_SHORT).show();
                             final String uid = task.getResult().getUser().getUid();
 
-                            UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(userNameEditText.getText().toString()).build();
-                            task.getResult().getUser().updateProfile(userProfileChangeRequest);
+                             profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(userNameEditText.getText().toString()).build();
+                            task.getResult().getUser().updateProfile(profileChangeRequest);
 
                             //이메일과 uid를 받아서 데이터베이스에 저장하는데 사용
                             final UserModel userModel = new UserModel();
@@ -462,7 +471,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
                             userModel.setUserName(userNameEditText.getText().toString());
                             userModel.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
                             userModel.setPassword(registerPwEditText.getText().toString());
-                            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).setValue(userModel);
+                            reference.child("USER").child(uid).setValue(userModel);
 
                             passPushTokenToServer();
                             SharedPref.getInstance(getContext()).setData("userName", userModel.getUserName());
@@ -475,8 +484,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             //데이터베이스 저장
-                                            FirebaseDatabase.getInstance().getReference()
-                                                    .child("USER").child(uid).child("profileImageUrl").setValue(uri.toString());
+                                            reference.child("USER").child(uid).child("profileImageUrl").setValue(uri.toString());
                                             Toast.makeText(getActivity(), "회원가입되었습니다.", Toast.LENGTH_SHORT).show();
                                             FirebaseUser user = mAuth.getCurrentUser();
                                             updateUI(user);

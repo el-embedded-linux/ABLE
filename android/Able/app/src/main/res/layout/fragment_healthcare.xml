@@ -41,8 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/collapsibleCalendarView"
-        app:layout_constraintVertical_bias="0.947">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <com.github.lzyzsd.circleprogress.ArcProgress
@@ -107,8 +106,7 @@
                 android:textSize="23.3sp"
                 app:layout_constraintBottom_toBottomOf="@+id/pic_kcal"
                 app:layout_constraintStart_toEndOf="@+id/pic_kcal"
-                app:layout_constraintTop_toTopOf="@+id/pic_kcal"
-                 />
+                app:layout_constraintTop_toTopOf="@+id/pic_kcal" />
 
             <TextView
                 android:id="@+id/speed_text"
@@ -138,8 +136,8 @@
                 android:layout_height="24dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="30dp"
                 android:src="@drawable/healthcare_speed"
+                app:layout_constraintBottom_toTopOf="@+id/pic_kcal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.2"
                 app:layout_constraintStart_toStartOf="parent"
@@ -149,17 +147,14 @@
                 android:id="@+id/pic_km"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:src="@drawable/healthcare_km"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/pic_speed"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.3" />
+                app:layout_constraintTop_toBottomOf="@+id/line" />
 
             <ImageView
                 android:id="@+id/pic_kcal"
@@ -167,8 +162,8 @@
                 android:layout_height="24dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="30dp"
                 android:src="@drawable/heathcare_kcal"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.2"
                 app:layout_constraintStart_toStartOf="parent"
@@ -194,8 +189,7 @@
                 android:textColor="#ffbc7f"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toTopOf="@+id/speed_text"
-                app:layout_constraintStart_toStartOf="@+id/speed_text"
-                 />
+                app:layout_constraintStart_toStartOf="@+id/speed_text" />
 
             <TextView
                 android:id="@+id/kcal"
@@ -205,8 +199,7 @@
                 android:textColor="#ffbc7f"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toTopOf="@+id/burnUpTextView"
-                app:layout_constraintStart_toStartOf="@+id/burnUpTextView"
-                 />
+                app:layout_constraintStart_toStartOf="@+id/burnUpTextView" />
 
             <TextView
                 android:id="@+id/km"
@@ -216,7 +209,7 @@
                 android:textColor="#ffbc7f"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toTopOf="@+id/distanceTextView"
-                app:layout_constraintStart_toStartOf="@+id/distanceTextView"/>
+                app:layout_constraintStart_toStartOf="@+id/distanceTextView" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -226,8 +219,7 @@
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
                 app:layout_constraintBottom_toBottomOf="@+id/distanceTextView"
-                app:layout_constraintStart_toEndOf="@+id/distanceTextView"
-                />
+                app:layout_constraintStart_toEndOf="@+id/distanceTextView" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -237,8 +229,7 @@
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
                 app:layout_constraintBottom_toBottomOf="@+id/burnUpTextView"
-                app:layout_constraintStart_toEndOf="@+id/burnUpTextView"
-                />
+                app:layout_constraintStart_toEndOf="@+id/burnUpTextView" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -248,8 +239,7 @@
                 android:textColor="#ef8c0b"
                 android:textSize="23.3sp"
                 app:layout_constraintBottom_toBottomOf="@+id/speed_text"
-                app:layout_constraintStart_toEndOf="@+id/speed_text"
-                />
+                app:layout_constraintStart_toEndOf="@+id/speed_text" />
 
         </android.support.constraint.ConstraintLayout>
 

@@ -43,7 +43,7 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 public class FragmentFriend extends Fragment {
 
-    Button btn, gobtn ,delbtn, rankBtn;
+    Button btn, gobtn ,delbtn;
     FragmentTransaction ft;
     String fragmentTag;
     FirebaseUser user;
