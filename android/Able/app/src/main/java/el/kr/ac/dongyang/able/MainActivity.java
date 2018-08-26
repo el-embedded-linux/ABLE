@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity
     FragmentHealthcare fragmentHealthcare;
     FragmentSetting fragmentSetting;
     PeopleFragment peopleFragment;
+    private long pressedTime;
+    private String fragmentTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +68,13 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        manager = getSupportFragmentManager();
         fragmentFriend = new FragmentFriend();
         fragmentLogin = new FragmentLogin();
         fragmentNavigation = new FragmentNavigation();
         fragmentHealthcare = new FragmentHealthcare();
         fragmentSetting = new FragmentSetting();
         peopleFragment = new PeopleFragment();
-        manager = getSupportFragmentManager();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -87,19 +90,7 @@ public class MainActivity extends AppCompatActivity
         temp_max = findViewById(R.id.Temp_max);
         temp_min = findViewById(R.id.Temp_min);
         icon_manager = new Icon_Manager();
-
-        ((TextView) findViewById(R.id.weather)).setTypeface(icon_manager.get_icons("fonts/weathericons-regular-webfont.ttf", this));
-
-        Function.placeIdTask asyncTask = new Function.placeIdTask(new Function.AsyncResponse() {
-            public void processFinish(String weather_temperature, String weather_temp_max, String weather_temp_min, String updatedOn, String weather_iconText, String sun_rise) {
-                weatherIcon.setText(Html.fromHtml(weather_iconText));
-                temperature.setText(weather_temperature);
-                temp_max.setText(weather_temp_max);
-                temp_min.setText(weather_temp_min);
-            }
-        });
-
-        asyncTask.execute("37.500774", "126.867899");
+        setWeather();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -109,18 +100,33 @@ public class MainActivity extends AppCompatActivity
         //getHashKey();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    private void setWeather() {
+        String font = "fonts/weathericons-regular-webfont.ttf";
+        weatherIcon.setTypeface(icon_manager.get_icons(font, this));
+
+        Function.placeIdTask asyncTask = new Function.placeIdTask(new Function.AsyncResponse() {
+            public void processFinish(String temperature, String temp_max, String temp_min, String updatedOn, String iconText, String sun_rise) {
+                weatherIcon.setText(Html.fromHtml(iconText));
+                MainActivity.this.temperature.setText(temperature);
+                MainActivity.this.temp_max.setText(temp_max);
+                MainActivity.this.temp_min.setText(temp_min);
+            }
+        });
+        asyncTask.execute("37.500774", "126.867899");
+    }
+
     private void passPushTokenToServer(String uid) {
         String token = FirebaseInstanceId.getInstance().getToken();
         Map<String, Object> map = new HashMap<>();
         map.put("pushToken", token);
 
         FirebaseDatabase.getInstance().getReference().child("USER").child(uid).updateChildren(map);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     //해시키 구하는 함수
@@ -145,6 +151,19 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (manager.getBackStackEntryCount()==0){
+            if (pressedTime == 0) {
+                Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                pressedTime = System.currentTimeMillis();
+            } else {
+                int seconds = (int) (System.currentTimeMillis() - pressedTime);
+                if (seconds > 2000) {
+                    Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                    pressedTime = 0;
+                } else {
+                    super.onBackPressed();
+                }
+            }
         } else {
             super.onBackPressed();
         }
@@ -168,7 +187,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
-            addFragment(fragmentFriend);
+            replaceFragment(fragmentFriend);
         }
 
         return super.onOptionsItemSelected(item);
@@ -183,19 +202,19 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_login:
-                addFragment(fragmentLogin);
+                replaceFragment(fragmentLogin);
                 break;
             case R.id.nav_navigation:
-                addFragment(fragmentNavigation);
+                replaceFragment(fragmentNavigation);
                 break;
             case R.id.nav_helthcare:
-                addFragment(fragmentHealthcare);
+                replaceFragment(fragmentHealthcare);
                 break;
             case R.id.nav_groupriding:
-                addFragment(peopleFragment);
+                replaceFragment(peopleFragment);
                 break;
             case R.id.nav_setting:
-                addFragment(fragmentSetting);
+                replaceFragment(fragmentSetting);
                 break;
         }
 
@@ -204,21 +223,18 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void addFragment(Fragment fragment) {
+    private void replaceFragment(Fragment fragment) {
         if (!fragment.isVisible()) {
-            if (fragment instanceof FragmentNavigation) {
+                fragmentTag = fragment.getClass().getSimpleName();
+                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 ft = manager.beginTransaction()
-                        .addToBackStack(null)
-                        .replace(R.id.main_layout, fragment, "FRAGMENT_NAVIGATION");
-                Log.d("navigationok", "okokokok");
+                        .replace(R.id.main_layout, fragment, fragmentTag)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack(null);
                 ft.commit();
-            } else {
-                ft = manager.beginTransaction()
-                        .addToBackStack(null)
-                        .replace(R.id.main_layout, fragment);
-                ft.commit();
-            }
         }
     }
+
+
 }
 

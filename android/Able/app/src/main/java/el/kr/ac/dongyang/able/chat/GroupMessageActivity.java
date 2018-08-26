@@ -121,7 +121,7 @@ public class GroupMessageActivity extends AppCompatActivity {
                                     if (item.equals(uid)) {
                                         continue;
                                     }
-                                    sendGcm(users.get(item).pushToken);
+                                    sendGcm(users.get(item).getPushToken());
                                 }
                                 editText.setText("");
                             }
@@ -246,10 +246,10 @@ public class GroupMessageActivity extends AppCompatActivity {
 
             } else {
                 Glide.with(holder.itemView.getContext())
-                        .load(users.get(comments.get(position).uid).profileImageUrl)
+                        .load(users.get(comments.get(position).uid).getProfileImageUrl())
                         .apply(new RequestOptions().circleCrop())
                         .into(messageViewHolder.imageView_profile);
-                messageViewHolder.textview_name.setText(users.get(comments.get(position).uid).userName);
+                messageViewHolder.textview_name.setText(users.get(comments.get(position).uid).getUserName());
                 messageViewHolder.linearLayout_destination.setVisibility(View.VISIBLE);
                 messageViewHolder.textView_message.setBackgroundResource(R.drawable.leftbubble);
                 messageViewHolder.textView_message.setText(comments.get(position).message);

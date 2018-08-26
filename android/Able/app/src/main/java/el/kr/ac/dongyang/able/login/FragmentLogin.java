@@ -259,8 +259,8 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
                     UserModel userModel = new UserModel();
                     String email = task.getResult().getUser().getEmail();
                     StringTokenizer tokens = new StringTokenizer(email);
-                    userModel.userName = tokens.nextToken("@");
-                    FirebaseDatabase.getInstance().getReference().child("USER").child(uid).child("userName").setValue(userModel.userName);
+                    userModel.setUserName(tokens.nextToken("@"));
+                    FirebaseDatabase.getInstance().getReference().child("USER").child(uid).child("userName").setValue(userModel.getUserName());
                     updateUI(user);
                 } else {
                     // If sign in fails, display a message to the user.
@@ -291,9 +291,9 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
                     UserModel userModel = new UserModel();
                     String email = task.getResult().getUser().getEmail();
                     StringTokenizer tokens = new StringTokenizer(email);
-                    userModel.userName = tokens.nextToken("@");
+                    userModel.setUserName(tokens.nextToken("@"));
                     FirebaseDatabase.getInstance().getReference().child("USER")
-                            .child(uid).child("userName").setValue(userModel.userName);
+                            .child(uid).child("userName").setValue(userModel.getUserName());
                     updateUI(user);
                 } else {
                     // If sign in fails, display a message to the user.
@@ -458,14 +458,14 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
 
                             //이메일과 uid를 받아서 데이터베이스에 저장하는데 사용
                             final UserModel userModel = new UserModel();
-                            userModel.email = registerEmailEditText.getText().toString();
-                            userModel.userName = userNameEditText.getText().toString();
-                            userModel.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            userModel.password = registerPwEditText.getText().toString();
+                            userModel.setEmail(registerEmailEditText.getText().toString());
+                            userModel.setUserName(userNameEditText.getText().toString());
+                            userModel.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            userModel.setPassword(registerPwEditText.getText().toString());
                             FirebaseDatabase.getInstance().getReference().child("USER").child(uid).setValue(userModel);
 
                             passPushTokenToServer();
-                            SharedPref.getInstance(getContext()).setData("userName", userModel.userName);
+                            SharedPref.getInstance(getContext()).setData("userName", userModel.getUserName());
 
                             FirebaseStorage.getInstance().getReference().child("userImages").child(uid).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                 @Override

@@ -185,8 +185,8 @@ public class FragmentSetting extends Fragment{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userModel = dataSnapshot.getValue(UserModel.class);
-                if (userModel != null && userModel.weight != null) {
-                    weight = Double.parseDouble(userModel.weight);
+                if (userModel != null && userModel.getWeight() != null) {
+                    weight = Double.parseDouble(userModel.getWeight());
                     Log.d(TAG, "start - " + weight);
                 }
             }

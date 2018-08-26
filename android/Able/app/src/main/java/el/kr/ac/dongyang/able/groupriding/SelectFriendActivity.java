@@ -25,7 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.chat.MessageActivity;
@@ -34,6 +36,7 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 public class SelectFriendActivity extends AppCompatActivity {
     ChatModel chatModel = new ChatModel();
+    Map<String, Boolean> user = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +50,10 @@ public class SelectFriendActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                chatModel.users.put(myUid,true);
+                user.put(myUid, true);
+                chatModel.setUsers(user);
                 FirebaseDatabase.getInstance().getReference().child("CHATROOMS").push().setValue(chatModel);
-
-
+                user.clear();
             }
         });
     }
@@ -73,7 +76,7 @@ public class SelectFriendActivity extends AppCompatActivity {
 
                         UserModel userModel = snapshot.getValue(UserModel.class);
 
-                        if(userModel.uid.equals(myUid)){
+                        if(userModel.getUid().equals(myUid)){
                             continue;
                         }
                         userModels.add(userModel);
@@ -105,17 +108,17 @@ public class SelectFriendActivity extends AppCompatActivity {
 
             Glide.with
                     (holder.itemView.getContext())
-                    .load(userModels.get(position).profileImageUrl)
+                    .load(userModels.get(position).getProfileImageUrl())
                     .apply(new RequestOptions().circleCrop())
                     .into(((CustomViewHolder)holder).imageView);
-            ((CustomViewHolder)holder).textView.setText(userModels.get(position).userName);
+            ((CustomViewHolder)holder).textView.setText(userModels.get(position).getUserName());
 
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), MessageActivity.class);
-                    intent.putExtra("destinationUid",userModels.get(position).uid);
+                    intent.putExtra("destinationUid",userModels.get(position).getUid());
                     ActivityOptions activityOptions = null;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
                         activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright,R.anim.toleft);
@@ -125,18 +128,17 @@ public class SelectFriendActivity extends AppCompatActivity {
                 }
             });
 
-            if(userModels.get(position).comment != null){
-                ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).comment);
+            if(userModels.get(position).getComment() != null){
+                ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).getComment());
             }
             ((CustomViewHolder) holder).checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    //체크 된상태
                     if(b){
-                        chatModel.users.put(userModels.get(position).uid,true);
-                        //체크 취소 상태
-                    }else{
-                        chatModel.users.remove(userModels.get(position));
+                        user.put(userModels.get(position).getUid(),b);
+                    } else {
+
+                        user.remove(userModels.get(position).getUid());
                     }
                 }
             });

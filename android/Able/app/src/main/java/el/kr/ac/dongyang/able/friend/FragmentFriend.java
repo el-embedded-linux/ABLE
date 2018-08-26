@@ -165,14 +165,14 @@ public class FragmentFriend extends Fragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserModel userModel = dataSnapshot.getValue(UserModel.class);
                     Glide.with(customViewHolder.itemView.getContext())
-                            .load(userModel.profileImageUrl)
+                            .load(userModel.getProfileImageUrl())
                             .apply(new RequestOptions().circleCrop())
                             .into(customViewHolder.imageView);
 
-                    customViewHolder.textView.setText(userModel.userName);
+                    customViewHolder.textView.setText(userModel.getUserName());
 
-                    if (userModel.comment != null) {
-                        customViewHolder.textView_comment.setText(userModel.comment);
+                    if (userModel.getComment() != null) {
+                        customViewHolder.textView_comment.setText(userModel.getComment());
                     }
                 }
                 @Override

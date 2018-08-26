@@ -68,6 +68,7 @@ public class MessageActivity extends AppCompatActivity {
     private UserModel destinationUserModel;
     private DatabaseReference databaseReference;
     private ValueEventListener valueEventListener;
+    private Map<String, Boolean> user = new HashMap<>();
     int peopleCount = 0;
 
     @Override
@@ -86,8 +87,10 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ChatModel chatModel = new ChatModel();
-                chatModel.users.put(uid, true);
-                chatModel.users.put(dsetinationUid, true);
+                user.put(uid,true);
+                user.put(dsetinationUid, true);
+                chatModel.setUsers(user);
+                user.clear();
 
                 if (chatRoomUid == null) {
 
@@ -122,7 +125,7 @@ public class MessageActivity extends AppCompatActivity {
 
         String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         NotificationModel notificationModel = new NotificationModel();
-        notificationModel.to = destinationUserModel.pushToken;
+        notificationModel.to = destinationUserModel.getPushToken();
         notificationModel.notification.title = userName;
         notificationModel.notification.text = editText.getText().toString();
         notificationModel.data.title = userName;
@@ -157,7 +160,7 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot item : dataSnapshot.getChildren()) {
                     ChatModel chatModel = item.getValue(ChatModel.class);
-                    if (chatModel.users.containsKey(dsetinationUid) && chatModel.users.size() == 2) {
+                    if (chatModel.getUsers().containsKey(dsetinationUid) && chatModel.getUsers().size() == 2) {
                         chatRoomUid = item.getKey();
                         button.setEnabled(true);
                         recyclerView.setLayoutManager(new LinearLayoutManager(MessageActivity.this));
@@ -263,10 +266,10 @@ public class MessageActivity extends AppCompatActivity {
                 //상대방이 보낸 메시지
             } else {
                 Glide.with(holder.itemView.getContext())
-                        .load(destinationUserModel.profileImageUrl)
+                        .load(destinationUserModel.getProfileImageUrl())
                         .apply(new RequestOptions().circleCrop())
                         .into(messageViewHolder.imageView_profile);
-                messageViewHolder.textView_name.setText(destinationUserModel.userName);
+                messageViewHolder.textView_name.setText(destinationUserModel.getUserName());
                 messageViewHolder.linearLayout_destination.setVisibility(View.VISIBLE);
                 messageViewHolder.textView_message.setBackgroundResource(R.drawable.leftbubble);
                 messageViewHolder.textView_message.setText(comments.get(position).message);

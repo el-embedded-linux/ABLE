@@ -94,7 +94,7 @@ public class BarChartActivity extends AppCompatActivity {
                 for (DataSnapshot item : dataSnapshot.getChildren()) {
                     userModel = item.getValue(UserModel.class);
                     keys.add(item.getKey());
-                    userNames.add(userModel.userName);
+                    userNames.add(userModel.getUserName());
                 }
                 userNames.add("");
 

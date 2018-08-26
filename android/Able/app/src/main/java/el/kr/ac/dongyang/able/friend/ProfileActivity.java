@@ -51,14 +51,14 @@ public class ProfileActivity extends AppCompatActivity {
                 userModel = dataSnapshot.getValue(UserModel.class);
 
                 Glide.with(getApplicationContext())
-                        .load(userModel.profileImageUrl)
+                        .load(userModel.getProfileImageUrl())
                         .apply(new RequestOptions().circleCrop())
                         .into(imageView);
 
-                userName.setText(userModel.userName);
-                height.setText(userModel.height);
-                goal.setText(userModel.goal);
-                message.setText(userModel.comment);
+                userName.setText(userModel.getUserName());
+                height.setText(userModel.getHeight());
+                goal.setText(userModel.getGoal());
+                message.setText(userModel.getComment());
 
                 FirebaseDatabase.getInstance().getReference().child("TOTALHEALTH").child(friendUid).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

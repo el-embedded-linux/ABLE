@@ -47,6 +47,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 
 import el.kr.ac.dongyang.able.BusProvider;
@@ -62,11 +63,10 @@ import el.kr.ac.dongyang.able.R;
 public class FragmentNavigation extends Fragment {
 
     private String bussett;
-    private static final String LOG_TAG = "FragmentNavigation";
     private Double startlist[] = new Double[2];
     private double latitude_r, longitude_r;
     private TMapView tMapView = null;
-    private ArrayList<String> naviList = new ArrayList<String>();
+    private List<String> naviList = new ArrayList<String>();
     private WebView web;
     private Handler mHandler = new Handler();
     private FragmentTransaction fragmentTransaction;
@@ -163,7 +163,10 @@ public class FragmentNavigation extends Fragment {
 
         notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        int importance = NotificationManager.IMPORTANCE_LOW;
+        int importance = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            importance = NotificationManager.IMPORTANCE_LOW;
+        }
         NotificationChannel mChannel;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mChannel = new NotificationChannel(id, name, importance);
@@ -190,18 +193,18 @@ public class FragmentNavigation extends Fragment {
     private void hideFragment() {
         fragmentManager = getActivity().getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentByTag("FRAGMENT_NAVIGATION");
-        fragmentTransaction.hide(currentFragment);
+        Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentByTag("FragmentNavigation");
+        fragmentTransaction.replace(R.id.main_layout, currentFragment);
         fragmentTransaction.commit();
     }
 
     private void commitFragment(Fragment fragment) {
-        String fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-        Log.i("fagmentTag", fragmentTag);
-        getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_layout, fragment);
-        fragmentTransaction.addToBackStack(fragmentTag);
+        String fragmentTag = fragment.getClass().getSimpleName();
+        fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction()
+                .add(R.id.main_layout, fragment, fragmentTag)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -259,7 +262,6 @@ public class FragmentNavigation extends Fragment {
                 }
             });
         }
-
         @JavascriptInterface
         public void setTimeDistance(final String arg) {
             mHandler.post(new Runnable() {

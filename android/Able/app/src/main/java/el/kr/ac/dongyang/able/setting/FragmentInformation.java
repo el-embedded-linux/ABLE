@@ -74,12 +74,12 @@ public class FragmentInformation extends Fragment{
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     userModel = dataSnapshot.getValue(UserModel.class);
                     if(userModel != null) {
-                        mName.setText(userModel.userName);
-                        mAddress.setText(userModel.address);
-                        mHeight.setText(userModel.height);
-                        mWeight.setText(userModel.weight);
-                        mComment.setText(userModel.comment);
-                        mGoal.setText(userModel.goal);
+                        mName.setText(userModel.getUserName());
+                        mAddress.setText(userModel.getAddress());
+                        mHeight.setText(userModel.getHeight());
+                        mWeight.setText(userModel.getWeight());
+                        mComment.setText(userModel.getComment());
+                        mGoal.setText(userModel.getGoal());
                     }
                 }
                 @Override
@@ -96,29 +96,29 @@ public class FragmentInformation extends Fragment{
             @Override
             public void onClick(View view) {
                 if(mName.length() != 0) {
-                    userModel.userName = mName.getText().toString();
-                    mDatabase.child("USER").child(uid).child("userName").setValue(userModel.userName);
-                    SharedPref.getInstance(getContext()).setData("userName", userModel.userName);
+                    userModel.setUserName(mName.getText().toString());
+                    mDatabase.child("USER").child(uid).child("userName").setValue(userModel.getUserName());
+                    SharedPref.getInstance(getContext()).setData("userName", userModel.getUserName());
                 }
                 if(mAddress.length() != 0) {
-                    userModel.address = mAddress.getText().toString();
-                    mDatabase.child("USER").child(uid).child("address").setValue(userModel.address);
+                    userModel.setAddress(mAddress.getText().toString());
+                    mDatabase.child("USER").child(uid).child("address").setValue(userModel.getAddress());
                 }
                 if(mHeight.length() != 0) {
-                    userModel.height = mHeight.getText().toString();
-                    mDatabase.child("USER").child(uid).child("height").setValue(userModel.height);
+                    userModel.setHeight(mHeight.getText().toString());
+                    mDatabase.child("USER").child(uid).child("height").setValue(userModel.getHeight());
                 }
                 if(mWeight.length() != 0) {
-                    userModel.weight = mWeight.getText().toString();
-                    mDatabase.child("USER").child(uid).child("weight").setValue(userModel.weight);
+                    userModel.setWeight(mWeight.getText().toString());
+                    mDatabase.child("USER").child(uid).child("weight").setValue(userModel.getWeight());
                 }
                 if(mComment.length() != 0) {
-                    userModel.comment = mComment.getText().toString();
-                    mDatabase.child("USER").child(uid).child("comment").setValue(userModel.comment);
+                    userModel.setComment(mComment.getText().toString());
+                    mDatabase.child("USER").child(uid).child("comment").setValue(userModel.getComment());
                 }
                 if(mGoal.length() != 0) {
-                    userModel.goal = mGoal.getText().toString();
-                    mDatabase.child("USER").child(uid).child("goal").setValue(userModel.goal);
+                    userModel.setGoal(mGoal.getText().toString());
+                    mDatabase.child("USER").child(uid).child("goal").setValue(userModel.getGoal());
                 }
                 getActivity().onBackPressed();
             }

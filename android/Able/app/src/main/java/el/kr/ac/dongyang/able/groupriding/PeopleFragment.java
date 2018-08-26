@@ -96,7 +96,7 @@ public class PeopleFragment extends Fragment {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                         UserModel userModel = snapshot.getValue(UserModel.class);
-                        if(userModel.uid.equals(myUid)){
+                        if(userModel.getUid().equals(myUid)){
                             continue;
                         }
                         userModels.add(snapshot.getValue(UserModel.class));
@@ -123,16 +123,16 @@ public class PeopleFragment extends Fragment {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
 
             Glide.with(holder.itemView.getContext())
-                    .load(userModels.get(position).profileImageUrl)
+                    .load(userModels.get(position).getProfileImageUrl())
                     .apply(new RequestOptions().circleCrop())
                     .into(((CustomViewHolder) holder).imageView);
-            ((CustomViewHolder) holder).textView.setText(userModels.get(position).userName);
+            ((CustomViewHolder) holder).textView.setText(userModels.get(position).getUserName());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), MessageActivity.class);
-                    intent.putExtra("destinationUid", userModels.get(position).uid);
+                    intent.putExtra("destinationUid", userModels.get(position).getUid());
                     //애니메이션 안된다. 왜 안되는건지 모르겠네
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright, R.anim.toleft);
@@ -141,8 +141,8 @@ public class PeopleFragment extends Fragment {
                 }
             });
 
-            if(userModels.get(position).comment != null){
-                ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).comment);
+            if(userModels.get(position).getComment() != null){
+                ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).getComment());
             }
         }
 

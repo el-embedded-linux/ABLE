@@ -31,9 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import el.kr.ac.dongyang.able.R;
-import el.kr.ac.dongyang.able.RecyclerItemClickListener;
-import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
-import el.kr.ac.dongyang.able.model.FriendModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
 /**
@@ -82,7 +79,7 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
                     userModels.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         UserModel userModel = snapshot.getValue(UserModel.class);
-                        if(userModel.uid.equals(myUid)){
+                        if(userModel.getUid().equals(myUid)){
                             continue;
                         }
                         userModels.add(snapshot.getValue(UserModel.class));
@@ -109,19 +106,19 @@ public class FragmentUserlist extends android.support.v4.app.Fragment{
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             Glide.with(holder.itemView.getContext())
-                    .load(userModels.get(position).profileImageUrl)
+                    .load(userModels.get(position).getProfileImageUrl())
                     .apply(new RequestOptions().circleCrop())
                     .into(((CustomViewHolder) holder).imageView);
-            ((CustomViewHolder)holder).textView.setText(userModels.get(position).userName);
+            ((CustomViewHolder)holder).textView.setText(userModels.get(position).getUserName());
             ((CustomViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FirebaseDatabase.getInstance().getReference().child("FRIEND").child(uid).child(userModels.get(position).uid).child("userName").setValue(userModels.get(position).userName);
+                    FirebaseDatabase.getInstance().getReference().child("FRIEND").child(uid).child(userModels.get(position).getUid()).child("userName").setValue(userModels.get(position).getUserName());
                     Toast.makeText(getActivity(), position + "번 째 유저 친구추가", Toast.LENGTH_SHORT).show();
                 }
             });
-            if(userModels.get(position).comment != null){
-                ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).comment);
+            if(userModels.get(position).getComment() != null){
+                ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).getComment());
             }
         }
 

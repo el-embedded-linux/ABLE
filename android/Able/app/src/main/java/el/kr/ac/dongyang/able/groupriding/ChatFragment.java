@@ -96,7 +96,7 @@ public class ChatFragment extends android.support.v4.app.Fragment {
             final CustomViewHolder customViewHolder = (CustomViewHolder) holder;
             String destinationUid = null;
             // 일일 챗방에 있는 유저를 체크, 갠톡을 위한 상대 uid를 저장함
-            for (String user : chatModels.get(position).users.keySet()) {
+            for (String user : chatModels.get(position).getUsers().keySet()) {
                 if (!user.equals(uid)) {
                         destinationUid = user;
                         destinationUsers.add(destinationUid);
@@ -109,11 +109,11 @@ public class ChatFragment extends android.support.v4.app.Fragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserModel userModel = dataSnapshot.getValue(UserModel.class);
                     Glide.with(customViewHolder.itemView.getContext())
-                            .load(userModel.profileImageUrl)
+                            .load(userModel.getProfileImageUrl())
                             .apply(new RequestOptions().circleCrop())
                             .into(customViewHolder.imageView);
 
-                    customViewHolder.textView_title.setText(userModel.userName);
+                    customViewHolder.textView_title.setText(userModel.getUserName());
 
                 }
 
@@ -125,19 +125,19 @@ public class ChatFragment extends android.support.v4.app.Fragment {
 
             //메시지를 내림 차순으로 정렬 후 마지막 메세지의 키값을 가져옴
             Map<String, ChatModel.Comment> commentMap = new TreeMap<>(Collections.reverseOrder());
-            commentMap.putAll(chatModels.get(position).comments);
+            commentMap.putAll(chatModels.get(position).getComments());
             if (commentMap.keySet().toArray().length > 0) {
                 String lastMessageKey = (String) commentMap.keySet().toArray()[0];
-                customViewHolder.textView_last_message.setText(chatModels.get(position).comments.get(lastMessageKey).message);
+                customViewHolder.textView_last_message.setText(chatModels.get(position).getComments().get(lastMessageKey).message);
 
                 //TimeStamp
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-                long unixTime = (long) chatModels.get(position).comments.get(lastMessageKey).timestamp;
+                long unixTime = (long) chatModels.get(position).getComments().get(lastMessageKey).timestamp;
                 Date date = new Date(unixTime);
                 customViewHolder.textView_timestamp.setText(simpleDateFormat.format(date));
             }
 
-            if(chatModels.get(position).users.size() > 2) {
+            if(chatModels.get(position).getUsers().size() > 2) {
                 //단체채팅방
                 customViewHolder.textView_group.setVisibility(View.VISIBLE);
             } else {
@@ -149,7 +149,7 @@ public class ChatFragment extends android.support.v4.app.Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent intent = null;
-                    if(chatModels.get(position).users.size() > 2){
+                    if(chatModels.get(position).getUsers().size() > 2){
                         intent = new Intent(view.getContext(), GroupMessageActivity.class);
                         intent.putExtra("destinationRoom",keys.get(position));
                     }else{
