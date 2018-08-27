@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Able</string>
+    <string name="naviTitle">User</string>
+    <string name="naviSubTitle">EL project Able</string>
 
     <string name="facebook_app_id">2136071656408800</string>
     <string name="fb_login_protocol_scheme">fb2136071656408800</string>

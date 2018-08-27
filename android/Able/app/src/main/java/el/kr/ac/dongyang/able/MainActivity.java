@@ -18,13 +18,21 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,6 +43,7 @@ import el.kr.ac.dongyang.able.friend.FragmentFriend;
 import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
 import el.kr.ac.dongyang.able.health.FragmentHealthcare;
 import el.kr.ac.dongyang.able.login.FragmentLogin;
+import el.kr.ac.dongyang.able.model.UserModel;
 import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
 import el.kr.ac.dongyang.able.setting.FragmentSetting;
 
@@ -48,10 +57,13 @@ public class MainActivity extends AppCompatActivity
     FragmentManager manager;
     FirebaseUser firebaseUser;
     NavigationView navigationView;
+    TextView naviTitle, naviSubTitle;
+    ImageView naviImg;
 
     TextView weatherIcon, temperature, temp_max, temp_min;
     Icon_Manager icon_manager;
 
+    FragmentHome fragmentHome;
     FragmentFriend fragmentFriend;
     FragmentLogin fragmentLogin;
     FragmentNavigation fragmentNavigation;
@@ -69,6 +81,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         manager = getSupportFragmentManager();
+        fragmentHome = new FragmentHome();
         fragmentFriend = new FragmentFriend();
         fragmentLogin = new FragmentLogin();
         fragmentNavigation = new FragmentNavigation();
@@ -85,6 +98,11 @@ public class MainActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View headerView = navigationView.getHeaderView(0);
+        naviTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewTitle);
+        naviSubTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewSubTitle);
+        naviImg = headerView.findViewById(R.id.NaviHeaderMainImageView);
+
         weatherIcon = findViewById(R.id.weather);
         temperature = findViewById(R.id.Temperature);
         temp_max = findViewById(R.id.Temp_max);
@@ -92,18 +110,37 @@ public class MainActivity extends AppCompatActivity
         icon_manager = new Icon_Manager();
         setWeather();
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String uid = user.getUid();
-            passPushTokenToServer(uid);
-        }
         //getHashKey();
     }
+
+
 
     @Override
     protected void onStart() {
         super.onStart();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String uid = firebaseUser.getUid();
+            passPushTokenToServer(uid);
+            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addValueEventListener(new ValueEventListener() {
+                UserModel userModel = new UserModel();
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    userModel = dataSnapshot.getValue(UserModel.class);
+                    if(userModel.getProfileImageUrl() != null) {
+                        Glide.with(MainActivity.this)
+                                .load(userModel.getProfileImageUrl())
+                                .apply(new RequestOptions().circleCrop())
+                                .into(naviImg);
+                    }
+                    naviTitle.setText(userModel.getUserName());
+                    naviSubTitle.setText(userModel.getComment());
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
     }
 
     private void setWeather() {
@@ -175,6 +212,8 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
+
 
     //메뉴 아이템에 무엇을 넣을 것인지, 더 추가도 가능. 현재는 친구목록 : FragmentFriend로 이동
     @Override

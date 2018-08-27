@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -78,6 +82,9 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
     private GoogleSignInClient mGoogleSignInClient; //구글 로그인 부분
     private DatabaseReference reference;
     public UserProfileChangeRequest profileChangeRequest;
+    private NavigationView navigationView;
+    TextView naviTitle, naviSubTitle;
+    ImageView naviImg;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -108,6 +115,12 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
         getActivity().setTitle("Login");
 
         final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        navigationView = getActivity().findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        naviTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewTitle);
+        naviSubTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewSubTitle);
+        naviImg = headerView.findViewById(R.id.NaviHeaderMainImageView);
 
         reference = FirebaseDatabase.getInstance().getReference();
         //뷰
@@ -413,6 +426,14 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
                     userModel = dataSnapshot.getValue(UserModel.class);
                     if (userModel != null) {
                         userName = userModel.getUserName();
+                        if(userModel.getProfileImageUrl() != null) {
+                            Glide.with(getActivity())
+                                    .load(userModel.getProfileImageUrl())
+                                    .apply(new RequestOptions().circleCrop())
+                                    .into(naviImg);
+                        }
+                        naviTitle.setText(userModel.getUserName());
+                        naviSubTitle.setText(userModel.getComment());
                     }
                 }
                 @Override
@@ -429,6 +450,9 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
             registerView.setVisibility(View.GONE);
             loginView.setVisibility(View.VISIBLE);
             userName = "회원";
+            naviImg.setImageResource(R.drawable.playstore_icon);
+            naviTitle.setText(R.string.naviTitle);
+            naviSubTitle.setText(R.string.naviSubTitle);
         }
     }
 

@@ -1,7 +1,6 @@
 package el.kr.ac.dongyang.able;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,19 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.otto.Subscribe;
 
-import el.kr.ac.dongyang.able.db.Userdb;
 import el.kr.ac.dongyang.able.eventbus.UserEvent;
 import el.kr.ac.dongyang.able.model.UserModel;
 import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
@@ -59,12 +54,13 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container,false);
 
+        manager = getActivity().getSupportFragmentManager();
         fragmentNavigation = new FragmentNavigation();
         naviBtn = view.findViewById(R.id.hGoNavi);
         naviBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addFragment(fragmentNavigation);
+                replaceFragment(fragmentNavigation);
             }
         });
         textId = view.findViewById(R.id.name);
@@ -111,20 +107,15 @@ public class FragmentHome extends android.support.v4.app.Fragment{
         Log.d("finishLoad", userEvent.getUserId());
     }
 
-    public void addFragment(Fragment fragment) {
+    private void replaceFragment(Fragment fragment) {
         if (!fragment.isVisible()) {
-            if (fragment instanceof FragmentNavigation) {
-                ft = manager.beginTransaction()
-                        .addToBackStack(null)
-                        .replace(R.id.main_layout, fragment, "FRAGMENT_NAVIGATION");
-                Log.d("navigationok", "okokokok");
-                ft.commit();
-            } else {
-                ft = manager.beginTransaction()
-                        .addToBackStack(null)
-                        .replace(R.id.main_layout, fragment);
-                ft.commit();
-            }
+            fragmentTag = fragment.getClass().getSimpleName();
+            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft = manager.beginTransaction()
+                    .replace(R.id.main_layout, fragment, fragmentTag)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .addToBackStack(null);
+            ft.commit();
         }
     }
 }
