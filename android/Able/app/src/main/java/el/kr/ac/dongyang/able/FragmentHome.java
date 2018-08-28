@@ -1,7 +1,6 @@
 package el.kr.ac.dongyang.able;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,19 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.otto.Subscribe;
 
-import el.kr.ac.dongyang.able.db.Userdb;
 import el.kr.ac.dongyang.able.eventbus.UserEvent;
 import el.kr.ac.dongyang.able.model.UserModel;
 import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
@@ -38,8 +33,9 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     Button naviBtn;
     TextView textId;
     FragmentTransaction ft;
+    FragmentManager manager;
     String fragmentTag;
-    Fragment fragmentNav;
+    FragmentNavigation fragmentNavigation;
     FirebaseUser user;
     private UserModel userModel;
     private String userName;
@@ -56,43 +52,40 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home,container,false);
+        View view = inflater.inflate(R.layout.fragment_home, container,false);
 
-        fragmentNav = new FragmentNavigation();
+        manager = getActivity().getSupportFragmentManager();
+        fragmentNavigation = new FragmentNavigation();
         naviBtn = view.findViewById(R.id.hGoNavi);
         naviBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentTag = fragmentNav.getClass().getSimpleName();  //FragmentLogin
-                Log.i("fagmentTag", fragmentTag);
-                getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.main_layout, fragmentNav);
-                ft.addToBackStack(fragmentTag);
-                ft.commit();
+                replaceFragment(fragmentNavigation);
             }
         });
         textId = view.findViewById(R.id.name);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null) {
-            String uid = user.getUid();
-            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            final String uid = user.getUid();
+            userModel = new UserModel();
+            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     userModel = dataSnapshot.getValue(UserModel.class);
-                    //왜 userModel 이 null이지
                     if (userModel != null) {
                         userName = userModel.getUserName();
+                        textId.setText(userName);
                     }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
-            textId.setText(userName);
         }
+
+        //String name = SharedPref.getInstance(getContext()).getData("userName");
+        //textId.setText(name);
 
         return view;
     }
@@ -112,5 +105,17 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     public void finishLoad(UserEvent userEvent){
         textId.setText(userEvent.getUserId());
         Log.d("finishLoad", userEvent.getUserId());
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        if (!fragment.isVisible()) {
+            fragmentTag = fragment.getClass().getSimpleName();
+            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft = manager.beginTransaction()
+                    .replace(R.id.main_layout, fragment, fragmentTag)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .addToBackStack(null);
+            ft.commit();
+        }
     }
 }

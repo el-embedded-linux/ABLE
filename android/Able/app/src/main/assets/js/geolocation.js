@@ -39,8 +39,8 @@ var vectorcode = 0;
 function initTmap(){
     map = new Tmap.Map({
         div:'map_div',
-        width : "25rem",
-        height : "28rem",
+        width : '100%',
+        height : '100%'
     });
 
     //map.events.register("touchend", map, onClick);

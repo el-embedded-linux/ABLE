@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -69,6 +70,8 @@ public class GroupMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_message);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         destinationRoom = getIntent().getStringExtra("destinationRoom");
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         editText = findViewById(R.id.groupMessageActivity_editText);
@@ -118,7 +121,7 @@ public class GroupMessageActivity extends AppCompatActivity {
                                     if (item.equals(uid)) {
                                         continue;
                                     }
-                                    sendGcm(users.get(item).pushToken);
+                                    sendGcm(users.get(item).getPushToken());
                                 }
                                 editText.setText("");
                             }
@@ -243,10 +246,10 @@ public class GroupMessageActivity extends AppCompatActivity {
 
             } else {
                 Glide.with(holder.itemView.getContext())
-                        .load(users.get(comments.get(position).uid).profileImageUrl)
+                        .load(users.get(comments.get(position).uid).getProfileImageUrl())
                         .apply(new RequestOptions().circleCrop())
                         .into(messageViewHolder.imageView_profile);
-                messageViewHolder.textview_name.setText(users.get(comments.get(position).uid).userName);
+                messageViewHolder.textview_name.setText(users.get(comments.get(position).uid).getUserName());
                 messageViewHolder.linearLayout_destination.setVisibility(View.VISIBLE);
                 messageViewHolder.textView_message.setBackgroundResource(R.drawable.leftbubble);
                 messageViewHolder.textView_message.setText(comments.get(position).message);

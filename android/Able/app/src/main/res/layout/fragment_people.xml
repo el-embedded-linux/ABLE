@@ -7,7 +7,9 @@
     android:background="@drawable/groupriding_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="70dp">
+    android:paddingTop="70dp"
+    android:clickable="true"
+    >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/peoplefragment_recyclerview"
@@ -36,7 +38,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         fab:fab_addButtonColorNormal="@color/green"
         fab:fab_addButtonColorPressed="@color/green_pressed"
-        fab:fab_addButtonPlusIconColor="@color/white">
+        fab:fab_addButtonPlusIconColor="@color/white"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelsPosition="left">
+
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_groupchatlist"
@@ -45,7 +50,8 @@
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/white_pressed"
             fab:fab_icon="@drawable/navigation_magnifier2"
-            fab:fab_title="Action A" />
+            fab:fab_title="초대하기"
+            />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_chatrooms"
@@ -54,7 +60,8 @@
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/white_pressed"
             fab:fab_icon="@drawable/drawer_menu_users"
-            fab:fab_title="Action with a very long name that won\'t fit on the screen" />
+            fab:fab_title="채팅방"
+            />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </android.support.constraint.ConstraintLayout>

@@ -18,12 +18,21 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,6 +43,7 @@ import el.kr.ac.dongyang.able.friend.FragmentFriend;
 import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
 import el.kr.ac.dongyang.able.health.FragmentHealthcare;
 import el.kr.ac.dongyang.able.login.FragmentLogin;
+import el.kr.ac.dongyang.able.model.UserModel;
 import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
 import el.kr.ac.dongyang.able.setting.FragmentSetting;
 
@@ -44,13 +54,24 @@ public class MainActivity extends AppCompatActivity
 
     private String TAG = "Able";
     FragmentTransaction ft;
-    String fragmentTag;
-    Fragment fragmentNav,fragmentSet;
+    FragmentManager manager;
     FirebaseUser firebaseUser;
     NavigationView navigationView;
+    TextView naviTitle, naviSubTitle;
+    ImageView naviImg;
 
-    TextView weatherIcon, temperature,temp_max,temp_min;
+    TextView weatherIcon, temperature, temp_max, temp_min;
     Icon_Manager icon_manager;
+
+    FragmentHome fragmentHome;
+    FragmentFriend fragmentFriend;
+    FragmentLogin fragmentLogin;
+    FragmentNavigation fragmentNavigation;
+    FragmentHealthcare fragmentHealthcare;
+    FragmentSetting fragmentSetting;
+    PeopleFragment peopleFragment;
+    private long pressedTime;
+    private String fragmentTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +79,15 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        fragmentNav = new FragmentNavigation();
-        fragmentSet = new FragmentSetting();
+
+        manager = getSupportFragmentManager();
+        fragmentHome = new FragmentHome();
+        fragmentFriend = new FragmentFriend();
+        fragmentLogin = new FragmentLogin();
+        fragmentNavigation = new FragmentNavigation();
+        fragmentHealthcare = new FragmentHealthcare();
+        fragmentSetting = new FragmentSetting();
+        peopleFragment = new PeopleFragment();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -70,32 +98,64 @@ public class MainActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View headerView = navigationView.getHeaderView(0);
+        naviTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewTitle);
+        naviSubTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewSubTitle);
+        naviImg = headerView.findViewById(R.id.NaviHeaderMainImageView);
+
         weatherIcon = findViewById(R.id.weather);
         temperature = findViewById(R.id.Temperature);
         temp_max = findViewById(R.id.Temp_max);
         temp_min = findViewById(R.id.Temp_min);
         icon_manager = new Icon_Manager();
+        setWeather();
 
-        ((TextView) findViewById(R.id.weather)).setTypeface(icon_manager.get_icons("fonts/weathericons-regular-webfont.ttf", this));
+        //getHashKey();
+    }
 
-        Function.placeIdTask asyncTask =new Function.placeIdTask(new Function.AsyncResponse() {
-            public void processFinish(String weather_temperature, String weather_temp_max, String weather_temp_min,String updatedOn, String weather_iconText, String sun_rise) {
 
-                weatherIcon.setText(Html.fromHtml(weather_iconText));
-                temperature.setText(weather_temperature);
-                temp_max.setText(weather_temp_max);
-                temp_min.setText(weather_temp_min);
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String uid = firebaseUser.getUid();
+            passPushTokenToServer(uid);
+            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addValueEventListener(new ValueEventListener() {
+                UserModel userModel = new UserModel();
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    userModel = dataSnapshot.getValue(UserModel.class);
+                    if(userModel.getProfileImageUrl() != null) {
+                        Glide.with(MainActivity.this)
+                                .load(userModel.getProfileImageUrl())
+                                .apply(new RequestOptions().circleCrop())
+                                .into(naviImg);
+                    }
+                    naviTitle.setText(userModel.getUserName());
+                    naviSubTitle.setText(userModel.getComment());
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
+    }
+
+    private void setWeather() {
+        String font = "fonts/weathericons-regular-webfont.ttf";
+        weatherIcon.setTypeface(icon_manager.get_icons(font, this));
+
+        Function.placeIdTask asyncTask = new Function.placeIdTask(new Function.AsyncResponse() {
+            public void processFinish(String temperature, String temp_max, String temp_min, String updatedOn, String iconText, String sun_rise) {
+                weatherIcon.setText(Html.fromHtml(iconText));
+                MainActivity.this.temperature.setText(temperature);
+                MainActivity.this.temp_max.setText(temp_max);
+                MainActivity.this.temp_min.setText(temp_min);
             }
         });
-
         asyncTask.execute("37.500774", "126.867899");
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
-            String uid = user.getUid();
-            passPushTokenToServer(uid);
-        }
-        //getHashKey();
     }
 
     private void passPushTokenToServer(String uid) {
@@ -105,23 +165,6 @@ public class MainActivity extends AppCompatActivity
 
         FirebaseDatabase.getInstance().getReference().child("USER").child(uid).updateChildren(map);
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
 
     //해시키 구하는 함수
     private void getHashKey() {
@@ -145,6 +188,19 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (manager.getBackStackEntryCount()==0){
+            if (pressedTime == 0) {
+                Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                pressedTime = System.currentTimeMillis();
+            } else {
+                int seconds = (int) (System.currentTimeMillis() - pressedTime);
+                if (seconds > 2000) {
+                    Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                    pressedTime = 0;
+                } else {
+                    super.onBackPressed();
+                }
+            }
         } else {
             super.onBackPressed();
         }
@@ -157,6 +213,8 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+
     //메뉴 아이템에 무엇을 넣을 것인지, 더 추가도 가능. 현재는 친구목록 : FragmentFriend로 이동
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -168,14 +226,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
-            Fragment fragment = new FragmentFriend();
-            fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_layout, fragment);
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
+            replaceFragment(fragmentFriend);
         }
 
         return super.onOptionsItemSelected(item);
@@ -188,58 +239,41 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_login) {
-            Fragment fragment = new FragmentLogin();
-            fragmentTag = fragment.getClass().getSimpleName();
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_layout, fragment);
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
-
-        } else if (id == R.id.nav_navigation) {     //영훈
-            fragmentTag = fragmentNav.getClass().getSimpleName();
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.main_layout, fragmentNav, "FRAGMENT_NAVIGATION");
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
-
-        } else if (id == R.id.nav_helthcare) {      //승현
-            Fragment fragment = new FragmentHealthcare();
-            fragmentTag = fragment.getClass().getSimpleName();
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.main_layout, fragment);
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
-
-        } else if (id == R.id.nav_groupriding) {    //지수
-            Fragment fragment = new PeopleFragment();
-            fragmentTag = fragment.getClass().getSimpleName();
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_layout, fragment);
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
-
-        } else if (id == R.id.nav_setting) {        //수현
-            fragmentTag = fragmentSet.getClass().getSimpleName();
-            Log.i("fagmentTag", fragmentTag);
-            getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.main_layout, fragmentSet);
-            ft.addToBackStack(fragmentTag);
-            ft.commit();
+        switch (id) {
+            case R.id.nav_login:
+                replaceFragment(fragmentLogin);
+                break;
+            case R.id.nav_navigation:
+                replaceFragment(fragmentNavigation);
+                break;
+            case R.id.nav_helthcare:
+                replaceFragment(fragmentHealthcare);
+                break;
+            case R.id.nav_groupriding:
+                replaceFragment(peopleFragment);
+                break;
+            case R.id.nav_setting:
+                replaceFragment(fragmentSetting);
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void replaceFragment(Fragment fragment) {
+        if (!fragment.isVisible()) {
+                fragmentTag = fragment.getClass().getSimpleName();
+                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                ft = manager.beginTransaction()
+                        .replace(R.id.main_layout, fragment, fragmentTag)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack(null);
+                ft.commit();
+        }
+    }
+
+
 }
 

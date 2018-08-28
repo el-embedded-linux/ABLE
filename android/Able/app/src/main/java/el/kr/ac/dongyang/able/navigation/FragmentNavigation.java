@@ -2,7 +2,11 @@ package el.kr.ac.dongyang.able.navigation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,16 +37,17 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 
 import el.kr.ac.dongyang.able.BusProvider;
@@ -53,38 +60,34 @@ import el.kr.ac.dongyang.able.R;
  * 지도 맵 띄움.
  * 출발지 포인트랑 목적지 포인트 받으면 라인이랑 마커 띄움
  */
-public class FragmentNavigation extends android.support.v4.app.Fragment {
+public class FragmentNavigation extends Fragment {
 
-    WebView web;
-    private Handler mHandler = new Handler();
-    String fragmentTag;
-    FragmentTransaction ft;
-    FragmentManager fm;
-    String bussett;
-    Double startlist[] = new Double[2];
-    ProgressBar naviWebLoadingBar;
-
-    private TMapGpsManager tmapgps = null;
+    private String bussett;
+    private Double startlist[] = new Double[2];
+    private double latitude_r, longitude_r;
     private TMapView tMapView = null;
-    private static String mApiKey = "2bcf226b-36b6-49da-82cc-5f00acee90a2"; // 발급받은 appKey
-    private static int mMarkerID;
+    private List<String> naviList = new ArrayList<String>();
+    private WebView web;
+    private Handler mHandler = new Handler();
+    private FragmentTransaction fragmentTransaction;
+    private FragmentManager fragmentManager;
 
-    private ArrayList<String> mArrayMarkerID = new ArrayList<String>();
-
-    public ArrayList<String> naviList = new ArrayList<String>();
-    private static final String LOG_TAG = "FragmentNavigation";
-
-    EditText et1;
-    Button startBtn, currentBtn;
-    ConstraintLayout constLocationInfo;
-    double latitude_r,longitude_r;
+    private EditText et1;
+    private Button startBtn, currentBtn;
+    private ConstraintLayout constLocationInfo;
+    private TextView nodeText, beforeText, textTime, textDistance;
+    private ProgressBar naviWebLoadingBar;
 
     private Bus busProvider = BusProvider.getInstance();
-    Timer t = new Timer(true);
-    TextView nodeText, beforeText, textTime, textDistance;
+    private Timer t = new Timer(true);
+
+    private NotificationCompat.Builder mBuilder;
+    private RemoteViews contentView;
+    private NotificationManager notificationManager;
 
     public FragmentNavigation() {
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,11 +98,13 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     @Override
     @SuppressLint("JavascriptInterface")
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_navigation,container,false);
+        View view = inflater.inflate(R.layout.fragment_navigation, container, false);
         getActivity().setTitle("Navigation");
 
         nodeText = view.findViewById(R.id.nodetext);
         beforeText = view.findViewById(R.id.beforeText);
+        nodeText.setVisibility(View.GONE);
+        beforeText.setVisibility(View.GONE);
         constLocationInfo = view.findViewById(R.id.constLocationInfo);
         textTime = view.findViewById(R.id.textTime);
         textDistance = view.findViewById(R.id.textDistance);
@@ -109,39 +114,102 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fm = getActivity().getSupportFragmentManager();
-                ft = fm.beginTransaction();
-                Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentByTag("FRAGMENT_NAVIGATION");
-                ft.hide(currentFragment);
-                ft.commit();
-                Toast.makeText(getActivity(), "주행이 시작됩니다.", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(getActivity(), "주행이 시작됩니다.", Toast.LENGTH_SHORT).show();
+                startNotification();
+                fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().remove(FragmentNavigation.this).commit();
+                fragmentManager.popBackStack();
             }
         });
 
         TMapTapi tmaptapi = new TMapTapi(getActivity());
-        tmaptapi.setSKTMapAuthentication ("2414ee00-3784-4c78-913d-32bf5fa9c107");
+        tmaptapi.setSKTMapAuthentication("2414ee00-3784-4c78-913d-32bf5fa9c107");
 
         et1 = view.findViewById(R.id.naviLocation);
-
         //edittext 밑줄 색 변경
         int color = Color.parseColor("#ffffff");
         et1.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-
         et1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new FragmentNaviList();
-                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-                Log.i("fagmentTag", fragmentTag);
-                getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft=getActivity().getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.main_layout, fragment);
-                ft.addToBackStack(fragmentTag);
-                ft.commit();
+                commitFragment(fragment);
             }
         });
+
         web = view.findViewById(R.id.web);
-        web.setWebViewClient(new WebViewClient(){
+        initWeb();
+
+        currentBtn = view.findViewById(R.id.currentBtn);
+        currentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (latitude_r != 0) {
+                    web.loadUrl("javascript:geoLo('" + latitude_r + "', '" + longitude_r + "')");
+                } else {
+                    Toast.makeText(getActivity(), "현재 위치가 없습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        setGps();
+
+        return view;
+    }
+
+    private void startNotification() {
+        String id = "my_channel_01";
+        CharSequence name = "test";
+
+        notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        int importance = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            importance = NotificationManager.IMPORTANCE_LOW;
+        }
+        NotificationChannel mChannel;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(id, name, importance);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+        Intent intent2 = new Intent(getActivity(), MainActivity.class);
+        PendingIntent pintent2 = PendingIntent.getActivity(getActivity(), 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        contentView = new RemoteViews(getContext().getPackageName(), R.layout.remoteview);
+        contentView.setTextViewText(R.id.remoteViewEndPoint, et1.getText().toString());
+
+        mBuilder = new NotificationCompat.Builder(getContext())
+                .setSmallIcon(R.drawable.playstore_icon_null)
+                .setContent(contentView)
+                .setChannelId(id)
+                .setContentIntent(pintent2);
+
+        notificationManager.notify(1, mBuilder.build());
+    }
+
+    private void hideFragment() {
+        fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentByTag("FragmentNavigation");
+        fragmentTransaction.replace(R.id.main_layout, currentFragment);
+        fragmentTransaction.commit();
+    }
+
+    private void commitFragment(Fragment fragment) {
+        String fragmentTag = fragment.getClass().getSimpleName();
+        fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction()
+                .add(R.id.main_layout, fragment, fragmentTag)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void initWeb() {
+        web.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -164,7 +232,7 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
         webSet.setSaveFormData(false);
         webSet.setSavePassword(false);
         webSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        web.setWebChromeClient(new WebChromeClient(){
+        web.setWebChromeClient(new WebChromeClient() {
             public boolean onConsoleMessage(ConsoleMessage cm) {
                 Log.d("MyApplication", cm.message() + " -- From line "
                         + cm.lineNumber() + " of "
@@ -174,42 +242,17 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
         });
         web.setWebViewClient(new WebViewClient()); //페이지 로딩을 마쳤을 경우 작업
         web.loadUrl("file:///android_asset/index.html"); //웹뷰로드
-
         web.setHorizontalScrollBarEnabled(false);
         web.setVerticalScrollBarEnabled(false);
-
         web.getSettings().setLoadWithOverviewMode(true);
         web.getSettings().setUseWideViewPort(true);
-
         web.getSettings().setJavaScriptEnabled(true); //자바스크립트 허용
-        web.addJavascriptInterface(new TMapBridge(),"tmap");
-
-        currentBtn = view.findViewById(R.id.currentBtn);
-        currentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(latitude_r != 0) {
-                    web.loadUrl("javascript:geoLo('" + latitude_r + "', '" + longitude_r + "')");
-                }
-            }
-        });
-
-        setGps();
-
-        return view;
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        web.addJavascriptInterface(new TMapBridge(), "tmap");
     }
 
     private class TMapBridge {
         int i = 0;
+
         @JavascriptInterface
         public void setMessage(final String arg) {
             mHandler.post(new Runnable() {
@@ -220,7 +263,7 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
             });
         }
         @JavascriptInterface
-        public void setTimeDistance(final String arg){
+        public void setTimeDistance(final String arg) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -248,22 +291,22 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
                 web.loadUrl("javascript:geoLo('" + latitude_r + "', '" + longitude_r + "')");
 
                 String nextPoint = "";
-                int latitudeint = (int)(latitude_r * 100000);
-                int longitudeint = (int)(longitude_r * 100000);
+                int latitudeint = (int) (latitude_r * 100000);
+                int longitudeint = (int) (longitude_r * 100000);
 
-                if(!naviList.isEmpty()) {
+                if (!naviList.isEmpty()) {
                     String startPoint = "";
                     //처음 한번만
-                    if(startPoint.isEmpty()){
+                    if (startPoint.isEmpty()) {
                         try {
                             startPoint = naviList.get(0);
                             //셋팅에서 돌기 위한건데 흠..
                             //busProvider.post(startPoint);
                             Thread.sleep(1000);
-                        }   catch (InterruptedException e) {
+                        } catch (InterruptedException e) {
                         }
                     }
-                    for(int i=0; i<naviList.size(); i++) {
+                    for (int i = 0; i < naviList.size(); i++) {
 
                         String lonandlat = naviList.get(i);
                         String target = "lon=";
@@ -279,15 +322,15 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
                         result2 = lonandlat2.substring(target_num2);
                         String resultlat = result2.substring(4);
 
-                        int resultlat2p = (int)((Double.parseDouble(resultlat.substring(0,7))+0.00050)*100000);
-                        int resultlat2m = (int)((Double.parseDouble(resultlat.substring(0,7))-0.00050)*100000);
+                        int resultlat2p = (int) ((Double.parseDouble(resultlat.substring(0, 7)) + 0.00050) * 100000);
+                        int resultlat2m = (int) ((Double.parseDouble(resultlat.substring(0, 7)) - 0.00050) * 100000);
 
-                        int resultlon2p = (int)((Double.parseDouble(resultlon.substring(0,8))+0.00050)*100000);
-                        int resultlon2m = (int)((Double.parseDouble(resultlon.substring(0,8))-0.00050)*100000);
+                        int resultlon2p = (int) ((Double.parseDouble(resultlon.substring(0, 8)) + 0.00050) * 100000);
+                        int resultlon2m = (int) ((Double.parseDouble(resultlon.substring(0, 8)) - 0.00050) * 100000);
 
-                        if(latitudeint >= resultlat2m && latitudeint <= resultlat2p ){
-                            if(longitudeint >= resultlon2m && longitudeint <= resultlon2p ) {
-                                nextPoint = naviList.get(i+1);
+                        if (latitudeint >= resultlat2m && latitudeint <= resultlat2p) {
+                            if (longitudeint >= resultlon2m && longitudeint <= resultlon2p) {
+                                nextPoint = naviList.get(i + 1);
                                 //busProvider.post(nextPoint);
                                 Log.d("otto_lonlat : ", "" + nextPoint);
                                 //테스트용 텍스트뷰
@@ -301,10 +344,13 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
 
             }
         }
+
         public void onProviderDisabled(String provider) {
         }
+
         public void onProviderEnabled(String provider) {
         }
+
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     };
@@ -312,17 +358,16 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     public void setGps() {
         final LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(),
-            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(getActivity(),
-            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-                ActivityCompat.requestPermissions(getActivity(),
-                new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
                             android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,mLocationListener);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, mLocationListener);
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자(실내에선 NETWORK_PROVIDER 권장)
-                0, // 통지사이의 최소 시간간격 (miliSecond)
+                1000, // 통지사이의 최소 시간간격 (miliSecond)
                 0, // 통지사이의 최소 변경거리 (m)
                 mLocationListener);
     }
@@ -337,6 +382,7 @@ public class FragmentNavigation extends android.support.v4.app.Fragment {
     public void onDestroy() {
         super.onDestroy();
         BusProvider.getInstance().unregister(this);
+        //notificationManager.cancel(1);
     }
 
     @Subscribe

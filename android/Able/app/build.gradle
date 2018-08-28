@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "el.kr.ac.dongyang.able"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -29,6 +29,7 @@ android {
 
 dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation "com.android.support:customtabs:27.1.1"
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -43,7 +44,8 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'com.google.firebase:firebase-storage:11.8.0'
     implementation 'com.google.firebase:firebase-database:11.8.0'
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation files('libs/com.skt.Tmap_1.52.jar')
     implementation group: 'com.kakao.sdk', name: 'usermgmt', version: project.KAKAO_SDK_VERSION
     implementation 'com.squareup:otto:1.3.7'
@@ -53,8 +55,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.github.lzyzsd:circleprogress:1.2.1'
     implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.0'
-
-
-
+    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.airbnb.android:lottie:2.6.0-beta19'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -1,6 +1,9 @@
 package el.kr.ac.dongyang.able.navigation;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -12,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,41 +39,116 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by impro on 2018-05-23.
- * 검색해서 리스트 띄워주고 클릭시 설정됨
  * 키보드를 내려줘야 뜸.. 문제..
- * 검색결과에 null도 붙어서 나온다..
- *
+ * 검색결과에 null도 붙어서 나온다
  */
 
 public class FragmentNaviList extends android.support.v4.app.Fragment {
 
-    EditText nStart, nEnd;
-    Button nSearch;
-    RecyclerView recyclerView;
+    private EditText nEnd;
+    private Button searchBtn, startBtn;
+    private RecyclerView recyclerView;
     private ArrayList<TMapPOIItem> poiList = new ArrayList<TMapPOIItem>();
-    private ArrayList<TMapPOIItem> startList = new ArrayList<TMapPOIItem>();
     private ArrayList<TMapPOIItem> endList = new ArrayList<TMapPOIItem>();
-    public List<String> busitem = new ArrayList<>();
-    ConstraintLayout checkEndPoint;
-
-    InputMethodManager imm;
-    private int requestCode;
+    private List<String> busitem = new ArrayList<>();
+    private ConstraintLayout checkEndPointLayout;
     private Bus busProvider = BusProvider.getInstance();
+    private NavilistFragmentRecyclerViewAdapter recyclerViewAdapter;
+    private Handler handler;
 
     public FragmentNaviList(){
     }
 
+    @SuppressLint("HandlerLeak")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_navilist,container,false);
 
-        checkEndPoint = view.findViewById(R.id.checkEndPoint);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        checkEndPointLayout = view.findViewById(R.id.checkEndPointlayout);
 
         //리사이클러뷰 맵핑
         recyclerView = view.findViewById(R.id.fragment_naviList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
-        recyclerView.setAdapter(new FragmentNaviList.NavilistFragmentRecyclerViewAdapter());
+        initRecyclerView();
+
+        nEnd = view.findViewById(R.id.naviEnd);
+        nEnd.setFocusableInTouchMode(true);
+        nEnd.requestFocus();
+        nEnd.setInputType ( InputType. TYPE_TEXT_FLAG_NO_SUGGESTIONS );
+        final InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        //서치버튼
+        searchBtn = view.findViewById(R.id.searhAddr);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkEndPointLayout.setVisibility(View.GONE);
+                startBtn.setVisibility(View.VISIBLE);
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+                searchAllPoi();
+            }
+        });
+
+        handler = new Handler(){
+            public void handleMessage(Message msg){
+                recyclerViewAdapter.notifyDataSetChanged();
+            }
+        };
+
+        //목적지 설정
+        startBtn = view.findViewById(R.id.naviListStartBtn);
+        startBtn.setVisibility(View.GONE);
+        startBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //조건 다르게 변경 필요함
+                if(busitem.get(0) != null) {
+                    busProvider.post(busitem.get(0) + "," + busitem.get(1) + "," + busitem.get(2));
+                    //프래그먼트 종료됨
+                    getFragmentManager().beginTransaction().remove(FragmentNaviList.this).commitNow();
+                } else {
+                    Toast.makeText(getActivity(), "목적지를 선택해주세요", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        recyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    private void searchAllPoi() {
+        final String strDataEnd = nEnd.getText().toString();
+        TMapData tMapData = new TMapData();
+        poiList.clear();
+        tMapData.findAllPOI(strDataEnd, new TMapData.FindAllPOIListenerCallback() {
+            @Override
+            public void onFindAllPOI(ArrayList<TMapPOIItem> poiItem) {
+                for (int i = 0; i < poiItem.size(); i++) {
+                    TMapPOIItem item = poiItem.get(i);
+                    poiList.add(item);
+                    Log.d("주소로찾기", "POI Name: " + item.getPOIName().toString() + ", " +
+                            "Address: " + item.getPOIAddress().replace("null", "") + ", " +
+                            "Point: " + item.getPOIPoint().toString());
+                    Message msg = handler.obtainMessage();
+                    handler.sendMessage(msg);
+                }
+            }
+        });
+    }
+
+    private void initRecyclerView() {
+        recyclerViewAdapter = new NavilistFragmentRecyclerViewAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerViewAdapter.notifyDataSetChanged();
 
         //터치이벤트
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -93,57 +172,9 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
             public void onLongItemClick(View view, int position) {
             }
         }));
-
-        nEnd = view.findViewById(R.id.naviEnd);
-        nEnd.setFocusableInTouchMode(true);
-        nEnd.requestFocus();
-        nEnd.setInputType ( InputType. TYPE_TEXT_FLAG_NO_SUGGESTIONS );
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-        //목적지 에디트텍스트뷰
-        nEnd.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                //Enter key Action
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    checkEndPoint.setVisibility(View.GONE);
-                    final String strDataEnd = nEnd.getText().toString();
-                    TMapData tMapData = new TMapData();
-                    poiList.clear();
-                    tMapData.findAllPOI(strDataEnd, new TMapData.FindAllPOIListenerCallback() {
-                        @Override
-                        public void onFindAllPOI(ArrayList<TMapPOIItem> poiItem) {
-                            for (int i = 0; i < poiItem.size(); i++) {
-                                TMapPOIItem item = poiItem.get(i);
-                                poiList.add(item);
-                                Log.d("주소로찾기", "POI Name: " + item.getPOIName().toString() + ", " +
-                                        "Address: " + item.getPOIAddress().replace("null", "") + ", " +
-                                        "Point: " + item.getPOIPoint().toString());
-                            }
-                        }
-                    });
-                    recyclerView.removeAllViewsInLayout();
-                    recyclerView.setAdapter(new FragmentNaviList.NavilistFragmentRecyclerViewAdapter());
-                    return true;
-                }
-                return false;
-            }
-        });
-        //서치버튼
-        nSearch = view.findViewById(R.id.searhAddr);
-        nSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                busProvider.post(busitem.get(0) + "," + busitem.get(1) + "," + busitem.get(2));
-                //프래그먼트 종료됨
-                getFragmentManager().beginTransaction().remove(FragmentNaviList.this).commitNow();
-            }
-        });
-        return view;
     }
 
-   //어댑터 클래스 - 검색결과 띄움.
+    //어댑터 클래스 - 검색결과 띄움.
     public class NavilistFragmentRecyclerViewAdapter extends RecyclerView.Adapter<NavilistFragmentRecyclerViewAdapter.ViewHolder> {
         public NavilistFragmentRecyclerViewAdapter() {
         }
@@ -172,7 +203,7 @@ public class FragmentNaviList extends android.support.v4.app.Fragment {
 
             public ViewHolder(View view) {
                 super(view);
-                //imageView = view.findViewById(R.id.frienditem_imageview);
+                imageView = view.findViewById(R.id.frienditem_imageview);
                 nameText = view.findViewById(R.id.naviitem_textview_name);
                 addressText = view.findViewById(R.id.naviitem_textview_address);
             }

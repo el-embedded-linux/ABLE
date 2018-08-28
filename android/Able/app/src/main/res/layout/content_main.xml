@@ -17,7 +17,6 @@
         android:id="@+id/fragment"
         android:name="el.kr.ac.dongyang.able.FragmentHome"
         android:layout_weight="1"
-        tools:layout="@layout/fragment_home" />
-
+        />
 
 </android.support.design.internal.ScrimInsetsFrameLayout>

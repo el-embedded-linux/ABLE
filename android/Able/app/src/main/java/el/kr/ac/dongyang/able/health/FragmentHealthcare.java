@@ -1,14 +1,12 @@
 package el.kr.ac.dongyang.able.health;
 
-
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,13 +41,14 @@ import el.kr.ac.dongyang.able.model.UserModel;
  * 몸무게 받아와서 칼로리 계산은 성공.
  */
 
-public class FragmentHealthcare extends android.support.v4.app.Fragment{
+public class FragmentHealthcare extends Fragment {
     private static final String LOG_TAG = "FragmentNavigation";
 
     ConstraintLayout constraintLayoutHealth, constraintLayoutNone;
 
+    float currentGoal;
     String date, uid, cal2;
-    TextView speedTextView, kcalTextView, distanceTextView;
+    TextView speedTextView, kcalTextView, distanceTextView, goalTextView;
     FirebaseUser user;
     UserModel userModel;
     HealthModel healthModel;
@@ -66,7 +65,7 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_healthcare, container, false);
-        getActivity().setTitle("Health care");
+        getActivity().setTitle("EL 헬스케어");
 
         constraintLayoutHealth = view.findViewById(R.id.constraintLayoutHealth);
         constraintLayoutHealth.setVisibility(View.GONE);
@@ -81,6 +80,7 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
         speedTextView = view.findViewById(R.id.speed_text);
         kcalTextView = view.findViewById(R.id.burnUpTextView);
         distanceTextView = view.findViewById(R.id.distanceTextView);
+        goalTextView = view.findViewById(R.id.goal_text);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
@@ -98,6 +98,7 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
                 final String dayFormat = day.getYear() + "-" + (day.getMonth() + 1) + "-" + day.getDay();
 
                 collapsibleCalendar.collapse(0);
+                userModel = new UserModel();
 
                 FirebaseDatabase.getInstance().getReference().child("HEALTH").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                     HealthModel healthModel = new HealthModel();
@@ -112,28 +113,54 @@ public class FragmentHealthcare extends android.support.v4.app.Fragment{
                                 distanceTextView.setText(healthModel.getDistance());
                                 speedTextView.setText(healthModel.getSpeed());
 
-                                Thread t = new Thread(new Runnable() {
+                                FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
-                                    public void run() {
-                                        mHandler.post(new Runnable() {
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        userModel = dataSnapshot.getValue(UserModel.class);
+                                        if(userModel.getGoal() == null) {
+                                            currentGoal = 0;
+                                            goalTextView.setText("먼저 내정보 설정에서 목표를 설정해주세요");
+                                        }else if(healthModel.getDistance().equals("")){
+                                            currentGoal = 0;
+                                            goalTextView.setText("목표 완수까지 " + userModel.getGoal() + "km가 남았습니다!");
+
+                                        } else if(Float.parseFloat(healthModel.getDistance()) < Float.parseFloat(userModel.getGoal())) {
+                                            currentGoal = (Float.parseFloat(healthModel.getDistance()) / Float.parseFloat(userModel.getGoal())) * 100;
+                                            float remainDistance = Float.parseFloat(userModel.getGoal())-Float.parseFloat(healthModel.getDistance());
+                                            goalTextView.setText("목표 완수까지 " + remainDistance + "km가 남았습니다!");
+
+                                        } else {
+                                            currentGoal = 100;
+                                            goalTextView.setText("오늘의 목표를 달성했습니다!");
+                                        }
+                                        Thread t = new Thread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                //수치가 올라가는 코드
-                                                ObjectAnimator anim = ObjectAnimator.ofInt(arcProgress, "progress", 0, 50);
-                                                anim.setInterpolator(new DecelerateInterpolator());
-                                                anim.setDuration(500);
-                                                anim.start();
+                                                mHandler.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        //수치가 올라가는 코드
+                                                        ObjectAnimator anim = ObjectAnimator.ofInt(arcProgress, "progress", 0, (int)currentGoal);
+                                                        anim.setInterpolator(new DecelerateInterpolator());
+                                                        anim.setDuration(1000);
+                                                        anim.start();
 
-                                                //페이드인 되는 코드
+                                                        //페이드인 되는 코드
                                                 /*AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.progress_anim);
                                                 set.setInterpolator(new DecelerateInterpolator());
                                                 set.setTarget(arcProgress);
                                                 set.start();*/
+                                                    }
+                                                });
                                             }
                                         });
+                                        t.start();
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
                                     }
                                 });
-                                t.start();
                             } else {
                                 constraintLayoutHealth.setVisibility(View.GONE);
                                 constraintLayoutNone.setVisibility(View.VISIBLE);

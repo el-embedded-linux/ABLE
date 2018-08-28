@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+    android:id="@+id/fragmentLoginEmail"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/home_bg">
+    android:background="@drawable/home_bg"
+    android:clickable="true"
+    >
 
     <ImageView
         android:id="@+id/el_logo"
@@ -58,6 +61,7 @@
             android:layout_marginStart="8dp"
             android:background="@null"
             android:hint="이메일"
+            android:textColor="@color/white"
             android:inputType="textEmailAddress"
             android:textAlignment="center"
             android:textColorHint="#D5D5D5"
@@ -136,6 +140,7 @@
             android:layout_marginStart="8dp"
             android:background="@null"
             android:hint="비밀번호"
+            android:textColor="@color/white"
             android:inputType="textPassword"
             android:textAlignment="center"
             android:textColorHint="#D5D5D5"

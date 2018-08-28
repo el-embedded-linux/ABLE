@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/loginXml"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/fragment_login"
+        />
+
+    <include
+        android:id="@+id/loginEmailXml"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/fragment_login_email"
+        />
+
+    <include
+        android:id="@+id/registerXml"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/fragment_register"
+        />
+
+</android.support.constraint.ConstraintLayout>

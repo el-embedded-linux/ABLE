@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/groupriding_bg"
     android:orientation="vertical"
+    android:clickable="true"
     android:paddingTop="70dp">
 
     <android.support.v7.widget.RecyclerView
