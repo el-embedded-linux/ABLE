@@ -35,6 +35,10 @@
 #include "I2Cdev.h"
 #include "MPU9250.h"
 int16_t   mx, my, mz;
+// class default I2C address is 0x68
+// specific I2C addresses may be passed as a parameter here
+// AD0 low = 0x68 (default for InvenSense evaluation board)
+// AD0 high = 0x69
 //added code (8/14)
 MPU9250 accelgyro(0x69); // accelgyro
 I2Cdev   I2C_M;
