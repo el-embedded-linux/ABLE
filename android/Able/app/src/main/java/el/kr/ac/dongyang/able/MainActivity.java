@@ -1,5 +1,6 @@
 package el.kr.ac.dongyang.able;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -45,6 +46,7 @@ import el.kr.ac.dongyang.able.health.FragmentHealthcare;
 import el.kr.ac.dongyang.able.login.FragmentLogin;
 import el.kr.ac.dongyang.able.model.UserModel;
 import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
+import el.kr.ac.dongyang.able.navigation.NavigationActivity;
 import el.kr.ac.dongyang.able.setting.FragmentSetting;
 
 
@@ -244,7 +246,8 @@ public class MainActivity extends AppCompatActivity
                 replaceFragment(fragmentLogin);
                 break;
             case R.id.nav_navigation:
-                replaceFragment(fragmentNavigation);
+                Intent intent = new Intent(MainActivity.this, NavigationActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_helthcare:
                 replaceFragment(fragmentHealthcare);

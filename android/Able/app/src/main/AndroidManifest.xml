@@ -70,6 +70,8 @@
             </intent-filter>
         </service>
         <activity android:name=".friend.BarChartActivity"/>
+        <activity android:name=".navigation.NavigationActivity"/>
+        <activity android:name=".navigation.NaviListActivity"/>
 
     </application>
 
