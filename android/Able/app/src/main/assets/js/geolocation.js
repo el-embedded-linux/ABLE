@@ -236,6 +236,10 @@ function sendMessage(arg){
      window.tmap.setMessage(arg);
 }
 
+function sendDescription(arg){
+     window.tmap.setDescription(arg);
+}
+
 function sendTimeDistance(arg){
     window.tmap.setTimeDistance(arg);
 }
@@ -344,7 +348,9 @@ function distance(startx, starty, endx, endy) {
         			if(nodeType == "POINT"){
         			    var description;
         			    description = element.getElementsByTagName("description")[0].childNodes[0].nodeValue;
-        			    //console.log("code:"+description);//"code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error
+        			    //console.log("code:"+description);
+        			    sendDescription(description);
+        			    //"code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error
 
         				var point = element.getElementsByTagName("coordinates")[0].childNodes[0].nodeValue.split(',');
         				var lonlat = new Tmap.LonLat(point).transform("EPSG:3857", "EPSG:4326");
@@ -384,32 +390,6 @@ function distance(startx, starty, endx, endy) {
     }
 }
 
-//주소 검색. 검색한 주소를 전체 주소로 변경해준다.
-function searchAdress(input, lat, lon) {
-    $.ajax({
-        method: "GET",
-        url: "https://api2.sktelecom.com/tmap/geo/reversegeocoding?version=1",
-        data: {
-          lat: lat,
-          lon: lon,
-          appKey: headers["appKey"]
-        },
-        success: function(data) {
-            if(data != undefined) {
-            var obj = JSON.stringify(data);
-            obj = JSON.parse(obj);
-            } else {
-                alertAdress(input);
-            }
-            $(input).val(obj.addressInfo.fullAddress);
-        },
-        error:function(request,status,error){
-            alertAdress(input);
-            console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-        }
-    });
-}
-
 //에러시 발생. 마커 초기화
 function alertAdress(input) {
     alert("제공되지 않는 주소 범위입니다.");
@@ -418,71 +398,6 @@ function alertAdress(input) {
         } else {
             removeMarker("e");
         }
-}
-
-//텍스트 직접 입력시 호출. textSearch 호출
-function search(input) {
-    if($(input).val()=="") {
-        alert("입력값이 없습니다.");
-    } else {
-        textSearch(input, $(input).val());
-    }
-}
-
-//주소로 검색. sOrE 호출
-function textSearch(input, add) {
-    if($(input).val() != null) {
-        $.ajax({
-            method: "GET",
-            url: "https://api2.sktelecom.com/tmap/geo/fullAddrGeo?version=1",
-            data: {
-               fullAddr: add,
-               appKey: headers["appKey"]
-            },
-            success: function(data) {
-                var obj = JSON.stringify(data);
-                obj = JSON.parse(obj);
-
-                if(obj.coordinateInfo != undefined) {
-                   var coordinate = obj.coordinateInfo.coordinate[0];
-                   if(coordinate.lon != "") {
-                       console.log(coordinate.lon);
-                        sOrE(input, coordinate.lon, coordinate.lat);
-                   } else if(coordinate.newLon != "") {
-                       console.log(coordinate.newLon);
-                        sOrE(input, coordinate.newLon, coordinate.newLat);
-                   }
-                } else {
-                    if (input == "#start") {
-                        alert("출발지 주소가 잘못되었습니다.");
-                    } else {
-                        alert("도착지 주소가 잘못되었습니다.");
-                    }
-                }
-            },
-            error:function(request,status,error){
-                console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                
-            }
-        });
-    }
-}
-
-//텍스트서치 완료시 좌표이동됨.
-function sOrE (input, x, y) {
-    if(input == "#start") {
-        start_x = x;
-        start_y = y;
-        startInputS();
-        moveCoordinate("s", x,y);
-    } else if(input == "#end") {
-        end_x = x;
-        end_y = y;
-        startInputE();
-        moveCoordinate("e", x,y);
-    } else {
-        alert("잘못된 값을 입력하셨습니다.");
-    }
 }
 
 function startInputS() {

@@ -228,7 +228,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
-            replaceFragment(fragmentFriend);
+            Intent intent = new Intent(MainActivity.this, NavigationActivity.class);
+            intent.putExtra("clickBtn", "start");
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -247,6 +249,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_navigation:
                 Intent intent = new Intent(MainActivity.this, NavigationActivity.class);
+                intent.putExtra("clickBtn", "start");
                 startActivity(intent);
                 break;
             case R.id.nav_helthcare:
