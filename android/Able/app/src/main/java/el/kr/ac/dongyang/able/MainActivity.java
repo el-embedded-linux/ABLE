@@ -228,11 +228,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
-            Intent intent = new Intent(MainActivity.this, NavigationActivity.class);
-            intent.putExtra("clickBtn", "start");
-            startActivity(intent);
+            replaceFragment(fragmentFriend);
         }
-
         return super.onOptionsItemSelected(item);
     }
 

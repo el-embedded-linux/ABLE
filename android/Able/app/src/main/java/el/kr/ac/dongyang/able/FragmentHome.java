@@ -1,5 +1,6 @@
 package el.kr.ac.dongyang.able;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import com.squareup.otto.Subscribe;
 import el.kr.ac.dongyang.able.eventbus.UserEvent;
 import el.kr.ac.dongyang.able.model.UserModel;
 import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
+import el.kr.ac.dongyang.able.navigation.NavigationActivity;
 
 /**
  * Created by impro on 2018-03-30.
@@ -60,7 +62,9 @@ public class FragmentHome extends android.support.v4.app.Fragment{
         naviBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                replaceFragment(fragmentNavigation);
+                Intent intent = new Intent(getActivity(), NavigationActivity.class);
+                intent.putExtra("clickBtn", "start");
+                startActivity(intent);
             }
         });
         textId = view.findViewById(R.id.name);
@@ -105,17 +109,5 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     public void finishLoad(UserEvent userEvent){
         textId.setText(userEvent.getUserId());
         Log.d("finishLoad", userEvent.getUserId());
-    }
-
-    private void replaceFragment(Fragment fragment) {
-        if (!fragment.isVisible()) {
-            fragmentTag = fragment.getClass().getSimpleName();
-            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ft = manager.beginTransaction()
-                    .replace(R.id.main_layout, fragment, fragmentTag)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .addToBackStack(null);
-            ft.commit();
-        }
     }
 }
