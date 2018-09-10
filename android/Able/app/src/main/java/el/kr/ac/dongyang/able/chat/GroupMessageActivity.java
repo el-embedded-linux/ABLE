@@ -1,5 +1,6 @@
 package el.kr.ac.dongyang.able.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,7 @@ import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.ChatModel;
 import el.kr.ac.dongyang.able.model.NotificationModel;
 import el.kr.ac.dongyang.able.model.UserModel;
+import el.kr.ac.dongyang.able.navigation.NavigationActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -56,6 +58,7 @@ public class GroupMessageActivity extends AppCompatActivity {
     String destinationRoom;
     String uid;
     EditText editText;
+    Button groupRidingBtn;
 
     private DatabaseReference databaseReference;
     private ValueEventListener valueEventListener;
@@ -72,6 +75,15 @@ public class GroupMessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_message);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
+        groupRidingBtn = findViewById(R.id.groupRidingBtn);
+        groupRidingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GroupMessageActivity.this, NavigationActivity.class);
+                intent.putExtra("clickBtn", "share");
+                startActivity(intent);
+            }
+        });
         destinationRoom = getIntent().getStringExtra("destinationRoom");
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         editText = findViewById(R.id.groupMessageActivity_editText);

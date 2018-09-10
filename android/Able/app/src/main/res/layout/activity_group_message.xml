@@ -4,9 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/groupriding_bg"
+    android:background="@drawable/groupRiding_bg"
     tools:context=".chat.GroupMessageActivity"
     android:paddingTop="70dp">
+
+    <Button
+        android:id="@+id/groupRidingBtn"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_map_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/groupMessageActivity_editText"
@@ -15,15 +25,15 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
         android:layout_toLeftOf="@+id/groupMessageActivity_button"
         android:layout_toStartOf="@+id/groupMessageActivity_button"
         android:background="@drawable/login_white_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/groupMessageActivity_button"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/groupRidingBtn" />
 
     <Button
         android:id="@+id/groupMessageActivity_button"
