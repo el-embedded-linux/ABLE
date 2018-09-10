@@ -15,7 +15,6 @@ import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,6 +57,7 @@ public class NavigationActivity extends BaseActivity {
     private List<String> descriptionList = new ArrayList<>();
     private WebView web;
     private Handler mHandler = new Handler();
+    private Thread thread;
 
     private EditText searchAddressEditText;
     private Button startBtn, currentBtn, endBtn, shareBtn;
@@ -101,6 +101,7 @@ public class NavigationActivity extends BaseActivity {
                 Toast.makeText(NavigationActivity.this, "주행이 시작됩니다.", Toast.LENGTH_SHORT).show();
                 startConstraintLayout.setVisibility(View.GONE);
                 endConstraintLayout.setVisibility(View.VISIBLE);
+                descriptionChange(0);
                 startNotification();
             }
         });
@@ -136,8 +137,13 @@ public class NavigationActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 //메세지를 저장해야하는데 문자열로 저장하면 되겠지, 파베에 저장
+                //메세지채팅창에서 내 uid, 그룹에 대한 정보들? 필요할테고
+                //신도림역 이름, x,y좌표, x,y좌표
                 //신도림역 좌표 좌표 클릭버튼
                 //뷰어댑터를 하나 더 만들어야하나 아니면 그냥 안보이던걸 보이게 하는게 낫겠다
+
+                //그룹라이딩에서 값을 통해서 방향지시 해주고 싶다면 기본값 1로 저장하고
+                //숫자를 디비에 넣고 리스너로 계속 받아주면 되겠네
                 finish();
             }
         });
@@ -148,16 +154,13 @@ public class NavigationActivity extends BaseActivity {
         try {
             switch (clickText) {
                 case "start":
-                    //startConstraintLayout.setVisibility(View.VISIBLE);
                     endConstraintLayout.setVisibility(View.GONE);
                     shareBtn.setVisibility(View.GONE);
                     break;
                 case "end":
-                    //endConstraintLayout.setVisibility(View.VISIBLE);
                     startConstraintLayout.setVisibility(View.GONE);
                     break;
                 case "share":
-                    //startConstraintLayout.setVisibility(View.VISIBLE);
                     endConstraintLayout.setVisibility(View.GONE);
                     startBtn.setVisibility(View.GONE);
                     break;
@@ -397,23 +400,33 @@ public class NavigationActivity extends BaseActivity {
     };
 
     private void descriptionChange(final int position) {
-        mHandler.post(new Runnable() {
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 StringTokenizer st = new StringTokenizer(descriptionList.get(position));
                 int countTokens = st.countTokens();
                 for (int i = 0; i < countTokens; i++) {
-                    String token = st.nextToken();
-                    char meter = token.charAt(token.length()-1);
-                    if(token.equals("좌회전")) directionImg.setImageResource(R.drawable.arrow_left);
-                    else if(token.equals("우회전")) directionImg.setImageResource(R.drawable.arrow_right);
-                    else directionImg.setImageResource(R.drawable.arrow_up_straight);
-                    if(Character.toString(meter).equals("m")) {
-                        textDirection.setText(token);
-                    }
+                    final String token = st.nextToken();
+                    final char meter = token.charAt(token.length() - 1);
+                    handlerDirectionJob(token, Character.toString(meter));
                 }
             }
         });
+        thread.start();
+    }
+
+    private void handlerDirectionJob(final String text, final String meter) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (text.equals("좌회전"))
+                        directionImg.setImageResource(R.drawable.arrow_left);
+                    else if (text.equals("우회전"))
+                        directionImg.setImageResource(R.drawable.arrow_right);
+                    else if (meter.equals("m")) textDirection.setText(text);
+                    else directionImg.setImageResource(R.drawable.arrow_up_straight);
+                }
+            });
     }
 
     public void setGps() {
