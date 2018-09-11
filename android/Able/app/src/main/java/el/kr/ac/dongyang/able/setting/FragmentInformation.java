@@ -161,7 +161,7 @@ public class FragmentInformation extends Fragment{
                 }
                 if(mAddress.length() != 0) {
                     userModel.setAddress(mAddress.getText().toString());
-                    mDatabase.child("USER").child(uid).child("address").setValue(userModel.getAddress());
+                    mDatabase.child("USER").child(uid).child("destinationAddress").setValue(userModel.getAddress());
                 }
                 if(mHeight.length() != 0) {
                     userModel.setHeight(mHeight.getText().toString());

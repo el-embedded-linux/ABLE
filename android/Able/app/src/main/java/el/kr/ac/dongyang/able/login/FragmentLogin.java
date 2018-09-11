@@ -150,7 +150,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
 
         //구글 로그인
         // [START configure_signin]
-        // Configure sign-in to request the user's ID, email address, and basic
+        // Configure sign-in to request the user's ID, email destinationAddress, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))

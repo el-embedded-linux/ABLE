@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.webkit.ConsoleMessage;
@@ -61,7 +60,6 @@ import java.util.StringTokenizer;
 
 import el.kr.ac.dongyang.able.BaseActivity;
 import el.kr.ac.dongyang.able.R;
-import el.kr.ac.dongyang.able.chat.GroupMessageActivity;
 import el.kr.ac.dongyang.able.model.ChatModel;
 import el.kr.ac.dongyang.able.model.NotificationModel;
 import el.kr.ac.dongyang.able.model.UserModel;
@@ -189,8 +187,7 @@ public class NavigationActivity extends BaseActivity {
                 comment.destinationLongitude = endLong;
                 comment.myLonitude = startlist[0].toString();
                 comment.myLatitude = startlist[1].toString();
-
-                //메세지를 저장해야하는데 문자열로 저장하면 되겠지, 파베에 저장
+                comment.destinationAddress = address;
 
                 FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

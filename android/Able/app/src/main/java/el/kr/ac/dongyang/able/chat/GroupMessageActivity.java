@@ -245,16 +245,17 @@ public class GroupMessageActivity extends AppCompatActivity {
 
             GroupMessageViewHodler messageViewHolder = ((GroupMessageViewHodler) holder);
 
-
             //내가보낸 메세지
             if (comments.get(position).uid.equals(uid)) {
                 messageViewHolder.textView_message.setText(comments.get(position).message);
-                messageViewHolder.textView_message.setBackgroundResource(R.drawable.rightbubble);
+                messageViewHolder.linearLayout_text_btn.setBackgroundResource(R.drawable.rightbubble);
                 messageViewHolder.linearLayout_destination.setVisibility(View.INVISIBLE);
                 messageViewHolder.textView_message.setTextSize(20);
                 messageViewHolder.linearLayout_main.setGravity(Gravity.RIGHT);
                 setReadCounter(position, messageViewHolder.textView_readCounter_left);
-
+                if(comments.get(position).naviShare) {
+                    messageViewHolder.groupRidingStartBtn.setVisibility(View.VISIBLE);
+                }
                 //상대방이 보낸 메세지
 
             } else {
@@ -264,11 +265,14 @@ public class GroupMessageActivity extends AppCompatActivity {
                         .into(messageViewHolder.imageView_profile);
                 messageViewHolder.textview_name.setText(users.get(comments.get(position).uid).getUserName());
                 messageViewHolder.linearLayout_destination.setVisibility(View.VISIBLE);
-                messageViewHolder.textView_message.setBackgroundResource(R.drawable.leftbubble);
+                messageViewHolder.linearLayout_text_btn.setBackgroundResource(R.drawable.leftbubble);
                 messageViewHolder.textView_message.setText(comments.get(position).message);
                 messageViewHolder.textView_message.setTextSize(20);
                 messageViewHolder.linearLayout_main.setGravity(Gravity.LEFT);
                 setReadCounter(position, messageViewHolder.textView_readCounter_right);
+                if(comments.get(position).naviShare) {
+                    messageViewHolder.groupRidingStartBtn.setVisibility(View.VISIBLE);
+                }
             }
             long unixTime = (long) comments.get(position).timestamp;
             Date date = new Date(unixTime);
@@ -325,9 +329,11 @@ public class GroupMessageActivity extends AppCompatActivity {
             public ImageView imageView_profile;
             public LinearLayout linearLayout_destination;
             public LinearLayout linearLayout_main;
+            public LinearLayout linearLayout_text_btn;
             public TextView textView_timestamp;
             public TextView textView_readCounter_left;
             public TextView textView_readCounter_right;
+            public Button groupRidingStartBtn;
 
             public GroupMessageViewHodler(View view) {
                 super(view);
@@ -337,9 +343,26 @@ public class GroupMessageActivity extends AppCompatActivity {
                 imageView_profile = view.findViewById(R.id.messageItem_imageview_profile);
                 linearLayout_destination = view.findViewById(R.id.messageItem_linearlayout_destination);
                 linearLayout_main = view.findViewById(R.id.messageItem_linearlayout_main);
+                linearLayout_text_btn = view.findViewById(R.id.messageItem_linearlayout_msg_btn);
                 textView_timestamp = view.findViewById(R.id.messageItem_textview_timestamp);
                 textView_readCounter_left = view.findViewById(R.id.messageItem_textview_readCounter_left);
                 textView_readCounter_right = view.findViewById(R.id.messageItem_textview_readCounter_right);
+                groupRidingStartBtn = view.findViewById(R.id.groupRidingStartBtn);
+                groupRidingStartBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ChatModel.Comment comment = comments.get(getAdapterPosition());
+                        Intent intent = new Intent(GroupMessageActivity.this, NavigationActivity.class);
+                        /*intent.putExtra("destinationLatitude", comments.get(getAdapterPosition()).destinationLatitude);
+                        intent.putExtra("destinationLongitude", comments.get(getAdapterPosition()).destinationLongitude);
+                        intent.putExtra("destinationAddress", comments.get(getAdapterPosition()).destinationAddress);
+                        intent.putExtra("myLatitude", comments.get(getAdapterPosition()).myLatitude);
+                        intent.putExtra("myLonitude", comments.get(getAdapterPosition()).myLonitude);*/
+                        intent.putExtra("clickBtn", "shareStart");
+                        intent.putExtra("comment", comment);
+                        startActivity(intent);
+                    }
+                });
             }
         }
     }

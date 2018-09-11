@@ -1,5 +1,6 @@
 package el.kr.ac.dongyang.able.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class ChatModel {
         this.comments = comments;
     }
 
-    public static class Comment {
+    public static class Comment implements Serializable {
         public String uid;
         public String message;
         public Object timestamp;
@@ -36,6 +37,7 @@ public class ChatModel {
         public String destinationLatitude;
         public Map<String,Object> readUsers = new HashMap<>();
         public boolean naviShare;
+        public String destinationAddress;
 
         public Comment() {
         }
