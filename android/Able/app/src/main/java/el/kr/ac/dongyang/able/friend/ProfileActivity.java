@@ -1,6 +1,5 @@
 package el.kr.ac.dongyang.able.friend;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,7 +15,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import el.kr.ac.dongyang.able.R;
-import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 

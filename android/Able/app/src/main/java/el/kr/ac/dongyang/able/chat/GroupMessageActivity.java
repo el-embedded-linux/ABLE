@@ -30,7 +30,6 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

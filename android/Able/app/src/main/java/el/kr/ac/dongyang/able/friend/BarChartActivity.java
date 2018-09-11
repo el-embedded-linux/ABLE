@@ -21,7 +21,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import el.kr.ac.dongyang.able.R;
-import el.kr.ac.dongyang.able.model.ChatModel;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 

@@ -25,9 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.shrikanthravi.collapsiblecalendarview.data.Day;
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
 
-import java.lang.String;
-import java.security.spec.ECField;
-
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
