@@ -28,6 +28,23 @@ public class ChatModel {
         public String uid;
         public String message;
         public Object timestamp;
+        //경도 세자리수 126.123123123
+        public String myLonitude;
+        public String destinationLongitude;
+        //위도 두자리수 32.123123123
+        public String myLatitude;
+        public String destinationLatitude;
         public Map<String,Object> readUsers = new HashMap<>();
+        public boolean naviShare;
+
+        public Comment() {
+        }
+
+        public Comment(String uid, String message, Object timestamp, boolean naviShare) {
+            this.uid = uid;
+            this.message = message;
+            this.timestamp = timestamp;
+            this.naviShare = naviShare;
+        }
     }
 }

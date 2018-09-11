@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/groupriding_bg"
+    android:background="@drawable/grouprriding_bg"
     android:orientation="vertical"
     android:clickable="true"
     android:paddingTop="70dp">

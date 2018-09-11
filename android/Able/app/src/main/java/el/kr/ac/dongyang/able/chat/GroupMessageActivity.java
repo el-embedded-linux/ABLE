@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -58,11 +59,10 @@ public class GroupMessageActivity extends AppCompatActivity {
     String destinationRoom;
     String uid;
     EditText editText;
-    Button groupRidingBtn;
+    Button groupRidingMapBtn;
 
     private DatabaseReference databaseReference;
-    private ValueEventListener valueEventListener;
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.KOREA);
     private RecyclerView recyclerView;
 
     List<ChatModel.Comment> comments = new ArrayList<>();
@@ -75,15 +75,19 @@ public class GroupMessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_message);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        groupRidingBtn = findViewById(R.id.groupRidingBtn);
-        groupRidingBtn.setOnClickListener(new View.OnClickListener() {
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        groupRidingMapBtn = findViewById(R.id.groupRidingBtn);
+        groupRidingMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(GroupMessageActivity.this, NavigationActivity.class);
                 intent.putExtra("clickBtn", "share");
+                intent.putExtra("uid", uid);
+                intent.putExtra("destinationRoom", destinationRoom);
                 startActivity(intent);
             }
         });
+
         destinationRoom = getIntent().getStringExtra("destinationRoom");
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         editText = findViewById(R.id.groupMessageActivity_editText);
@@ -96,7 +100,22 @@ public class GroupMessageActivity extends AppCompatActivity {
                     users.put(item.getKey(), item.getValue(UserModel.class));
                 }
 
-                init();
+                Button button = findViewById(R.id.groupMessageActivity_button);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ChatModel.Comment comment =
+                                new ChatModel.Comment(uid, editText.getText().toString(), ServerValue.TIMESTAMP, false);
+                        //채팅 보낼때마다 디비 저장
+                        databaseReference.child("CHATROOMS").child(destinationRoom).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                //gcm 전송
+                                sendGcmUsers();
+                            }
+                        });
+                    }
+                });
                 recyclerView.setAdapter(new GroupMessageRecyclerViewAdapter());
                 recyclerView.setLayoutManager(new LinearLayoutManager(GroupMessageActivity.this));
             }
@@ -109,48 +128,30 @@ public class GroupMessageActivity extends AppCompatActivity {
     }
 
     void init() {
-        Button button = findViewById(R.id.groupMessageActivity_button);
-        button.setOnClickListener(new View.OnClickListener() {
+
+    }
+
+    public void sendGcmUsers() {
+        FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                ChatModel.Comment comment = new ChatModel.Comment();
-                comment.uid = uid;
-                comment.message = editText.getText().toString();
-                comment.timestamp = ServerValue.TIMESTAMP;
-                //채팅 보낼때마다 디비 저장
-                FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
 
-
-                        //gcm 보내는거
-                        FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
-
-                                for (String item : map.keySet()) {
-                                    if (item.equals(uid)) {
-                                        continue;
-                                    }
-                                    sendGcm(users.get(item).getPushToken());
-                                }
-                                editText.setText("");
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                for (String item : map.keySet()) {
+                    if (item.equals(uid)) {
+                        continue;
                     }
-                });
-
+                    gcmSetting(users.get(item).getPushToken());
+                }
+                editText.setText("");
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
 
-    void sendGcm(String pushToken) {
+    void gcmSetting(String pushToken) {
 
         Gson gson = new Gson();
 
@@ -161,7 +162,6 @@ public class GroupMessageActivity extends AppCompatActivity {
         notificationModel.notification.text = editText.getText().toString();
         notificationModel.data.title = userName;
         notificationModel.data.text = editText.getText().toString();
-
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"), gson.toJson(notificationModel));
 
@@ -191,8 +191,7 @@ public class GroupMessageActivity extends AppCompatActivity {
         }
 
         void getMessageList() {
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("comments");
-            valueEventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+            databaseReference.child("CHATROOMS").child(destinationRoom).child("comments").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     comments.clear();
@@ -201,7 +200,9 @@ public class GroupMessageActivity extends AppCompatActivity {
                         String key = item.getKey();
                         ChatModel.Comment comment_origin = item.getValue(ChatModel.Comment.class);
                         ChatModel.Comment comment_modify = item.getValue(ChatModel.Comment.class);
-                        comment_modify.readUsers.put(uid, true);
+                        if (comment_modify != null) {
+                            comment_modify.readUsers.put(uid, true);
+                        }
 
                         readUsersMap.put(key, comment_modify);
                         comments.add(comment_origin);
@@ -209,8 +210,7 @@ public class GroupMessageActivity extends AppCompatActivity {
                     if (comments.size() == 0) {
                     } else {
                         if (!comments.get(comments.size() - 1).readUsers.containsKey(uid)) {
-                            FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("comments")
-                                    .updateChildren(readUsersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            databaseReference.child("CHATROOMS").child(destinationRoom).child("comments").updateChildren(readUsersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     notifyDataSetChanged();
@@ -224,6 +224,7 @@ public class GroupMessageActivity extends AppCompatActivity {
                         //메세지가 갱신
                     }
                 }
+
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
@@ -280,9 +281,8 @@ public class GroupMessageActivity extends AppCompatActivity {
 
         void setReadCounter(final int position, final TextView textView) {
             if (peopleCount == 0) {
-
-
-                FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("users")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Map<String, Boolean> users = (Map<String, Boolean>) dataSnapshot.getValue();

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".groupriding.SelectFriendActivity"
-    android:background="@drawable/groupriding_bg"
+    android:background="@drawable/grouprriding_bg"
     android:paddingTop="70dp"
     >
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".chat.MessageActivity"
-    android:background="@drawable/groupriding_bg"
+    android:background="@drawable/grouprriding_bg"
     android:paddingTop="70dp">
 
     <android.support.v7.widget.RecyclerView

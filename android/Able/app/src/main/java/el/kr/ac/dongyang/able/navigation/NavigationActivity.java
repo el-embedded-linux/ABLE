@@ -18,10 +18,12 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.webkit.ConsoleMessage;
@@ -38,18 +40,42 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import el.kr.ac.dongyang.able.BaseActivity;
 import el.kr.ac.dongyang.able.R;
+import el.kr.ac.dongyang.able.chat.GroupMessageActivity;
+import el.kr.ac.dongyang.able.model.ChatModel;
+import el.kr.ac.dongyang.able.model.NotificationModel;
+import el.kr.ac.dongyang.able.model.UserModel;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class NavigationActivity extends BaseActivity {
 
+    Map<String, UserModel> users = new HashMap<>();
     private Double startlist[] = new Double[2];
     private double latitude_r, longitude_r;
     private TMapView tMapView = null;
@@ -70,12 +96,32 @@ public class NavigationActivity extends BaseActivity {
     private RemoteViews contentView;
     private NotificationCompat.Builder mBuilder;
     private static final int NAVILIST_CODE = 3000;
+    private String destinationRoom;
+    private String uid;
+
+    String address;
+    String endLong;
+    String endLat;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_navigation);
         setTitle("Navigation");
+
+        FirebaseDatabase.getInstance().getReference().child("USER").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot item : dataSnapshot.getChildren()) {
+                    users.put(item.getKey(), item.getValue(UserModel.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         nodeText = findViewById(R.id.nodetext);
         beforeText = findViewById(R.id.beforeText);
@@ -116,6 +162,7 @@ public class NavigationActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 //종료했을때 운동데이터 저장(거리, 속도, 시간, 칼로리
+
                                 //노티바 제거
                                 notificationManager.cancel(1);
                                 //액티비티 종료
@@ -136,12 +183,22 @@ public class NavigationActivity extends BaseActivity {
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //메세지를 저장해야하는데 문자열로 저장하면 되겠지, 파베에 저장
-                //메세지채팅창에서 내 uid, 그룹에 대한 정보들? 필요할테고
-                //신도림역 이름, x,y좌표, x,y좌표
-                //신도림역 좌표 좌표 클릭버튼
-                //뷰어댑터를 하나 더 만들어야하나 아니면 그냥 안보이던걸 보이게 하는게 낫겠다
+                ChatModel.Comment comment =
+                        new ChatModel.Comment(uid, "[ " + address + " ]\n그룹라이딩 공유", ServerValue.TIMESTAMP, true);
+                comment.destinationLatitude = endLat;
+                comment.destinationLongitude = endLong;
+                comment.myLonitude = startlist[0].toString();
+                comment.myLatitude = startlist[1].toString();
 
+                //메세지를 저장해야하는데 문자열로 저장하면 되겠지, 파베에 저장
+
+                FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //gcm 전송
+                        sendGcmUsers();
+                    }
+                });
                 //그룹라이딩에서 값을 통해서 방향지시 해주고 싶다면 기본값 1로 저장하고
                 //숫자를 디비에 넣고 리스너로 계속 받아주면 되겠네
                 finish();
@@ -150,6 +207,10 @@ public class NavigationActivity extends BaseActivity {
 
         Intent intent = getIntent();
         String clickText = intent.getStringExtra("clickBtn");
+        if(clickText.equals("share")){
+            uid = intent.getStringExtra("uid");
+            destinationRoom = intent.getStringExtra("destinationRoom");
+        }
 
         try {
             switch (clickText) {
@@ -163,6 +224,7 @@ public class NavigationActivity extends BaseActivity {
                 case "share":
                     endConstraintLayout.setVisibility(View.GONE);
                     startBtn.setVisibility(View.GONE);
+                    shareBtn.setVisibility(View.VISIBLE);
                     break;
             }
         } catch (Exception e) {
@@ -202,6 +264,58 @@ public class NavigationActivity extends BaseActivity {
         setGps();
 
     }
+
+    public void sendGcmUsers() {
+        FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
+
+                for (String item : map.keySet()) {
+                    if (item.equals(uid)) {
+                        continue;
+                    }
+                    gcmSetting(users.get(item).getPushToken());
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    void gcmSetting(String pushToken) {
+
+        Gson gson = new Gson();
+
+        String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        NotificationModel notificationModel = new NotificationModel();
+        notificationModel.to = pushToken;
+        notificationModel.notification.title = userName;
+        notificationModel.notification.text = "[ " + searchAddressEditText.getText().toString() + " ]\n그룹라이딩 시작";
+        notificationModel.data.title = userName;
+        notificationModel.data.text = "[ " + searchAddressEditText.getText().toString() + " ]\n그룹라이딩 시작";
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"), gson.toJson(notificationModel));
+
+        Request request = new Request.Builder()
+                .header("Content-Type", "application/json")
+                .addHeader("Authorization", "key=AIzaSyAXArVX1TeAhf2L9MNlTuKgumJgPK1Y0BU")
+                .url("https://gcm-http.googleapis.com/gcm/send")
+                .post(requestBody)
+                .build();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+            }
+        });
+    }
+
 
     private void startNotification() {
         String id = "my_channel_01";
@@ -448,9 +562,9 @@ public class NavigationActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == NAVILIST_CODE && resultCode == RESULT_OK) {
-            String address = data.getStringExtra("endName");
-            String endLong = data.getStringExtra("endLong");
-            String endLat = data.getStringExtra("endLat");
+            address = data.getStringExtra("endName");
+            endLong = data.getStringExtra("endLong");
+            endLat  = data.getStringExtra("endLat");
             searchAddressEditText.setText(address);
             web.loadUrl("javascript:distance('" + startlist[0] + "', '" + startlist[1] + "', '" + Double.parseDouble(endLong) + "', '" + Double.parseDouble(endLat) + "')");
             endConstraintLayout.setVisibility(View.GONE);
