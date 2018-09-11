@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,6 +40,7 @@ import el.kr.ac.dongyang.able.model.UserModel;
 public class PeopleFragment extends Fragment {
     FragmentTransaction ft;
     String fragmentTag;
+    String myUid;
 
     @Nullable
     @Override
@@ -46,7 +48,12 @@ public class PeopleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_people, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.peoplefragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
-        recyclerView.setAdapter(new PeopleFragmentRecyclerViewAdapter());
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            myUid = firebaseUser.getUid();
+            recyclerView.setAdapter(new PeopleFragmentRecyclerViewAdapter());
+        }
 
         //채팅방 리스트
         final FloatingActionButton actionB = view.findViewById(R.id.action_chatrooms);
@@ -87,7 +94,6 @@ public class PeopleFragment extends Fragment {
 
         public PeopleFragmentRecyclerViewAdapter() {
             userModels = new ArrayList<>();
-            final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             FirebaseDatabase.getInstance().getReference().child("USER").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

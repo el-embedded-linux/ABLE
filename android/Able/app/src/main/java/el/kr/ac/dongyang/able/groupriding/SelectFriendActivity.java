@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -37,23 +38,32 @@ import el.kr.ac.dongyang.able.model.UserModel;
 public class SelectFriendActivity extends AppCompatActivity {
     ChatModel chatModel = new ChatModel();
     Map<String, Boolean> user = new HashMap<>();
+    String myUid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_friend);
 
         RecyclerView recyclerView = findViewById(R.id.selectFriendActivity_recyclerview);
-        recyclerView.setAdapter(new SelectFriendRecyclerViewAdapter());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            myUid = firebaseUser.getUid();
+            recyclerView.setAdapter(new SelectFriendRecyclerViewAdapter());
+        }
+
         Button button = findViewById(R.id.selectFriendActivity_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                user.put(myUid, true);
-                chatModel.setUsers(user);
-                FirebaseDatabase.getInstance().getReference().child("CHATROOMS").push().setValue(chatModel);
-                user.clear();
+                if (myUid != null) {
+                    user.put(myUid, true);
+                    chatModel.setUsers(user);
+                    FirebaseDatabase.getInstance().getReference().child("CHATROOMS").push().setValue(chatModel);
+                    user.clear();
+                }
             }
         });
     }
@@ -65,7 +75,6 @@ public class SelectFriendActivity extends AppCompatActivity {
 
         public SelectFriendRecyclerViewAdapter() {
             userModels = new ArrayList<>();
-            final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             FirebaseDatabase.getInstance().getReference().child("USER").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
