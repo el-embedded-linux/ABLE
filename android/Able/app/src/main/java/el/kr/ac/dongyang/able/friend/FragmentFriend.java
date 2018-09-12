@@ -24,12 +24,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.UserModel;
 
@@ -41,7 +41,7 @@ import el.kr.ac.dongyang.able.model.UserModel;
  * 마지막 접속시간 미구현
  */
 
-public class FragmentFriend extends Fragment {
+public class FragmentFriend extends BaseFragment {
 
     Button btn, gobtn ,delbtn;
     FragmentTransaction ft;
@@ -127,7 +127,7 @@ public class FragmentFriend extends Fragment {
         private ArrayList<String> friendUsers = new ArrayList<>();
 
         public FriendlistFragmentRecyclerViewAdapter() {
-            FirebaseDatabase.getInstance().getReference().child("FRIEND").addValueEventListener(new ValueEventListener() {
+            reference.child("FRIEND").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     keys.clear();
@@ -160,7 +160,7 @@ public class FragmentFriend extends Fragment {
             friendUid = user;
             friendUsers.add(friendUid);
 
-            FirebaseDatabase.getInstance().getReference().child("USER").child(user).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child("USER").child(user).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserModel userModel = dataSnapshot.getValue(UserModel.class);

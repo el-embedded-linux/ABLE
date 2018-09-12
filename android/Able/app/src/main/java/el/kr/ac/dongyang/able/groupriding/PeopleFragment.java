@@ -28,15 +28,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
+import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.chat.MessageActivity;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-public class PeopleFragment extends Fragment {
+public class PeopleFragment extends BaseFragment {
     FragmentTransaction ft;
     String fragmentTag;
 
@@ -53,7 +53,6 @@ public class PeopleFragment extends Fragment {
         actionB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionB.setTitle("Action A clicked");
                 Fragment fragment = new ChatFragment();
                 fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
                 Log.i("fagmentTag", fragmentTag);
@@ -71,7 +70,6 @@ public class PeopleFragment extends Fragment {
         actionA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionA.setTitle("Action A clicked");
                 startActivity(new Intent(view.getContext(),SelectFriendActivity.class));
             }
         });
@@ -133,7 +131,6 @@ public class PeopleFragment extends Fragment {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), MessageActivity.class);
                     intent.putExtra("destinationUid", userModels.get(position).getUid());
-                    //애니메이션 안된다. 왜 안되는건지 모르겠네
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright, R.anim.toleft);
                         startActivity(intent, activityOptions.toBundle());

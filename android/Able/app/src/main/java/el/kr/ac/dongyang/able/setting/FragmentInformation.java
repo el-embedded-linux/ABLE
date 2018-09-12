@@ -3,22 +3,15 @@ package el.kr.ac.dongyang.able.setting;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.UserManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -29,12 +22,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 
+import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.SharedPref;
 import el.kr.ac.dongyang.able.model.UserModel;
@@ -48,7 +40,7 @@ import static android.app.Activity.RESULT_OK;
  * 이미지 저장 - 스토리지,디비 아직 미구현
  */
 
-public class FragmentInformation extends Fragment{
+public class FragmentInformation extends BaseFragment{
 
     private static final int PICK_FROM_ALBUM = 10;
     private Uri imageUri;
@@ -60,7 +52,6 @@ public class FragmentInformation extends Fragment{
     EditText mName, mAddress, mHeight, mWeight, mComment, mGoal;
     FirebaseUser user;
 
-    private DatabaseReference mDatabase;
     UserModel userModel;
     String uid;
     ImageView infoImg;
@@ -88,7 +79,6 @@ public class FragmentInformation extends Fragment{
         mComment = view.findViewById(R.id.editTextComment);
         mGoal = view.findViewById(R.id.editTextGoal);
         infoSave = view.findViewById(R.id.info_save);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         if(user != null){
@@ -99,7 +89,7 @@ public class FragmentInformation extends Fragment{
         //user가 있으면 기존에 저장된 값을 호출함.
         if (user != null) {
             // User is signed in
-            mDatabase.child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -148,7 +138,7 @@ public class FragmentInformation extends Fragment{
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     //데이터베이스 저장
-                                    mDatabase.child("USER").child(uid).child("profileImageUrl").setValue(uri.toString());
+                                    reference.child("USER").child(uid).child("profileImageUrl").setValue(uri.toString());
                                 }
                             });
                         }
@@ -156,28 +146,28 @@ public class FragmentInformation extends Fragment{
                 }
                 if(mName.length() != 0) {
                     userModel.setUserName(mName.getText().toString());
-                    mDatabase.child("USER").child(uid).child("userName").setValue(userModel.getUserName());
+                    reference.child("USER").child(uid).child("userName").setValue(userModel.getUserName());
                     SharedPref.getInstance(getContext()).setData("userName", userModel.getUserName());
                 }
                 if(mAddress.length() != 0) {
                     userModel.setAddress(mAddress.getText().toString());
-                    mDatabase.child("USER").child(uid).child("destinationAddress").setValue(userModel.getAddress());
+                    reference.child("USER").child(uid).child("destinationAddress").setValue(userModel.getAddress());
                 }
                 if(mHeight.length() != 0) {
                     userModel.setHeight(mHeight.getText().toString());
-                    mDatabase.child("USER").child(uid).child("height").setValue(userModel.getHeight());
+                    reference.child("USER").child(uid).child("height").setValue(userModel.getHeight());
                 }
                 if(mWeight.length() != 0) {
                     userModel.setWeight(mWeight.getText().toString());
-                    mDatabase.child("USER").child(uid).child("weight").setValue(userModel.getWeight());
+                    reference.child("USER").child(uid).child("weight").setValue(userModel.getWeight());
                 }
                 if(mComment.length() != 0) {
                     userModel.setComment(mComment.getText().toString());
-                    mDatabase.child("USER").child(uid).child("comment").setValue(userModel.getComment());
+                    reference.child("USER").child(uid).child("comment").setValue(userModel.getComment());
                 }
                 if(mGoal.length() != 0) {
                     userModel.setGoal(mGoal.getText().toString());
-                    mDatabase.child("USER").child(uid).child("goal").setValue(userModel.getGoal());
+                    reference.child("USER").child(uid).child("goal").setValue(userModel.getGoal());
                 }
                 getActivity().onBackPressed();
             }

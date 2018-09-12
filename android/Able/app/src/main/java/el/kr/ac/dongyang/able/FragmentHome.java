@@ -3,7 +3,6 @@ package el.kr.ac.dongyang.able;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -23,7 +22,6 @@ import com.squareup.otto.Subscribe;
 
 import el.kr.ac.dongyang.able.eventbus.UserEvent;
 import el.kr.ac.dongyang.able.model.UserModel;
-import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
 import el.kr.ac.dongyang.able.navigation.NavigationActivity;
 
 /**
@@ -37,7 +35,6 @@ public class FragmentHome extends android.support.v4.app.Fragment{
     FragmentTransaction ft;
     FragmentManager manager;
     String fragmentTag;
-    FragmentNavigation fragmentNavigation;
     FirebaseUser user;
     private UserModel userModel;
     private String userName;
@@ -57,7 +54,6 @@ public class FragmentHome extends android.support.v4.app.Fragment{
         View view = inflater.inflate(R.layout.fragment_home, container,false);
 
         manager = getActivity().getSupportFragmentManager();
-        fragmentNavigation = new FragmentNavigation();
         naviBtn = view.findViewById(R.id.hGoNavi);
         naviBtn.setOnClickListener(new View.OnClickListener() {
             @Override

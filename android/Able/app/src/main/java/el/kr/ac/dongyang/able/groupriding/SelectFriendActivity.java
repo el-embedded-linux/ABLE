@@ -3,7 +3,6 @@ package el.kr.ac.dongyang.able.groupriding;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,18 +22,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import el.kr.ac.dongyang.able.BaseActivity;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.chat.MessageActivity;
 import el.kr.ac.dongyang.able.model.ChatModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-public class SelectFriendActivity extends AppCompatActivity {
+public class SelectFriendActivity extends BaseActivity {
     ChatModel chatModel = new ChatModel();
     Map<String, Boolean> user = new HashMap<>();
     @Override
@@ -66,7 +65,7 @@ public class SelectFriendActivity extends AppCompatActivity {
         public SelectFriendRecyclerViewAdapter() {
             userModels = new ArrayList<>();
             final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            FirebaseDatabase.getInstance().getReference().child("USER").addValueEventListener(new ValueEventListener() {
+            reference.child("USER").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     userModels.clear();

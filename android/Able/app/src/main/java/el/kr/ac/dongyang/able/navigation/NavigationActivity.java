@@ -107,7 +107,7 @@ public class NavigationActivity extends BaseActivity {
         setContentView(R.layout.fragment_navigation);
         setTitle("Navigation");
 
-        FirebaseDatabase.getInstance().getReference().child("USER").addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child("USER").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot item : dataSnapshot.getChildren()) {

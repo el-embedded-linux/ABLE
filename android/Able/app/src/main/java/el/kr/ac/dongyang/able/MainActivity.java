@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -33,7 +32,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -45,7 +43,6 @@ import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
 import el.kr.ac.dongyang.able.health.FragmentHealthcare;
 import el.kr.ac.dongyang.able.login.FragmentLogin;
 import el.kr.ac.dongyang.able.model.UserModel;
-import el.kr.ac.dongyang.able.navigation.FragmentNavigation;
 import el.kr.ac.dongyang.able.navigation.NavigationActivity;
 import el.kr.ac.dongyang.able.setting.FragmentSetting;
 
@@ -68,12 +65,11 @@ public class MainActivity extends AppCompatActivity
     FragmentHome fragmentHome;
     FragmentFriend fragmentFriend;
     FragmentLogin fragmentLogin;
-    FragmentNavigation fragmentNavigation;
     FragmentHealthcare fragmentHealthcare;
     FragmentSetting fragmentSetting;
     PeopleFragment peopleFragment;
     private long pressedTime;
-    private String fragmentTag;
+    BaseActivity baseActivity = new BaseActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +82,6 @@ public class MainActivity extends AppCompatActivity
         fragmentHome = new FragmentHome();
         fragmentFriend = new FragmentFriend();
         fragmentLogin = new FragmentLogin();
-        fragmentNavigation = new FragmentNavigation();
         fragmentHealthcare = new FragmentHealthcare();
         fragmentSetting = new FragmentSetting();
         peopleFragment = new PeopleFragment();
@@ -228,7 +223,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
-            replaceFragment(fragmentFriend);
+            baseActivity.replaceFragment(fragmentFriend);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -242,7 +237,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_login:
-                replaceFragment(fragmentLogin);
+                baseActivity.replaceFragment(fragmentLogin);
                 break;
             case R.id.nav_navigation:
                 Intent intent = new Intent(MainActivity.this, NavigationActivity.class);
@@ -250,13 +245,13 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
                 break;
             case R.id.nav_helthcare:
-                replaceFragment(fragmentHealthcare);
+                baseActivity.replaceFragment(fragmentHealthcare);
                 break;
             case R.id.nav_groupriding:
-                replaceFragment(peopleFragment);
+                baseActivity.replaceFragment(peopleFragment);
                 break;
             case R.id.nav_setting:
-                replaceFragment(fragmentSetting);
+                baseActivity.replaceFragment(fragmentSetting);
                 break;
         }
 
@@ -264,19 +259,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    private void replaceFragment(Fragment fragment) {
-        if (!fragment.isVisible()) {
-                fragmentTag = fragment.getClass().getSimpleName();
-                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft = manager.beginTransaction()
-                        .replace(R.id.main_layout, fragment, fragmentTag)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .addToBackStack(null);
-                ft.commit();
-        }
-    }
-
-
 }
 

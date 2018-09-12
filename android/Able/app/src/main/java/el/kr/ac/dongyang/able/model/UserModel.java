@@ -1,8 +1,5 @@
 package el.kr.ac.dongyang.able.model;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Created by impro on 2018-05-08.
  */

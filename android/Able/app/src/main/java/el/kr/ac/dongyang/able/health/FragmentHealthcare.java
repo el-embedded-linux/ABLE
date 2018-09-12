@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +18,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.shrikanthravi.collapsiblecalendarview.data.Day;
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
 
-import java.lang.String;
-
+import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
@@ -41,7 +38,7 @@ import el.kr.ac.dongyang.able.model.UserModel;
  * 몸무게 받아와서 칼로리 계산은 성공.
  */
 
-public class FragmentHealthcare extends Fragment {
+public class FragmentHealthcare extends BaseFragment {
     private static final String LOG_TAG = "FragmentNavigation";
 
     ConstraintLayout constraintLayoutHealth, constraintLayoutNone;
@@ -55,7 +52,6 @@ public class FragmentHealthcare extends Fragment {
 
     ArcProgress arcProgress;
 
-    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private Handler mHandler;
 
     public FragmentHealthcare() {
@@ -197,8 +193,8 @@ public class FragmentHealthcare extends Fragment {
     public void setdate(String isdate){
         if (user != null) {
             // User is signed in
-            if (mDatabase.child("HEALTH").child(uid).getKey() != null) {
-                mDatabase.child("HEALTH").child(uid).addValueEventListener(new ValueEventListener() {
+            if (reference.child("HEALTH").child(uid).getKey() != null) {
+                reference.child("HEALTH").child(uid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         healthModel = dataSnapshot.child(date).getValue(HealthModel.class);
@@ -226,7 +222,7 @@ public class FragmentHealthcare extends Fragment {
         super.onStart();
 
         if(user != null) {
-            mDatabase.child("HEALTH").child(uid).child("2018-08-13").addValueEventListener(new ValueEventListener() {
+            reference.child("HEALTH").child(uid).child("2018-08-13").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     healthModel = dataSnapshot.getValue(HealthModel.class);

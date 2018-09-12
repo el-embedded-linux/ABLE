@@ -3,7 +3,6 @@ package el.kr.ac.dongyang.able.chat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -24,12 +23,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -41,6 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import el.kr.ac.dongyang.able.BaseActivity;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.ChatModel;
 import el.kr.ac.dongyang.able.model.NotificationModel;
@@ -54,14 +52,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class GroupMessageActivity extends AppCompatActivity {
+public class GroupMessageActivity extends BaseActivity {
     Map<String, UserModel> users = new HashMap<>();
     String destinationRoom;
     String uid;
     EditText editText;
     Button groupRidingMapBtn;
 
-    private DatabaseReference databaseReference;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.KOREA);
     private RecyclerView recyclerView;
 
@@ -75,7 +72,6 @@ public class GroupMessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_message);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
         groupRidingMapBtn = findViewById(R.id.groupRidingBtn);
         groupRidingMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +103,7 @@ public class GroupMessageActivity extends AppCompatActivity {
                         ChatModel.Comment comment =
                                 new ChatModel.Comment(uid, editText.getText().toString(), ServerValue.TIMESTAMP, false);
                         //채팅 보낼때마다 디비 저장
-                        databaseReference.child("CHATROOMS").child(destinationRoom).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        reference.child("CHATROOMS").child(destinationRoom).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 //gcm 전송
@@ -191,7 +187,7 @@ public class GroupMessageActivity extends AppCompatActivity {
         }
 
         void getMessageList() {
-            databaseReference.child("CHATROOMS").child(destinationRoom).child("comments").addValueEventListener(new ValueEventListener() {
+            reference.child("CHATROOMS").child(destinationRoom).child("comments").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     comments.clear();
@@ -210,7 +206,7 @@ public class GroupMessageActivity extends AppCompatActivity {
                     if (comments.size() == 0) {
                     } else {
                         if (!comments.get(comments.size() - 1).readUsers.containsKey(uid)) {
-                            databaseReference.child("CHATROOMS").child(destinationRoom).child("comments").updateChildren(readUsersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            reference.child("CHATROOMS").child(destinationRoom).child("comments").updateChildren(readUsersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     notifyDataSetChanged();
@@ -322,7 +318,7 @@ public class GroupMessageActivity extends AppCompatActivity {
             return comments.size();
         }
 
-        private class GroupMessageViewHodler extends RecyclerView.ViewHolder {
+        public class GroupMessageViewHodler extends RecyclerView.ViewHolder {
 
             public TextView textView_message;
             public TextView textview_name;

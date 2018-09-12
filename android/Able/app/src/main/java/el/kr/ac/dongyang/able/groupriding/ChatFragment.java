@@ -18,7 +18,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -30,13 +29,14 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
+import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.chat.GroupMessageActivity;
 import el.kr.ac.dongyang.able.chat.MessageActivity;
 import el.kr.ac.dongyang.able.model.ChatModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-public class ChatFragment extends android.support.v4.app.Fragment {
+public class ChatFragment extends BaseFragment {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm");
 
@@ -63,7 +63,7 @@ public class ChatFragment extends android.support.v4.app.Fragment {
         public ChatRecyclerViewAdapter() {
             uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            FirebaseDatabase.getInstance().getReference().child("CHATROOMS").orderByChild("users/" + uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child("CHATROOMS").orderByChild("users/" + uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     chatModels.clear();
@@ -104,7 +104,7 @@ public class ChatFragment extends android.support.v4.app.Fragment {
                 }
             }
 
-            FirebaseDatabase.getInstance().getReference().child("USER").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child("USER").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserModel userModel = dataSnapshot.getValue(UserModel.class);

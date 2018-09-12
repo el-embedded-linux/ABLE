@@ -32,7 +32,6 @@ import java.util.List;
 
 import el.kr.ac.dongyang.able.BusProvider;
 import el.kr.ac.dongyang.able.R;
-import el.kr.ac.dongyang.able.RecyclerItemClickListener;
 
 public class NaviListActivity extends AppCompatActivity {
 
@@ -139,29 +138,6 @@ public class NaviListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerViewAdapter.notifyDataSetChanged();
-
-        //터치이벤트
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                nEnd.setText(poiList.get(position).getPOIName());
-                endList.clear();
-                busitem.clear();
-                String address = poiList.get(position).getPOIName().toString();
-                String lon = Double.toString(poiList.get(position).getPOIPoint().getLongitude());
-                String lat = Double.toString(poiList.get(position).getPOIPoint().getLatitude());
-                busitem.add(address);
-                busitem.add(lon);
-                busitem.add(lat);
-                for(int i = 0; i<busitem.size(); i++){
-                    Log.d("bus", busitem.get(i).toString());
-                }
-                Toast.makeText(NaviListActivity.this, "목적지 선택", Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onLongItemClick(View view, int position) {
-            }
-        }));
     }
 
     //어댑터 클래스 - 검색결과 띄움.
@@ -176,9 +152,27 @@ public class NaviListActivity extends AppCompatActivity {
         }
         //리사이클러뷰의 내용을 넣음.
         @Override
-        public void onBindViewHolder(NaviListRecyclerViewAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(NaviListRecyclerViewAdapter.ViewHolder holder, final int position) {
             holder.nameText.setText(poiList.get(position).getPOIName());
             holder.addressText.setText(poiList.get(position).getPOIAddress());
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    nEnd.setText(poiList.get(position).getPOIName());
+                    endList.clear();
+                    busitem.clear();
+                    String address = poiList.get(position).getPOIName().toString();
+                    String lon = Double.toString(poiList.get(position).getPOIPoint().getLongitude());
+                    String lat = Double.toString(poiList.get(position).getPOIPoint().getLatitude());
+                    busitem.add(address);
+                    busitem.add(lon);
+                    busitem.add(lat);
+                    for(int i = 0; i<busitem.size(); i++){
+                        Log.d("bus", busitem.get(i).toString());
+                    }
+                    Toast.makeText(NaviListActivity.this, "목적지 선택", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         // 필수, 아이템 갯수
         @Override

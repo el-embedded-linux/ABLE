@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -41,9 +40,9 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.UUID;
 
+import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.BusProvider;
 import el.kr.ac.dongyang.able.R;
-import el.kr.ac.dongyang.able.health.FragmentHealthcare;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
@@ -53,7 +52,7 @@ import static java.lang.System.exit;
  * Created by impro on 2018-05-08.
  */
 
-public class FragmentSetting extends Fragment{
+public class FragmentSetting extends BaseFragment{
 
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     Double speed;

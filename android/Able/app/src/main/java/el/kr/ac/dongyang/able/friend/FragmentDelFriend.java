@@ -1,7 +1,7 @@
 package el.kr.ac.dongyang.able.friend;
 
-import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,33 +17,25 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-public class FragmentDelFriend extends android.support.v4.app.Fragment {
+public class FragmentDelFriend extends BaseFragment {
 
-    HashMap friendMap;
-    List<String> friendList;
     FirebaseUser user;
     String uid;
-    Map.Entry entry;
-    DatabaseReference reference;
 
     public FragmentDelFriend(){}
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_del_friend,container,false);
         getActivity().setTitle("DelFriend");
-        reference = FirebaseDatabase.getInstance().getReference();
         RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview_delfriend);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new DelFriendAdapter());
@@ -59,7 +51,7 @@ public class FragmentDelFriend extends android.support.v4.app.Fragment {
 
     class DelFriendAdapter extends RecyclerView.Adapter<DelFriendAdapter.CustomViewHolder> {
         private List<String> keys = new ArrayList<>();
-        private ArrayList<String> friendUsers = new ArrayList<>();
+        private List<String> friendUsers = new ArrayList<>();
 
         public DelFriendAdapter() {
             reference.child("FRIEND").addValueEventListener(new ValueEventListener() {

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 
@@ -25,8 +24,7 @@ public class SplashActivity extends Activity {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }
 
