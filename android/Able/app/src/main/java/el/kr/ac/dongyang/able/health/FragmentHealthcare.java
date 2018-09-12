@@ -45,12 +45,13 @@ public class FragmentHealthcare extends BaseFragment {
 
     float currentGoal;
     String date, uid, cal2;
-    TextView speedTextView, kcalTextView, distanceTextView, goalTextView;
+    TextView speedTextView, kcalTextView, distanceTextView, goalTextView, informationTextView;
     FirebaseUser user;
     UserModel userModel;
     HealthModel healthModel;
 
     ArcProgress arcProgress;
+    CollapsibleCalendar collapsibleCalendar;
 
     private Handler mHandler;
 
@@ -85,90 +86,20 @@ public class FragmentHealthcare extends BaseFragment {
         userModel = new UserModel();
         healthModel = new HealthModel();
 
-        final CollapsibleCalendar collapsibleCalendar = view.findViewById(R.id.collapsibleCalendarView);
+        collapsibleCalendar = view.findViewById(R.id.collapsibleCalendarView);
         collapsibleCalendar.setState(0);
         collapsibleCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
             @Override
             public void onDaySelect() {
-                Day day = collapsibleCalendar.getSelectedDay();
-                final String dayFormat = day.getYear() + "-" + (day.getMonth() + 1) + "-" + day.getDay();
-
-                collapsibleCalendar.collapse(0);
-                userModel = new UserModel();
-
-                FirebaseDatabase.getInstance().getReference().child("HEALTH").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                    HealthModel healthModel = new HealthModel();
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                            healthModel = dataSnapshot.child(dayFormat).getValue(HealthModel.class);
-
-                            if(healthModel != null) {
-                                constraintLayoutNone.setVisibility(View.GONE);
-                                constraintLayoutHealth.setVisibility(View.VISIBLE);
-                                kcalTextView.setText(healthModel.getKcal());
-                                distanceTextView.setText(healthModel.getDistance());
-                                speedTextView.setText(healthModel.getSpeed());
-
-                                FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        userModel = dataSnapshot.getValue(UserModel.class);
-                                        if(userModel.getGoal() == null) {
-                                            currentGoal = 0;
-                                            goalTextView.setText("먼저 내정보 설정에서 목표를 설정해주세요");
-                                        }else if(healthModel.getDistance().equals("")){
-                                            currentGoal = 0;
-                                            goalTextView.setText("목표 완수까지 " + userModel.getGoal() + "km가 남았습니다!");
-
-                                        } else if(Float.parseFloat(healthModel.getDistance()) < Float.parseFloat(userModel.getGoal())) {
-                                            currentGoal = (Float.parseFloat(healthModel.getDistance()) / Float.parseFloat(userModel.getGoal())) * 100;
-                                            float remainDistance = Float.parseFloat(userModel.getGoal())-Float.parseFloat(healthModel.getDistance());
-                                            goalTextView.setText("목표 완수까지 " + remainDistance + "km가 남았습니다!");
-
-                                        } else {
-                                            currentGoal = 100;
-                                            goalTextView.setText("오늘의 목표를 달성했습니다!");
-                                        }
-                                        Thread t = new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                mHandler.post(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        //수치가 올라가는 코드
-                                                        ObjectAnimator anim = ObjectAnimator.ofInt(arcProgress, "progress", 0, (int)currentGoal);
-                                                        anim.setInterpolator(new DecelerateInterpolator());
-                                                        anim.setDuration(1000);
-                                                        anim.start();
-
-                                                        //페이드인 되는 코드
-                                                /*AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.progress_anim);
-                                                set.setInterpolator(new DecelerateInterpolator());
-                                                set.setTarget(arcProgress);
-                                                set.start();*/
-                                                    }
-                                                });
-                                            }
-                                        });
-                                        t.start();
-                                    }
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            } else {
-                                constraintLayoutHealth.setVisibility(View.GONE);
-                                constraintLayoutNone.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d("databaseError", databaseError.getMessage());
-                    }
-                });
+                if(user == null) {
+                    collapsibleCalendar.collapse(0);
+                    constraintLayoutHealth.setVisibility(View.GONE);
+                    constraintLayoutNone.setVisibility(View.VISIBLE);
+                    informationTextView.setText("로그인을 해주세요");
+                } else {
+                    healthDataInit();
+                }
             }
-
             @Override
             public void onItemClick(View view) {
 
@@ -188,6 +119,86 @@ public class FragmentHealthcare extends BaseFragment {
         });
 
         return view;
+    }
+
+    private void healthDataInit() {
+        Day day = collapsibleCalendar.getSelectedDay();
+        collapsibleCalendar.collapse(0);
+        userModel = new UserModel();
+        final String dayFormat = day.getYear() + "-" + (day.getMonth() + 1) + "-" + day.getDay();
+
+        FirebaseDatabase.getInstance().getReference().child("HEALTH").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            HealthModel healthModel = new HealthModel();
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                healthModel = dataSnapshot.child(dayFormat).getValue(HealthModel.class);
+
+                if(healthModel != null) {
+                    constraintLayoutNone.setVisibility(View.GONE);
+                    constraintLayoutHealth.setVisibility(View.VISIBLE);
+                    kcalTextView.setText(healthModel.getKcal());
+                    distanceTextView.setText(healthModel.getDistance());
+                    speedTextView.setText(healthModel.getSpeed());
+
+                    FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            userModel = dataSnapshot.getValue(UserModel.class);
+                            if(userModel.getGoal() == null) {
+                                currentGoal = 0;
+                                goalTextView.setText("먼저 내정보 설정에서 목표를 설정해주세요");
+                            }else if(healthModel.getDistance().equals("")){
+                                currentGoal = 0;
+                                goalTextView.setText("목표 완수까지 " + userModel.getGoal() + "km가 남았습니다!");
+
+                            } else if(Float.parseFloat(healthModel.getDistance()) < Float.parseFloat(userModel.getGoal())) {
+                                currentGoal = (Float.parseFloat(healthModel.getDistance()) / Float.parseFloat(userModel.getGoal())) * 100;
+                                float remainDistance = Float.parseFloat(userModel.getGoal())-Float.parseFloat(healthModel.getDistance());
+                                goalTextView.setText("목표 완수까지 " + remainDistance + "km가 남았습니다!");
+
+                            } else {
+                                currentGoal = 100;
+                                goalTextView.setText("오늘의 목표를 달성했습니다!");
+                            }
+                            Thread t = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //수치가 올라가는 코드
+                                            ObjectAnimator anim = ObjectAnimator.ofInt(arcProgress, "progress", 0, (int)currentGoal);
+                                            anim.setInterpolator(new DecelerateInterpolator());
+                                            anim.setDuration(1000);
+                                            anim.start();
+
+                                            //페이드인 되는 코드
+                                                /*AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.progress_anim);
+                                                set.setInterpolator(new DecelerateInterpolator());
+                                                set.setTarget(arcProgress);
+                                                set.start();*/
+                                        }
+                                    });
+                                }
+                            });
+                            t.start();
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    constraintLayoutHealth.setVisibility(View.GONE);
+                    constraintLayoutNone.setVisibility(View.VISIBLE);
+                    informationTextView.setText("기록이 없습니다\n운동을 해주세요");
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("databaseError", databaseError.getMessage());
+            }
+        });
     }
 
     public void setdate(String isdate){

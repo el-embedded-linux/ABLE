@@ -131,8 +131,12 @@ public class FragmentFriend extends BaseFragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     keys.clear();
-                    for (DataSnapshot item : dataSnapshot.child(uid).getChildren()) {
-                        keys.add(item.getKey());
+                    try {
+                        for (DataSnapshot item : dataSnapshot.child(uid).getChildren()) {
+                            keys.add(item.getKey());
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
                     }
                     notifyDataSetChanged();
                 }

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,10 +35,8 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Set;
-import java.util.Timer;
 import java.util.UUID;
 
 import el.kr.ac.dongyang.able.BaseFragment;
@@ -56,7 +55,6 @@ public class FragmentSetting extends BaseFragment{
 
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     Double speed;
-    Switch btsw;
     Double weight;
     FirebaseUser user;
     String uid;
@@ -65,7 +63,6 @@ public class FragmentSetting extends BaseFragment{
     CalckThread calcul;
     String cal2;
     Double bykg = 10.0;
-    int minute = 60;
     Double MET = 3.3;
     String date;
     int day, month, year;
@@ -74,21 +71,19 @@ public class FragmentSetting extends BaseFragment{
 
     Calendar cal;
 
-    private ArrayList<String> navigeo = new ArrayList<String>();
     public String lonlat = "msg";
-
-    Timer t = new Timer(true);
 
     Button infoModify;
     FragmentTransaction ft;
     String fragmentTag;
+    private ArrayAdapter<String> mConversationArrayAdapter;
+
 
     //블루투스
     private final int REQUEST_BLUETOOTH_ENABLE = 100;
     ConnectedTask mConnectedTask = null;
     static BluetoothAdapter mBluetoothAdapter;
     private String mConnectedDeviceName = null;
-    private ArrayAdapter<String> mConversationArrayAdapter;
     static boolean isConnectionError = false;
     private static final String TAG = "BluetoothClient";
 
@@ -103,19 +98,18 @@ public class FragmentSetting extends BaseFragment{
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_setting,container,false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_setting, container, false);
         getActivity().setTitle("Setting");
 
-        bluetoothSwitch = view.findViewById(R.id.bluetooth_switch);
-
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
+        if (user != null) {
             uid = user.getUid();
         } else {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction().remove(FragmentSetting.this).commit();
             fragmentManager.popBackStack();
+            Toast.makeText(getActivity(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
         }
 
         userModel = new UserModel();
@@ -125,17 +119,17 @@ public class FragmentSetting extends BaseFragment{
         day = cal.get(Calendar.DAY_OF_MONTH);
         month = cal.get(Calendar.MONTH) + 1;
         year = cal.get(Calendar.YEAR);
-        if(month>=10 && day<10){
+        if (month >= 10 && day < 10) {
             date = year + "-" + month + "-0" + day;
-        }else if(month<10 && day>=10){
+        } else if (month < 10 && day >= 10) {
             date = year + "-0" + month + "-" + day;
-        } else if (month>=10 && day>=10) {
+        } else if (month >= 10 && day >= 10) {
             date = year + "-" + month + "-" + day;
-        }else{
+        } else {
             date = year + "-0" + month + "-0" + day;
         }
-        btsw = view.findViewById(R.id.bluetooth_switch);
-        btsw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bluetoothSwitch = view.findViewById(R.id.bluetooth_switch);
+        bluetoothSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
@@ -166,7 +160,7 @@ public class FragmentSetting extends BaseFragment{
                 fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
                 Log.i("fagmentTag", fragmentTag);
                 getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft=getActivity().getSupportFragmentManager().beginTransaction();
+                ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.main_layout, fragment);
                 ft.addToBackStack(fragmentTag);
                 ft.commit();
@@ -180,25 +174,28 @@ public class FragmentSetting extends BaseFragment{
     public void onStart() {
         super.onStart();
 
-        mDatabase.child("USER").child(uid).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userModel = dataSnapshot.getValue(UserModel.class);
-                if (userModel != null && userModel.getWeight() != null) {
-                    weight = Double.parseDouble(userModel.getWeight());
-                    Log.d(TAG, "start - " + weight);
+        if (uid != null) {
+            mDatabase.child("USER").child(uid).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    userModel = dataSnapshot.getValue(UserModel.class);
+                    if (userModel != null && userModel.getWeight() != null) {
+                        weight = Double.parseDouble(userModel.getWeight());
+                        Log.d(TAG, "start - " + weight);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
     }
 
     class CalckThread extends Thread {
         Double weight;
         Double speed;
+
         public CalckThread(Double weight, Double speed) {
             this.weight = weight;
             this.speed = speed;
@@ -206,7 +203,7 @@ public class FragmentSetting extends BaseFragment{
 
         public void run() {
             try {
-                Double call = (weight + bykg)*0.001*MET*speed;
+                Double call = (weight + bykg) * 0.001 * MET * speed;
                 cal2 = String.format("%.2f", call);
                 healthModel.setKcal(cal2);
                 mDatabase.child("HEALTH").child(uid).child(date).child("kcal").setValue(healthModel.getKcal());
@@ -220,17 +217,18 @@ public class FragmentSetting extends BaseFragment{
 
     public class SendTh extends Thread {
         String msg = "msg";
+
         /*        String msg;
         public SendTh(String msg){
             this.msg = msg;
         }*/
-        public void run(){
+        public void run() {
             while (true) {
-                if(!lonlat.equals(msg)) {
+                if (!lonlat.equals(msg)) {
 //                    try {
-                        mConnectedTask.write(lonlat);
-                        msg = lonlat;
-                        Log.d("msg2 : ", msg);
+                    mConnectedTask.write(lonlat);
+                    msg = lonlat;
+                    Log.d("msg2 : ", msg);
                        /* Thread.sleep(4000);
                     } catch (InterruptedException e) {
                     }*/
@@ -253,14 +251,15 @@ public class FragmentSetting extends BaseFragment{
 
             try {
                 mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(uuid);
-                Log.d( TAG, "create socket for "+mConnectedDeviceName);
+                Log.d(TAG, "create socket for " + mConnectedDeviceName);
 
             } catch (IOException e) {
-                Log.e( TAG, "socket create failed " + e.getMessage());
+                Log.e(TAG, "socket create failed " + e.getMessage());
             }
 
             //mConnectionStatus.setText("connecting...");
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // Always cancel discovery because it will slow down a connection
@@ -282,21 +281,21 @@ public class FragmentSetting extends BaseFragment{
             }
             return true;
         }
+
         @Override
         protected void onPostExecute(Boolean isSucess) {
-            if ( isSucess ) {
+            if (isSucess) {
                 connected(mBluetoothSocket);
-            }
-            else{
+            } else {
                 isConnectionError = true;
-                Log.d( TAG,  "Unable to connect device");
+                Log.d(TAG, "Unable to connect device");
                 showErrorDialog("Unable to connect device");
             }
         }
     }
 
     //여기서 데이터 보낼수 있음.. 하ㅠ
-    public void connected( BluetoothSocket socket ) {
+    public void connected(BluetoothSocket socket) {
         mConnectedTask = new ConnectedTask(socket);
         mConnectedTask.execute();
         SendTh sendTh = new SendTh();
@@ -309,35 +308,36 @@ public class FragmentSetting extends BaseFragment{
         private InputStream mInputStream = null;
         private OutputStream mOutputStream = null;
         private BluetoothSocket mBluetoothSocket = null;
-        ConnectedTask(BluetoothSocket socket){
+
+        ConnectedTask(BluetoothSocket socket) {
             mBluetoothSocket = socket;
             try {
                 mInputStream = mBluetoothSocket.getInputStream();
                 mOutputStream = mBluetoothSocket.getOutputStream();
             } catch (IOException e) {
-                Log.e(TAG, "socket not created", e );
+                Log.e(TAG, "socket not created", e);
             }
 
-            Log.d( TAG, "connected to "+mConnectedDeviceName);
+            Log.d(TAG, "connected to " + mConnectedDeviceName);
             //mConnectionStatus.setText( "connected to "+mConnectedDeviceName);
         }
 
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            byte [] readBuffer = new byte[1024];
+            byte[] readBuffer = new byte[1024];
             int readBufferPosition = 0;
 
             while (true) {
-                if ( isCancelled() ) return false;
+                if (isCancelled()) return false;
                 try {
                     int bytesAvailable = mInputStream.available();
-                    if(bytesAvailable > 0) {
+                    if (bytesAvailable > 0) {
                         byte[] packetBytes = new byte[bytesAvailable];
                         mInputStream.read(packetBytes);
-                        for(int i=0;i<bytesAvailable;i++) {
+                        for (int i = 0; i < bytesAvailable; i++) {
                             byte b = packetBytes[i];
-                            if(b == '\n') {
+                            if (b == '\n') {
                                 byte[] encodedBytes = new byte[readBufferPosition];
 
                                 System.arraycopy(readBuffer, 0, encodedBytes, 0,
@@ -352,10 +352,9 @@ public class FragmentSetting extends BaseFragment{
                                     healthModel.setSpeed(Double.toString(speed));
                                 }
                                 mDatabase.child("HEALTH").child(uid).child(date).child("speed").setValue(healthModel.getSpeed());
-                                calcul = new CalckThread(weight,speed);
+                                calcul = new CalckThread(weight, speed);
                                 calcul.start();
-                            }
-                            else {
+                            } else {
                                 readBuffer[readBufferPosition++] = b;
                             }
                         }
@@ -366,6 +365,7 @@ public class FragmentSetting extends BaseFragment{
                 }
             }
         }
+
         @Override
         protected void onProgressUpdate(String... recvMessage) {
             mConversationArrayAdapter.insert(mConnectedDeviceName + ": " + recvMessage[0], 0);
@@ -375,7 +375,7 @@ public class FragmentSetting extends BaseFragment{
         protected void onPostExecute(Boolean isSucess) {
             super.onPostExecute(isSucess);
 
-            if ( !isSucess ) {
+            if (!isSucess) {
                 closeSocket();
                 Log.d(TAG, "Device connection was lost");
                 isConnectionError = true;
@@ -389,7 +389,7 @@ public class FragmentSetting extends BaseFragment{
             closeSocket();
         }
 
-        void closeSocket(){
+        void closeSocket() {
             try {
                 mBluetoothSocket.close();
                 Log.d(TAG, "close socket()");
@@ -399,14 +399,14 @@ public class FragmentSetting extends BaseFragment{
             }
         }
 
-        void write(String msg){
+        void write(String msg) {
             msg += "\n";
             //Log.d("msg : ", msg);
             try {
                 mOutputStream.write(msg.getBytes());
                 mOutputStream.flush();
             } catch (IOException e) {
-                Log.e(TAG, "Exception during send", e );
+                Log.e(TAG, "Exception during send", e);
             }
             //mInputEditText.setText(" ");
         }
@@ -416,16 +416,16 @@ public class FragmentSetting extends BaseFragment{
         Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
         final BluetoothDevice[] pairedDevices = devices.toArray(new BluetoothDevice[0]);
 
-        if ( pairedDevices.length == 0 ){
-            showQuitDialog( "No devices have been paired.\n"
-                    +"You must pair it with another device.");
+        if (pairedDevices.length == 0) {
+            showQuitDialog("No devices have been paired.\n"
+                    + "You must pair it with another device.");
             return;
         }
 
         final String[] items;
         final int[] position = new int[1];
         items = new String[pairedDevices.length];
-        for (int i=0;i<pairedDevices.length;i++) {
+        for (int i = 0; i < pairedDevices.length; i++) {
             items[i] = pairedDevices[i].getName();
         }
 
@@ -443,7 +443,7 @@ public class FragmentSetting extends BaseFragment{
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(position[0] == -1){
+                if (position[0] == -1) {
                     return;
                 }
                 Toast.makeText(getActivity(), items[position[0]], Toast.LENGTH_SHORT).show();
@@ -468,11 +468,11 @@ public class FragmentSetting extends BaseFragment{
         builder.setTitle("Quit");
         builder.setCancelable(false);
         builder.setMessage(message);
-        builder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                if ( isConnectionError  ) {
+                if (isConnectionError) {
                     isConnectionError = false;
                     //finish();
                 }
@@ -486,7 +486,7 @@ public class FragmentSetting extends BaseFragment{
         builder.setTitle("Quit");
         builder.setCancelable(false);
         builder.setMessage(message);
-        builder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -496,9 +496,9 @@ public class FragmentSetting extends BaseFragment{
         builder.create().show();
     }
 
-    void sendMessage(String msg){
+    void sendMessage(String msg) {
         Log.d(TAG, "send : " + msg);
-        if ( mConnectedTask != null ) {
+        if (mConnectedTask != null) {
             mConnectedTask.write(msg);
             Log.d(TAG, "send message: " + msg);
             mConversationArrayAdapter.insert("Me:  " + msg, 0);
@@ -507,13 +507,13 @@ public class FragmentSetting extends BaseFragment{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_BLUETOOTH_ENABLE){
-            if (resultCode == getActivity().RESULT_OK){
+        if (requestCode == REQUEST_BLUETOOTH_ENABLE) {
+            if (resultCode == getActivity().RESULT_OK) {
                 //BlueTooth is now Enabled
                 showPairedDevicesListDialog();
             }
-            if(resultCode == getActivity().RESULT_CANCELED){
-                showQuitDialog( "You need to enable bluetooth");
+            if (resultCode == getActivity().RESULT_CANCELED) {
+                showQuitDialog("You need to enable bluetooth");
             }
         }
     }
@@ -521,7 +521,7 @@ public class FragmentSetting extends BaseFragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if ( mConnectedTask != null ) {
+        if (mConnectedTask != null) {
             mConnectedTask.cancel(true);
         }
         getActivity().setTitle("Able");
@@ -534,8 +534,8 @@ public class FragmentSetting extends BaseFragment{
     }
 
     @Subscribe
-    public void getPost(String msg){
-        Log.d("otto_lonlat_set : ", ""+msg);
+    public void getPost(String msg) {
+        Log.d("otto_lonlat_set : ", "" + msg);
         lonlat = msg;
         Log.d("setlonlat : ", lonlat);
     }
