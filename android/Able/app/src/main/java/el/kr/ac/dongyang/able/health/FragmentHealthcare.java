@@ -229,6 +229,7 @@ public class FragmentHealthcare extends BaseFragment {
         speedTextView.setText(speedTextView + "km");
         Log.d(LOG_TAG, "mhcal2:  " + cal2+"mhspeed: "+cal2);
     }
+
     public void onStart() {
         super.onStart();
 

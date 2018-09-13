@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -35,7 +34,9 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,9 +52,8 @@ import static java.lang.System.exit;
  * Created by impro on 2018-05-08.
  */
 
-public class FragmentSetting extends BaseFragment{
+public class FragmentSetting extends BaseFragment {
 
-    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     Double speed;
     Double weight;
     FirebaseUser user;
@@ -76,8 +76,6 @@ public class FragmentSetting extends BaseFragment{
     Button infoModify;
     FragmentTransaction ft;
     String fragmentTag;
-    private ArrayAdapter<String> mConversationArrayAdapter;
-
 
     //블루투스
     private final int REQUEST_BLUETOOTH_ENABLE = 100;
@@ -87,8 +85,7 @@ public class FragmentSetting extends BaseFragment{
     static boolean isConnectionError = false;
     private static final String TAG = "BluetoothClient";
 
-    public FragmentSetting() {
-    }
+    public FragmentSetting() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,20 +111,13 @@ public class FragmentSetting extends BaseFragment{
 
         userModel = new UserModel();
         healthModel = new HealthModel();
-        cal = Calendar.getInstance();
 
+        cal = Calendar.getInstance();
         day = cal.get(Calendar.DAY_OF_MONTH);
         month = cal.get(Calendar.MONTH) + 1;
         year = cal.get(Calendar.YEAR);
-        if (month >= 10 && day < 10) {
-            date = year + "-" + month + "-0" + day;
-        } else if (month < 10 && day >= 10) {
-            date = year + "-0" + month + "-" + day;
-        } else if (month >= 10 && day >= 10) {
-            date = year + "-" + month + "-" + day;
-        } else {
-            date = year + "-0" + month + "-0" + day;
-        }
+        date = year + "-" + month + "-" + day;
+
         bluetoothSwitch = view.findViewById(R.id.bluetooth_switch);
         bluetoothSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -175,7 +165,7 @@ public class FragmentSetting extends BaseFragment{
         super.onStart();
 
         if (uid != null) {
-            mDatabase.child("USER").child(uid).addValueEventListener(new ValueEventListener() {
+            reference.child("USER").child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     userModel = dataSnapshot.getValue(UserModel.class);
@@ -192,226 +182,31 @@ public class FragmentSetting extends BaseFragment{
         }
     }
 
-    class CalckThread extends Thread {
-        Double weight;
-        Double speed;
-
-        public CalckThread(Double weight, Double speed) {
-            this.weight = weight;
-            this.speed = speed;
-        }
-
-        public void run() {
-            try {
-                Double call = (weight + bykg) * 0.001 * MET * speed;
-                cal2 = String.format("%.2f", call);
-                healthModel.setKcal(cal2);
-                mDatabase.child("HEALTH").child(uid).child(date).child("kcal").setValue(healthModel.getKcal());
-                Log.d(TAG, "Thread - " + Double.toString(weight));
-                Log.d(TAG, "cal - " + Double.parseDouble(cal2));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public class SendTh extends Thread {
-        String msg = "msg";
-
-        /*        String msg;
-        public SendTh(String msg){
-            this.msg = msg;
-        }*/
-        public void run() {
-            while (true) {
-                if (!lonlat.equals(msg)) {
-//                    try {
-                    mConnectedTask.write(lonlat);
-                    msg = lonlat;
-                    Log.d("msg2 : ", msg);
-                       /* Thread.sleep(4000);
-                    } catch (InterruptedException e) {
-                    }*/
-                }
-            }
-        }
-    }
-
-    private class ConnectTask extends AsyncTask<Void, Void, Boolean> {
-
-        private BluetoothSocket mBluetoothSocket = null;
-        private BluetoothDevice mBluetoothDevice = null;
-
-        ConnectTask(BluetoothDevice bluetoothDevice) {
-            mBluetoothDevice = bluetoothDevice;
-            mConnectedDeviceName = bluetoothDevice.getName();
-
-            //SPP
-            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-
-            try {
-                mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(uuid);
-                Log.d(TAG, "create socket for " + mConnectedDeviceName);
-
-            } catch (IOException e) {
-                Log.e(TAG, "socket create failed " + e.getMessage());
-            }
-
-            //mConnectionStatus.setText("connecting...");
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // Always cancel discovery because it will slow down a connection
-            mBluetoothAdapter.cancelDiscovery();
-            // Make a connection to the BluetoothSocket
-            try {
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
-                mBluetoothSocket.connect();
-            } catch (IOException e) {
-                // Close the socket
-                try {
-                    mBluetoothSocket.close();
-                } catch (IOException e2) {
-                    Log.e(TAG, "unable to close() " +
-                            " socket during connection failure", e2);
-                }
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean isSucess) {
-            if (isSucess) {
-                connected(mBluetoothSocket);
-            } else {
-                isConnectionError = true;
-                Log.d(TAG, "Unable to connect device");
-                showErrorDialog("Unable to connect device");
-            }
-        }
-    }
-
     //여기서 데이터 보낼수 있음.. 하ㅠ
     public void connected(BluetoothSocket socket) {
         mConnectedTask = new ConnectedTask(socket);
         mConnectedTask.execute();
-        SendTh sendTh = new SendTh();
-        sendTh.start();
-
-    }
-
-    private class ConnectedTask extends AsyncTask<Void, String, Boolean> {
-
-        private InputStream mInputStream = null;
-        private OutputStream mOutputStream = null;
-        private BluetoothSocket mBluetoothSocket = null;
-
-        ConnectedTask(BluetoothSocket socket) {
-            mBluetoothSocket = socket;
-            try {
-                mInputStream = mBluetoothSocket.getInputStream();
-                mOutputStream = mBluetoothSocket.getOutputStream();
-            } catch (IOException e) {
-                Log.e(TAG, "socket not created", e);
-            }
-
-            Log.d(TAG, "connected to " + mConnectedDeviceName);
-            //mConnectionStatus.setText( "connected to "+mConnectedDeviceName);
-        }
-
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            byte[] readBuffer = new byte[1024];
-            int readBufferPosition = 0;
-
-            while (true) {
-                if (isCancelled()) return false;
-                try {
-                    int bytesAvailable = mInputStream.available();
-                    if (bytesAvailable > 0) {
-                        byte[] packetBytes = new byte[bytesAvailable];
-                        mInputStream.read(packetBytes);
-                        for (int i = 0; i < bytesAvailable; i++) {
-                            byte b = packetBytes[i];
-                            if (b == '\n') {
-                                byte[] encodedBytes = new byte[readBufferPosition];
-
-                                System.arraycopy(readBuffer, 0, encodedBytes, 0,
-                                        encodedBytes.length);
-                                String recvMessage = new String(encodedBytes, "UTF-8");
-
-                                readBufferPosition = 0;
-
-                                Log.d(TAG, "recv message: " + recvMessage);
-                                for (int j = 0; j < recvMessage.length(); j++) {
-                                    speed = Double.parseDouble(recvMessage);
-                                    healthModel.setSpeed(Double.toString(speed));
-                                }
-                                mDatabase.child("HEALTH").child(uid).child(date).child("speed").setValue(healthModel.getSpeed());
-                                calcul = new CalckThread(weight, speed);
-                                calcul.start();
-                            } else {
-                                readBuffer[readBufferPosition++] = b;
-                            }
-                        }
+        new Thread(new Runnable() {
+            String msg = "msg";
+            @Override
+            public void run() {
+                while (true) {
+                    if (!lonlat.equals(msg)) {
+//                    try {
+                        mConnectedTask.write(lonlat);
+                        msg = lonlat;
+                        Log.d("msg2 : ", msg);
+                       /* Thread.sleep(4000);
+                    } catch (InterruptedException e) {
+                    }*/
                     }
-                } catch (IOException e) {
-                    Log.e(TAG, "disconnected", e);
-                    return false;
                 }
             }
-        }
+        }).start();
 
-        @Override
-        protected void onProgressUpdate(String... recvMessage) {
-            mConversationArrayAdapter.insert(mConnectedDeviceName + ": " + recvMessage[0], 0);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean isSucess) {
-            super.onPostExecute(isSucess);
-
-            if (!isSucess) {
-                closeSocket();
-                Log.d(TAG, "Device connection was lost");
-                isConnectionError = true;
-                showErrorDialog("Device connection was lost");
-            }
-        }
-
-        @Override
-        protected void onCancelled(Boolean aBoolean) {
-            super.onCancelled(aBoolean);
-            closeSocket();
-        }
-
-        void closeSocket() {
-            try {
-                mBluetoothSocket.close();
-                Log.d(TAG, "close socket()");
-            } catch (IOException e2) {
-                Log.e(TAG, "unable to close() " +
-                        " socket during connection failure", e2);
-            }
-        }
-
-        void write(String msg) {
-            msg += "\n";
-            //Log.d("msg : ", msg);
-            try {
-                mOutputStream.write(msg.getBytes());
-                mOutputStream.flush();
-            } catch (IOException e) {
-                Log.e(TAG, "Exception during send", e);
-            }
-            //mInputEditText.setText(" ");
-        }
     }
 
+    //연결 가능한 디바이스 목록
     public void showPairedDevicesListDialog() {
         Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
         final BluetoothDevice[] pairedDevices = devices.toArray(new BluetoothDevice[0]);
@@ -496,15 +291,6 @@ public class FragmentSetting extends BaseFragment{
         builder.create().show();
     }
 
-    void sendMessage(String msg) {
-        Log.d(TAG, "send : " + msg);
-        if (mConnectedTask != null) {
-            mConnectedTask.write(msg);
-            Log.d(TAG, "send message: " + msg);
-            mConversationArrayAdapter.insert("Me:  " + msg, 0);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_BLUETOOTH_ENABLE) {
@@ -538,5 +324,187 @@ public class FragmentSetting extends BaseFragment{
         Log.d("otto_lonlat_set : ", "" + msg);
         lonlat = msg;
         Log.d("setlonlat : ", lonlat);
+    }
+
+    private class CalckThread extends Thread {
+        Double weight;
+        Double speed;
+
+        public CalckThread(Double weight, Double speed) {
+            this.weight = weight;
+            this.speed = speed;
+        }
+
+        public void run() {
+            try {
+                Double call = (weight + bykg) * 0.001 * MET * speed;
+                cal2 = String.format("%.2f", call);
+                healthModel.setKcal(cal2);
+                reference.child("HEALTH").child(uid).child(date).child("kcal").setValue(healthModel.getKcal());
+                Log.d(TAG, "Thread - " + Double.toString(weight));
+                Log.d(TAG, "cal - " + Double.parseDouble(cal2));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class ConnectTask extends AsyncTask<Void, Void, Boolean> {
+
+        private BluetoothSocket mBluetoothSocket = null;
+        private BluetoothDevice mBluetoothDevice;
+
+        ConnectTask(BluetoothDevice bluetoothDevice) {
+            mBluetoothDevice = bluetoothDevice;
+            mConnectedDeviceName = bluetoothDevice.getName();
+
+            //SPP
+            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+
+            try {
+                mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(uuid);
+                Log.d(TAG, "create socket for " + mConnectedDeviceName);
+
+            } catch (IOException e) {
+                Log.e(TAG, "socket create failed " + e.getMessage());
+            }
+
+            //mConnectionStatus.setText("connecting...");
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // Always cancel discovery because it will slow down a connection
+            mBluetoothAdapter.cancelDiscovery();
+            // Make a connection to the BluetoothSocket
+            try {
+                // This is a blocking call and will only return on a
+                // successful connection or an exception
+                mBluetoothSocket.connect();
+            } catch (IOException e) {
+                // Close the socket
+                try {
+                    mBluetoothSocket.close();
+                } catch (IOException e2) {
+                    Log.e(TAG, "unable to close() " +
+                            " socket during connection failure", e2);
+                }
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isSucess) {
+            if (isSucess) {
+                connected(mBluetoothSocket);
+            } else {
+                isConnectionError = true;
+                Log.d(TAG, "Unable to connect device");
+                showErrorDialog("Unable to connect device");
+            }
+        }
+    }
+
+    private class ConnectedTask extends AsyncTask<Void, String, Boolean> {
+
+        private InputStream mInputStream = null;
+        private OutputStream mOutputStream = null;
+        private BluetoothSocket mBluetoothSocket = null;
+
+        ConnectedTask(BluetoothSocket socket) {
+            mBluetoothSocket = socket;
+            try {
+                mInputStream = mBluetoothSocket.getInputStream();
+                mOutputStream = mBluetoothSocket.getOutputStream();
+            } catch (IOException e) {
+                Log.e(TAG, "socket not created", e);
+            }
+
+            Log.d(TAG, "connected to " + mConnectedDeviceName);
+            //mConnectionStatus.setText( "connected to "+mConnectedDeviceName);
+        }
+        @Override
+
+        protected Boolean doInBackground(Void... params) {
+            byte[] readBuffer = new byte[1024];
+            int readBufferPosition = 0;
+
+            while (true) {
+                if (isCancelled()) return false;
+                try {
+                    int bytesAvailable = mInputStream.available();
+                    if (bytesAvailable > 0) {
+                        byte[] packetBytes = new byte[bytesAvailable];
+                        mInputStream.read(packetBytes);
+                        for (int i = 0; i < bytesAvailable; i++) {
+                            byte b = packetBytes[i];
+                            if (b == '\n') {
+                                byte[] encodedBytes = new byte[readBufferPosition];
+
+                                System.arraycopy(readBuffer, 0, encodedBytes, 0,
+                                        encodedBytes.length);
+                                String recvMessage = new String(encodedBytes, "UTF-8");
+
+                                readBufferPosition = 0;
+
+                                Log.d(TAG, "recv message: " + recvMessage);
+                                for (int j = 0; j < recvMessage.length(); j++) {
+                                    speed = Double.parseDouble(recvMessage);
+                                    healthModel.setSpeed(Double.toString(speed));
+                                }
+                                reference.child("HEALTH").child(uid).child(date).child("speed").setValue(healthModel.getSpeed());
+                                calcul = new CalckThread(weight, speed);
+                                calcul.start();
+                            } else {
+                                readBuffer[readBufferPosition++] = b;
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "disconnected", e);
+                    return false;
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isSucess) {
+            super.onPostExecute(isSucess);
+            if (!isSucess) {
+                closeSocket();
+                Log.d(TAG, "Device connection was lost");
+                isConnectionError = true;
+                showErrorDialog("Device connection was lost");
+            }
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            closeSocket();
+        }
+
+        void closeSocket() {
+            try {
+                mBluetoothSocket.close();
+                Log.d(TAG, "close socket()");
+            } catch (IOException e2) {
+                Log.e(TAG, "unable to close() " +
+                        " socket during connection failure", e2);
+            }
+        }
+
+        void write(String msg) {
+            msg += "\n";
+            //Log.d("msg : ", msg);
+            try {
+                mOutputStream.write(msg.getBytes());
+                mOutputStream.flush();
+            } catch (IOException e) {
+                Log.e(TAG, "Exception during send", e);
+            }
+            //mInputEditText.setText(" ");
+        }
     }
 }

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -49,7 +48,7 @@ import el.kr.ac.dongyang.able.setting.FragmentSetting;
 
 
 //기본적으로 프래그먼트홈이 뜨도록 되어있음. content_xml에서 설정됨.
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private String TAG = "Able";
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     ImageView naviImg;
 
     TextView weatherIcon, temperature, temp_max, temp_min;
-    Icon_Manager icon_manager;
+    WeatherIconManager weatherIconManager;
 
     FragmentHome fragmentHome;
     FragmentFriend fragmentFriend;
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity
     FragmentSetting fragmentSetting;
     PeopleFragment peopleFragment;
     private long pressedTime;
-    BaseActivity baseActivity = new BaseActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,22 +103,19 @@ public class MainActivity extends AppCompatActivity
         temperature = findViewById(R.id.Temperature);
         temp_max = findViewById(R.id.Temp_max);
         temp_min = findViewById(R.id.Temp_min);
-        icon_manager = new Icon_Manager();
+        weatherIconManager = new WeatherIconManager();
         setWeather();
 
         //getHashKey();
     }
 
-
-
     @Override
     protected void onStart() {
         super.onStart();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String uid = firebaseUser.getUid();
             passPushTokenToServer(uid);
-            FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addValueEventListener(new ValueEventListener() {
+            reference.child("USER").child(uid).addValueEventListener(new ValueEventListener() {
                 UserModel userModel = new UserModel();
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -143,9 +138,9 @@ public class MainActivity extends AppCompatActivity
 
     private void setWeather() {
         String font = "fonts/weathericons-regular-webfont.ttf";
-        weatherIcon.setTypeface(icon_manager.get_icons(font, this));
+        weatherIcon.setTypeface(weatherIconManager.get_icons(font, this));
 
-        Function.placeIdTask asyncTask = new Function.placeIdTask(new Function.AsyncResponse() {
+        WeatherFunction.placeIdTask asyncTask = new WeatherFunction.placeIdTask(new WeatherFunction.AsyncResponse() {
             public void processFinish(String temperature, String temp_max, String temp_min, String updatedOn, String iconText, String sun_rise) {
                 weatherIcon.setText(Html.fromHtml(iconText));
                 MainActivity.this.temperature.setText(temperature);
@@ -211,8 +206,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
-
     //메뉴 아이템에 무엇을 넣을 것인지, 더 추가도 가능. 현재는 친구목록 : FragmentFriend로 이동
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -224,7 +217,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_friend) {
-            baseActivity.replaceFragment(fragmentFriend);
+            replaceFragment(fragmentFriend);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -238,7 +231,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_login:
-                baseActivity.replaceFragment(fragmentLogin);
+                replaceFragment(fragmentLogin);
                 break;
             case R.id.nav_navigation:
                 Intent intent = new Intent(MainActivity.this, NavigationActivity.class);
@@ -246,13 +239,13 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
                 break;
             case R.id.nav_helthcare:
-                baseActivity.replaceFragment(fragmentHealthcare);
+                replaceFragment(fragmentHealthcare);
                 break;
             case R.id.nav_groupriding:
-                baseActivity.replaceFragment(peopleFragment);
+                replaceFragment(peopleFragment);
                 break;
             case R.id.nav_setting:
-                baseActivity.replaceFragment(fragmentSetting);
+                replaceFragment(fragmentSetting);
                 break;
         }
 

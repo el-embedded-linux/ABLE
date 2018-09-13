@@ -3,6 +3,7 @@ package el.kr.ac.dongyang.able.groupriding;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ public class SelectFriendActivity extends BaseActivity {
     ChatModel chatModel = new ChatModel();
     Map<String, Boolean> user = new HashMap<>();
     String myUid;
+    SelectFriendRecyclerViewAdapter selectFriendRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,8 @@ public class SelectFriendActivity extends BaseActivity {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             myUid = firebaseUser.getUid();
-            recyclerView.setAdapter(new SelectFriendRecyclerViewAdapter());
+            selectFriendRecyclerViewAdapter = new SelectFriendRecyclerViewAdapter();
+            recyclerView.setAdapter(selectFriendRecyclerViewAdapter);
         }
 
         Button button = findViewById(R.id.selectFriendActivity_button);
@@ -62,6 +65,7 @@ public class SelectFriendActivity extends BaseActivity {
                     chatModel.setUsers(user);
                     FirebaseDatabase.getInstance().getReference().child("CHATROOMS").push().setValue(chatModel);
                     user.clear();
+                    selectFriendRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -70,87 +74,69 @@ public class SelectFriendActivity extends BaseActivity {
 
     class SelectFriendRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        List<UserModel> userModels;
+        List<UserModel> userModels = new ArrayList<>();
 
         public SelectFriendRecyclerViewAdapter() {
-            userModels = new ArrayList<>();
             reference.child("USER").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     userModels.clear();
-
                     for(DataSnapshot snapshot :dataSnapshot.getChildren()){
-
-
                         UserModel userModel = snapshot.getValue(UserModel.class);
-
                         if(userModel.getUid().equals(myUid)){
                             continue;
                         }
                         userModels.add(userModel);
                     }
                     notifyDataSetChanged();
-
                 }
-
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
+                public void onCancelled(DatabaseError databaseError) {}
             });
-
-
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_friend_select,parent,false);
-
-
             return new CustomViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+            CustomViewHolder customViewHolder = ((CustomViewHolder) holder);
 
-
-            Glide.with
-                    (holder.itemView.getContext())
+            Glide
+                    .with(customViewHolder.itemView.getContext())
                     .load(userModels.get(position).getProfileImageUrl())
                     .apply(new RequestOptions().circleCrop())
-                    .into(((CustomViewHolder)holder).imageView);
-            ((CustomViewHolder)holder).textView.setText(userModels.get(position).getUserName());
+                    .into(customViewHolder.imageView);
+            customViewHolder.textView.setText(userModels.get(position).getUserName());
 
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            customViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), MessageActivity.class);
                     intent.putExtra("destinationUid",userModels.get(position).getUid());
                     ActivityOptions activityOptions = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                        activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright,R.anim.toleft);
-                        startActivity(intent,activityOptions.toBundle());
-                    }
+                    activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright,R.anim.toleft);
+                    startActivity(intent,activityOptions.toBundle());
 
                 }
             });
 
             if(userModels.get(position).getComment() != null){
-                ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).getComment());
+                customViewHolder.textView_comment.setText(userModels.get(position).getComment());
             }
-            ((CustomViewHolder) holder).checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            customViewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if(b){
-                        user.put(userModels.get(position).getUid(),b);
+                        user.put(userModels.get(position).getUid(),true);
                     } else {
-
                         user.remove(userModels.get(position).getUid());
                     }
                 }
             });
-
         }
 
         @Override
@@ -159,12 +145,12 @@ public class SelectFriendActivity extends BaseActivity {
         }
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
-            public ImageView imageView;
-            public TextView textView;
-            public TextView textView_comment;
-            public CheckBox checkBox;
+            ImageView imageView;
+            TextView textView;
+            TextView textView_comment;
+            CheckBox checkBox;
 
-            public CustomViewHolder(View view) {
+            CustomViewHolder(View view) {
                 super(view);
                 imageView =  view.findViewById(R.id.frienditem_imageview);
                 textView =  view.findViewById(R.id.frienditem_textview);

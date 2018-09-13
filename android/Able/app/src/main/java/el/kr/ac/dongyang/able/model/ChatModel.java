@@ -42,6 +42,12 @@ public class ChatModel {
         public Comment() {
         }
 
+        public Comment(String uid, String message, Object timestamp) {
+            this.uid = uid;
+            this.message = message;
+            this.timestamp = timestamp;
+        }
+
         public Comment(String uid, String message, Object timestamp, boolean naviShare) {
             this.uid = uid;
             this.message = message;

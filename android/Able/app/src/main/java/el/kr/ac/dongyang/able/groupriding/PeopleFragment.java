@@ -44,16 +44,24 @@ public class PeopleFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_people, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.peoplefragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             myUid = firebaseUser.getUid();
             recyclerView.setAdapter(new PeopleFragmentRecyclerViewAdapter());
         }
+
+        //그룹채팅 유저 추가
+        final FloatingActionButton actionA = view.findViewById(R.id.action_groupchatlist);
+        actionA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(),SelectFriendActivity.class));
+            }
+        });
 
         //채팅방 리스트
         final FloatingActionButton actionB = view.findViewById(R.id.action_chatrooms);
@@ -68,21 +76,10 @@ public class PeopleFragment extends BaseFragment {
                 ft.replace(R.id.main_layout, fragment);
                 ft.addToBackStack(fragmentTag);
                 ft.commit();
-
             }
         });
 
-        //그룹채팅 유저 추가
-        final FloatingActionButton actionA = view.findViewById(R.id.action_groupchatlist);
-        actionA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),SelectFriendActivity.class));
-            }
-        });
-
-        final FloatingActionsMenu menuMultipleActions = view.findViewById(R.id.multiple_actions);
-
+        //final FloatingActionsMenu menuMultipleActions = view.findViewById(R.id.multiple_actions);
         return view;
     }
 
@@ -90,17 +87,15 @@ public class PeopleFragment extends BaseFragment {
 
         List<UserModel> userModels;
 
-        public PeopleFragmentRecyclerViewAdapter() {
+        PeopleFragmentRecyclerViewAdapter() {
             userModels = new ArrayList<>();
-            FirebaseDatabase.getInstance().getReference().child("USER").addValueEventListener(new ValueEventListener() {
+            reference.child("USER").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     userModels.clear();
-
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
                         UserModel userModel = snapshot.getValue(UserModel.class);
-                        if(userModel.getUid().equals(myUid)){
+                        if (userModel.getUid().equals(myUid)) {
                             continue;
                         }
                         userModels.add(snapshot.getValue(UserModel.class));
@@ -137,14 +132,12 @@ public class PeopleFragment extends BaseFragment {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), MessageActivity.class);
                     intent.putExtra("destinationUid", userModels.get(position).getUid());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright, R.anim.toleft);
-                        startActivity(intent, activityOptions.toBundle());
-                    }
+                    ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright, R.anim.toleft);
+                    startActivity(intent, activityOptions.toBundle());
                 }
             });
 
-            if(userModels.get(position).getComment() != null){
+            if (userModels.get(position).getComment() != null) {
                 ((CustomViewHolder) holder).textView_comment.setText(userModels.get(position).getComment());
             }
         }
@@ -153,18 +146,18 @@ public class PeopleFragment extends BaseFragment {
         public int getItemCount() {
             return userModels.size();
         }
-    }
 
-    private class CustomViewHolder extends RecyclerView.ViewHolder {
-        public ImageView imageView;
-        public TextView textView;
-        public TextView textView_comment;
+        private class CustomViewHolder extends RecyclerView.ViewHolder {
+            public ImageView imageView;
+            public TextView textView;
+            public TextView textView_comment;
 
-        public CustomViewHolder(View view) {
-            super(view);
-            imageView = view.findViewById(R.id.frienditem_imageview);
-            textView = view.findViewById(R.id.frienditem_textview);
-            textView_comment = view.findViewById(R.id.frienditem_textview_comment);
+            public CustomViewHolder(View view) {
+                super(view);
+                imageView = view.findViewById(R.id.frienditem_imageview);
+                textView = view.findViewById(R.id.frienditem_textview);
+                textView_comment = view.findViewById(R.id.frienditem_textview_comment);
+            }
         }
     }
 }

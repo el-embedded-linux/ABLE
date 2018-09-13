@@ -163,10 +163,8 @@ public class ChatFragment extends BaseFragment {
                     }
 
                     ActivityOptions activityOptions = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                        activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright, R.anim.toleft);
-                        startActivity(intent, activityOptions.toBundle());
-                    }
+                    activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright, R.anim.toleft);
+                    startActivity(intent, activityOptions.toBundle());
 
                 }
             });

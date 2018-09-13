@@ -76,7 +76,6 @@ public class NavigationActivity extends BaseActivity {
     Map<String, UserModel> users = new HashMap<>();
     private Double startlist[] = new Double[2];
     private double latitude_r, longitude_r;
-    private TMapView tMapView = null;
     private List<String> naviList = new ArrayList<>();
     private List<String> descriptionList = new ArrayList<>();
     private WebView web;
@@ -100,6 +99,7 @@ public class NavigationActivity extends BaseActivity {
     String address;
     String endLong;
     String endLat;
+    private String clickText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,17 +138,7 @@ public class NavigationActivity extends BaseActivity {
         textDistance = findViewById(R.id.textDistance);
         naviWebLoadingBar = findViewById(R.id.naviCircleBar);
         naviWebLoadingBar.setVisibility(View.GONE);
-        startBtn = findViewById(R.id.startBtn);
-        startBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(NavigationActivity.this, "주행이 시작됩니다.", Toast.LENGTH_SHORT).show();
-                startConstraintLayout.setVisibility(View.GONE);
-                endConstraintLayout.setVisibility(View.VISIBLE);
-                descriptionChange(0);
-                startNotification();
-            }
-        });
+
         endBtn = findViewById(R.id.endBtn);
         endBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,13 +179,19 @@ public class NavigationActivity extends BaseActivity {
                 comment.myLatitude = startlist[1].toString();
                 comment.destinationAddress = address;
 
-                FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        //gcm 전송
-                        sendGcmUsers();
-                    }
-                });
+                reference
+                        .child("CHATROOMS")
+                        .child(destinationRoom)
+                        .child("comments")
+                        .push()
+                        .setValue(comment)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                //gcm 전송
+                                sendGcmUsers();
+                            }
+                        });
                 //그룹라이딩에서 값을 통해서 방향지시 해주고 싶다면 기본값 1로 저장하고
                 //숫자를 디비에 넣고 리스너로 계속 받아주면 되겠네
                 finish();
@@ -203,8 +199,8 @@ public class NavigationActivity extends BaseActivity {
         });
 
         Intent intent = getIntent();
-        String clickText = intent.getStringExtra("clickBtn");
-        if(clickText.equals("share")){
+        clickText = intent.getStringExtra("clickBtn");
+        if (clickText.equals("share")) {
             uid = intent.getStringExtra("uid");
             destinationRoom = intent.getStringExtra("destinationRoom");
         }
@@ -223,10 +219,37 @@ public class NavigationActivity extends BaseActivity {
                     startBtn.setVisibility(View.GONE);
                     shareBtn.setVisibility(View.VISIBLE);
                     break;
+                case "shareStart":
+                    endConstraintLayout.setVisibility(View.GONE);
+                    shareBtn.setVisibility(View.GONE);
+                    Object commentOb = intent.getSerializableExtra("comment");
+                    ChatModel.Comment comment = (ChatModel.Comment) commentOb;
+                    web.loadUrl(
+                            "javascript:distance('" +
+                                    comment.myLonitude + "', '" +
+                                    comment.myLatitude + "', '" +
+                                    comment.destinationLongitude + "', '" +
+                                    comment.destinationLatitude + "')");
+                    searchAddressEditText.setText(comment.destinationAddress);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        startBtn = findViewById(R.id.startBtn);
+        startBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(NavigationActivity.this, "주행이 시작됩니다.", Toast.LENGTH_SHORT).show();
+                startConstraintLayout.setVisibility(View.GONE);
+                endConstraintLayout.setVisibility(View.VISIBLE);
+                if(clickText.equals("shareStart")){
+
+                    descriptionChange(0);
+                }
+                startNotification();
+            }
+        });
 
         TMapTapi tmaptapi = new TMapTapi(this);
         tmaptapi.setSKTMapAuthentication("2414ee00-3784-4c78-913d-32bf5fa9c107");
@@ -258,12 +281,20 @@ public class NavigationActivity extends BaseActivity {
             }
         });
 
-        setGps();
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                setGps();
+            }
+        }).start();
     }
 
     public void sendGcmUsers() {
-        FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+        reference
+                .child("CHATROOMS")
+                .child(destinationRoom)
+                .child("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
@@ -275,6 +306,7 @@ public class NavigationActivity extends BaseActivity {
                     gcmSetting(users.get(item).getPushToken());
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -312,7 +344,6 @@ public class NavigationActivity extends BaseActivity {
             }
         });
     }
-
 
     private void startNotification() {
         String id = "my_channel_01";
@@ -371,14 +402,6 @@ public class NavigationActivity extends BaseActivity {
         webSet.setSaveFormData(false);
         webSet.setSavePassword(false);
         webSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        web.setWebChromeClient(new WebChromeClient() {
-            public boolean onConsoleMessage(ConsoleMessage cm) {
-                Log.d("MyApplication", cm.message() + " -- From line "
-                        + cm.lineNumber() + " of "
-                        + cm.sourceId() + ", " + cm);
-                return true;
-            }
-        });
         web.setWebViewClient(new WebViewClient()); //페이지 로딩을 마쳤을 경우 작업
         web.loadUrl("file:///android_asset/index.html"); //웹뷰로드
         web.setHorizontalScrollBarEnabled(false);
@@ -438,7 +461,6 @@ public class NavigationActivity extends BaseActivity {
                 startlist[0] = longitude_r;
                 startlist[1] = latitude_r;
                 Log.d("geo", "lat : " + Double.toString(latitude_r) + ", lon : " + Double.toString(longitude_r));
-                //현재위치 마커생성했는데 계속 변하는건 맞지
                 web.loadUrl("javascript:geoLo('" + latitude_r + "', '" + longitude_r + "')");
 
                 String nextPoint = "";
@@ -527,17 +549,17 @@ public class NavigationActivity extends BaseActivity {
     }
 
     private void handlerDirectionJob(final String text, final String meter) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (text.equals("좌회전"))
-                        directionImg.setImageResource(R.drawable.arrow_left);
-                    else if (text.equals("우회전"))
-                        directionImg.setImageResource(R.drawable.arrow_right);
-                    else if (meter.equals("m")) textDirection.setText(text);
-                    else directionImg.setImageResource(R.drawable.arrow_up_straight);
-                }
-            });
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (text.equals("좌회전"))
+                    directionImg.setImageResource(R.drawable.arrow_left);
+                else if (text.equals("우회전"))
+                    directionImg.setImageResource(R.drawable.arrow_right);
+                else if (meter.equals("m")) textDirection.setText(text);
+                else directionImg.setImageResource(R.drawable.arrow_up_straight);
+            }
+        });
     }
 
     public void setGps() {
@@ -561,7 +583,7 @@ public class NavigationActivity extends BaseActivity {
         if (requestCode == NAVILIST_CODE && resultCode == RESULT_OK) {
             address = data.getStringExtra("endName");
             endLong = data.getStringExtra("endLong");
-            endLat  = data.getStringExtra("endLat");
+            endLat = data.getStringExtra("endLat");
             searchAddressEditText.setText(address);
             web.loadUrl("javascript:distance('" + startlist[0] + "', '" + startlist[1] + "', '" + Double.parseDouble(endLong) + "', '" + Double.parseDouble(endLat) + "')");
             endConstraintLayout.setVisibility(View.GONE);

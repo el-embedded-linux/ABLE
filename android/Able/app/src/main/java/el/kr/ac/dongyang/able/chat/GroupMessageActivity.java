@@ -89,7 +89,7 @@ public class GroupMessageActivity extends BaseActivity {
         editText = findViewById(R.id.groupMessageActivity_editText);
         recyclerView = findViewById(R.id.groupMessageActivity_recyclerview);
 
-        FirebaseDatabase.getInstance().getReference().child("USER").addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child("USER").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot item : dataSnapshot.getChildren()) {
@@ -123,16 +123,12 @@ public class GroupMessageActivity extends BaseActivity {
         });
     }
 
-    void init() {
-
-    }
-
     public void sendGcmUsers() {
-        FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child("CHATROOMS").child(destinationRoom).child("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
-
                 for (String item : map.keySet()) {
                     if (item.equals(uid)) {
                         continue;
@@ -182,7 +178,6 @@ public class GroupMessageActivity extends BaseActivity {
     class GroupMessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public GroupMessageRecyclerViewAdapter() {
-
             getMessageList();
         }
 
@@ -238,39 +233,38 @@ public class GroupMessageActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             GroupMessageViewHodler messageViewHolder = ((GroupMessageViewHodler) holder);
-
+            ChatModel.Comment comment = comments.get(position);
             //내가보낸 메세지
-            if (comments.get(position).uid.equals(uid)) {
-                messageViewHolder.textView_message.setText(comments.get(position).message);
+            if (comment.uid.equals(uid)) {
+                messageViewHolder.textView_message.setText(comment.message);
                 messageViewHolder.linearLayout_text_btn.setBackgroundResource(R.drawable.rightbubble);
                 messageViewHolder.linearLayout_destination.setVisibility(View.INVISIBLE);
                 messageViewHolder.textView_message.setTextSize(20);
                 messageViewHolder.linearLayout_main.setGravity(Gravity.RIGHT);
                 setReadCounter(position, messageViewHolder.textView_readCounter_left);
-                if(comments.get(position).naviShare) {
-                    messageViewHolder.groupRidingStartBtn.setVisibility(View.VISIBLE);
-                }
-                //상대방이 보낸 메세지
-
             } else {
-                Glide.with(holder.itemView.getContext())
-                        .load(users.get(comments.get(position).uid).getProfileImageUrl())
+                //상대방이 보낸 메세지
+                Glide
+                        .with(holder.itemView.getContext())
+                        .load(users.get(comment.uid).getProfileImageUrl())
                         .apply(new RequestOptions().circleCrop())
                         .into(messageViewHolder.imageView_profile);
-                messageViewHolder.textview_name.setText(users.get(comments.get(position).uid).getUserName());
+                messageViewHolder.textview_name.setText(users.get(comment.uid).getUserName());
                 messageViewHolder.linearLayout_destination.setVisibility(View.VISIBLE);
                 messageViewHolder.linearLayout_text_btn.setBackgroundResource(R.drawable.leftbubble);
-                messageViewHolder.textView_message.setText(comments.get(position).message);
+                messageViewHolder.textView_message.setText(comment.message);
                 messageViewHolder.textView_message.setTextSize(20);
                 messageViewHolder.linearLayout_main.setGravity(Gravity.LEFT);
                 setReadCounter(position, messageViewHolder.textView_readCounter_right);
-                if(comments.get(position).naviShare) {
-                    messageViewHolder.groupRidingStartBtn.setVisibility(View.VISIBLE);
-                }
             }
-            long unixTime = (long) comments.get(position).timestamp;
+
+            if(comment.naviShare) {
+                messageViewHolder.groupRidingStartBtn.setVisibility(View.VISIBLE);
+                messageViewHolder.groupRidingStartBtn.setGravity(Gravity.CENTER);
+            }
+
+            long unixTime = (long) comment.timestamp;
             Date date = new Date(unixTime);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
             String time = simpleDateFormat.format(date);
@@ -281,7 +275,7 @@ public class GroupMessageActivity extends BaseActivity {
 
         void setReadCounter(final int position, final TextView textView) {
             if (peopleCount == 0) {
-                FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(destinationRoom).child("users")
+                reference.child("CHATROOMS").child(destinationRoom).child("users")
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -320,18 +314,18 @@ public class GroupMessageActivity extends BaseActivity {
 
         public class GroupMessageViewHodler extends RecyclerView.ViewHolder {
 
-            public TextView textView_message;
-            public TextView textview_name;
-            public ImageView imageView_profile;
-            public LinearLayout linearLayout_destination;
-            public LinearLayout linearLayout_main;
-            public LinearLayout linearLayout_text_btn;
-            public TextView textView_timestamp;
-            public TextView textView_readCounter_left;
-            public TextView textView_readCounter_right;
-            public Button groupRidingStartBtn;
+            TextView textView_message;
+            TextView textview_name;
+            ImageView imageView_profile;
+            LinearLayout linearLayout_destination;
+            LinearLayout linearLayout_main;
+            LinearLayout linearLayout_text_btn;
+            TextView textView_timestamp;
+            TextView textView_readCounter_left;
+            TextView textView_readCounter_right;
+            Button groupRidingStartBtn;
 
-            public GroupMessageViewHodler(View view) {
+            GroupMessageViewHodler(View view) {
                 super(view);
 
                 textView_message = view.findViewById(R.id.messageItem_textView_message);

@@ -61,6 +61,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.BusProvider;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.SharedPref;
@@ -70,7 +71,7 @@ import el.kr.ac.dongyang.able.model.UserModel;
 import static android.app.Activity.RESULT_OK;
 
 
-public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnConnectionFailedListener {
 
 
     private static final String TAG = "FagmentLogin";
@@ -78,7 +79,6 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
     private static final int PICK_FROM_ALBUM = 10;
 
     private GoogleSignInClient mGoogleSignInClient; //구글 로그인 부분
-    private DatabaseReference reference;
     public UserProfileChangeRequest profileChangeRequest;
     private NavigationView navigationView;
     TextView naviTitle, naviSubTitle;
@@ -120,7 +120,6 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
         naviSubTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewSubTitle);
         naviImg = headerView.findViewById(R.id.NaviHeaderMainImageView);
 
-        reference = FirebaseDatabase.getInstance().getReference();
         //뷰
         emailView = view.findViewById(R.id.loginEmailXml);
         emailView.setVisibility(View.GONE);
@@ -237,19 +236,14 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
             public void onClick(View view) {
                 if (registerEmailEditText.getText().toString() == null || userNameEditText.getText().toString() == null || registerPwEditText.getText().toString() == null || registerPwCheckEditText.getText().toString() == null || imageUri == null) {
                     Toast.makeText(getContext(), "모두 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    return;
                 } else if (!registerPwEditText.getText().toString().equals(registerPwCheckEditText.getText().toString())) {
                     Toast.makeText(getActivity(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
-                    return;
                 } else if (registerPwEditText.getText().toString().trim().length() < 6) {
                     Toast.makeText(getActivity(), "비밀번호는 최소 6자리 이상이어야 합니다.", Toast.LENGTH_SHORT).show();
-                    return;
                 } else if (!registerEmailEditText.getText().toString().trim().matches(emailPattern)) {
                     Toast.makeText(getActivity(), "이메일이 같지 않습니다.", Toast.LENGTH_SHORT).show();
-                    return;
                 } else if (!checkBox.isChecked()){
                     Toast.makeText(getActivity(), "개인정보 약관에 동의하여 주십시오.", Toast.LENGTH_SHORT).show();
-                    return;
                 } else {
                     createUser(registerEmailEditText.getText().toString(), registerPwEditText.getText().toString());
                 }
@@ -370,7 +364,7 @@ public class FragmentLogin extends Fragment implements GoogleApiClient.OnConnect
     }
 
     private void passPushTokenToServer() {
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String uid = firebaseUser.getUid();
         String token = FirebaseInstanceId.getInstance().getToken();
         Map<String, Object> map = new HashMap<>();
         map.put("pushToken", token);

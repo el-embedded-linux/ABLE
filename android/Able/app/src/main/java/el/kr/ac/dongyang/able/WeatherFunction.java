@@ -18,7 +18,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 
-public class Function {
+public class WeatherFunction {
 
     // Project Created by Ferdousur Rahman Shajib
     // www.androstock.com

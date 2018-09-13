@@ -29,11 +29,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import el.kr.ac.dongyang.able.BaseActivity;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-public class BarChartActivity extends AppCompatActivity {
+public class BarChartActivity extends BaseActivity {
 
     private List<String> userNames = new ArrayList<>();
     private List<BarEntry> entries = new ArrayList<>();
@@ -84,7 +85,7 @@ public class BarChartActivity extends AppCompatActivity {
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        FirebaseDatabase.getInstance().getReference().child("FRIEND").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child("FRIEND").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 keys.clear();
@@ -96,7 +97,7 @@ public class BarChartActivity extends AppCompatActivity {
                 }
                 userNames.add("");
 
-                FirebaseDatabase.getInstance().getReference().child("TOTALHEALTH").addListenerForSingleValueEvent(new ValueEventListener() {
+                reference.child("TOTALHEALTH").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         HealthModel healthModel = new HealthModel();
@@ -120,7 +121,6 @@ public class BarChartActivity extends AppCompatActivity {
                     }
                 });
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

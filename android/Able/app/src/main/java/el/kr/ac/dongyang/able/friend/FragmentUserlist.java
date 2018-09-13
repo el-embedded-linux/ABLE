@@ -53,7 +53,7 @@ public class FragmentUserlist extends BaseFragment{
         //리사이클러뷰 맵핑
         RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
-        recyclerView.setAdapter(new UserlistFragmentRecyclerViewAdapter());
+        recyclerView.setAdapter(new UserlistRecyclerViewAdapter());
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){ uid = user.getUid(); }
 
@@ -61,11 +61,11 @@ public class FragmentUserlist extends BaseFragment{
     }
 
     //어댑터 클래스
-    class UserlistFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    class UserlistRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         //userModels라는 리스트를 만들고 addValueEventListerner와 DataSnapshot을 이용해 데이터 호출
         //받아온 값을 userModels에 넣음.
-        public UserlistFragmentRecyclerViewAdapter() {
+        public UserlistRecyclerViewAdapter() {
             userModels = new ArrayList<>();
             final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             reference.child("USER").addValueEventListener(new ValueEventListener() {

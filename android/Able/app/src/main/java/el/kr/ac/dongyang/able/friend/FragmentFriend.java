@@ -105,7 +105,7 @@ public class FragmentFriend extends BaseFragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview_friend);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
-        recyclerView.setAdapter(new FriendlistFragmentRecyclerViewAdapter());
+        recyclerView.setAdapter(new FriendlistRecyclerViewAdapter());
         recyclerView.setVisibility(View.GONE);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -121,12 +121,12 @@ public class FragmentFriend extends BaseFragment {
         return view;
     }
 
-    class FriendlistFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    class FriendlistRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private List<String> keys = new ArrayList<>();
         private ArrayList<String> friendUsers = new ArrayList<>();
 
-        public FriendlistFragmentRecyclerViewAdapter() {
+        public FriendlistRecyclerViewAdapter() {
             reference.child("FRIEND").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

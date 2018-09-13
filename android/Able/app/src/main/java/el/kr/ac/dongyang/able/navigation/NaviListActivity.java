@@ -161,14 +161,14 @@ public class NaviListActivity extends AppCompatActivity {
                     nEnd.setText(poiList.get(position).getPOIName());
                     endList.clear();
                     busitem.clear();
-                    String address = poiList.get(position).getPOIName().toString();
+                    String address = poiList.get(position).getPOIName();
                     String lon = Double.toString(poiList.get(position).getPOIPoint().getLongitude());
                     String lat = Double.toString(poiList.get(position).getPOIPoint().getLatitude());
                     busitem.add(address);
                     busitem.add(lon);
                     busitem.add(lat);
                     for(int i = 0; i<busitem.size(); i++){
-                        Log.d("bus", busitem.get(i).toString());
+                        Log.d("bus", busitem.get(i));
                     }
                     Toast.makeText(NaviListActivity.this, "목적지 선택", Toast.LENGTH_SHORT).show();
                 }

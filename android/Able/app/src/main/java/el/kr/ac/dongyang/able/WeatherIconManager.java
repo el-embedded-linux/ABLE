@@ -9,7 +9,7 @@ import java.util.Hashtable;
  * Created by user on 2018-07-08.
  */
 
-public class Icon_Manager {
+public class WeatherIconManager {
 
     private static Hashtable<String,Typeface> cached_icons = new Hashtable<>();
 
