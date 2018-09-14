@@ -58,7 +58,7 @@ public class FragmentFriend extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
         getActivity().setTitle("Friend");
 
-        ConstraintLayout loginConstraintLayout = view.findViewById(R.id.loginConlayout);
+        ConstraintLayout loginConstraintLayout = view.findViewById(R.id.directionConstraintLayout);
 
         gobtn = view.findViewById(R.id.go_rank);
         gobtn.setOnClickListener(new View.OnClickListener() {

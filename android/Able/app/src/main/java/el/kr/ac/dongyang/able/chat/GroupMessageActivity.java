@@ -350,6 +350,8 @@ public class GroupMessageActivity extends BaseActivity {
                         intent.putExtra("myLonitude", comments.get(getAdapterPosition()).myLonitude);*/
                         intent.putExtra("clickBtn", "shareStart");
                         intent.putExtra("comment", comment);
+                        intent.putExtra("uid", uid);
+                        intent.putExtra("destinationRoom", destinationRoom);
                         startActivity(intent);
                     }
                 });

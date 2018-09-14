@@ -21,9 +21,15 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
@@ -40,6 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -61,6 +68,7 @@ import java.util.StringTokenizer;
 import el.kr.ac.dongyang.able.BaseActivity;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.ChatModel;
+import el.kr.ac.dongyang.able.model.DirectionModel;
 import el.kr.ac.dongyang.able.model.NotificationModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 import okhttp3.Call;
@@ -96,16 +104,63 @@ public class NavigationActivity extends BaseActivity {
     private String destinationRoom;
     private String uid;
 
+    private ConstraintLayout directionLayout;
+    private ImageView arrowImg;
+
     String address;
     String endLong;
     String endLat;
     private String clickText;
+    private int directionStatus;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_navigation);
+        Toolbar toolbar = findViewById(R.id.naviToolbar);
+        setSupportActionBar(toolbar);
         setTitle("Navigation");
+
+        web = findViewById(R.id.web);
+        initWeb();
+
+        final DrawerLayout drawer = findViewById(R.id.drawerNavigation);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        View drawerShare = findViewById(R.id.drawer);
+
+        //<editor-fold desc="드로우어 방향화살표 클릭">
+        drawerShare.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                directionStatus = 1;
+                reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("left");
+                drawer.closeDrawer(GravityCompat.END);
+            }
+        });
+
+        drawerShare.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                directionStatus = 1;
+                reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("up");
+                drawer.closeDrawer(GravityCompat.END);
+            }
+        });
+
+        drawerShare.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                directionStatus = 1;
+                reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("right");
+                drawer.closeDrawer(GravityCompat.END);
+            }
+        });
+        //</editor-fold>
 
         reference.child("USER").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -203,37 +258,27 @@ public class NavigationActivity extends BaseActivity {
         if (clickText.equals("share")) {
             uid = intent.getStringExtra("uid");
             destinationRoom = intent.getStringExtra("destinationRoom");
-        }
+        } else if (clickText.equals("shareStart")) {
+            uid = intent.getStringExtra("uid");
+            destinationRoom = intent.getStringExtra("destinationRoom");
+            reference
+                    .child("CHATROOMS")
+                    .child(destinationRoom)
+                    .child("direction")
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (directionStatus != 0) {
+                                DirectionModel direction = dataSnapshot.getValue(DirectionModel.class);
+                                String arrow = direction.getDirection();
+                                arrowViewVisible(arrow);
+                            }
+                        }
 
-        try {
-            switch (clickText) {
-                case "start":
-                    endConstraintLayout.setVisibility(View.GONE);
-                    shareBtn.setVisibility(View.GONE);
-                    break;
-                case "end":
-                    startConstraintLayout.setVisibility(View.GONE);
-                    break;
-                case "share":
-                    endConstraintLayout.setVisibility(View.GONE);
-                    startBtn.setVisibility(View.GONE);
-                    shareBtn.setVisibility(View.VISIBLE);
-                    break;
-                case "shareStart":
-                    endConstraintLayout.setVisibility(View.GONE);
-                    shareBtn.setVisibility(View.GONE);
-                    Object commentOb = intent.getSerializableExtra("comment");
-                    ChatModel.Comment comment = (ChatModel.Comment) commentOb;
-                    web.loadUrl(
-                            "javascript:distance('" +
-                                    comment.myLonitude + "', '" +
-                                    comment.myLatitude + "', '" +
-                                    comment.destinationLongitude + "', '" +
-                                    comment.destinationLatitude + "')");
-                    searchAddressEditText.setText(comment.destinationAddress);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
         }
 
         startBtn = findViewById(R.id.startBtn);
@@ -243,10 +288,7 @@ public class NavigationActivity extends BaseActivity {
                 Toast.makeText(NavigationActivity.this, "주행이 시작됩니다.", Toast.LENGTH_SHORT).show();
                 startConstraintLayout.setVisibility(View.GONE);
                 endConstraintLayout.setVisibility(View.VISIBLE);
-                if(clickText.equals("shareStart")){
-
-                    descriptionChange(0);
-                }
+                descriptionChange(0);
                 startNotification();
             }
         });
@@ -266,9 +308,6 @@ public class NavigationActivity extends BaseActivity {
             }
         });
 
-        web = findViewById(R.id.web);
-        initWeb();
-
         currentBtn = findViewById(R.id.currentBtn);
         currentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,12 +320,80 @@ public class NavigationActivity extends BaseActivity {
             }
         });
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                setGps();
+        try {
+            switch (clickText) {
+                case "start":
+                    endConstraintLayout.setVisibility(View.GONE);
+                    shareBtn.setVisibility(View.GONE);
+                    break;
+                case "end":
+                    startConstraintLayout.setVisibility(View.GONE);
+                    break;
+                case "share":
+                    endConstraintLayout.setVisibility(View.GONE);
+                    startBtn.setVisibility(View.GONE);
+                    shareBtn.setVisibility(View.VISIBLE);
+                    break;
+                case "shareStart":
+                    startConstraintLayout.setVisibility(View.VISIBLE);
+                    constLocationInfo.setVisibility(View.VISIBLE);
+                    endConstraintLayout.setVisibility(View.GONE);
+                    shareBtn.setVisibility(View.GONE);
+                    Object commentOb = intent.getSerializableExtra("comment");
+                    final ChatModel.Comment comment = (ChatModel.Comment) commentOb;
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            web.loadUrl(
+                                    "javascript:distance('" +
+                                            comment.myLonitude + "', '" +
+                                            comment.myLatitude + "', '" +
+                                            comment.destinationLongitude + "', '" +
+                                            comment.destinationLatitude + "')");
+                        }
+                    },2000);
+                    searchAddressEditText.setText(comment.destinationAddress);
             }
-        }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        setGps();
+    }
+
+    private void arrowViewVisible(String arrow) {
+        switch (arrow) {
+            case "left":
+                arrowImg.setImageResource(R.drawable.arrow_left);
+                directionLayout.setVisibility(View.VISIBLE);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        directionLayout.setVisibility(View.GONE);
+                    }
+                }, 1000);
+                break;
+            case "up":
+                arrowImg.setImageResource(R.drawable.arrow_up_straight);
+                directionLayout.setVisibility(View.VISIBLE);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        directionLayout.setVisibility(View.GONE);
+                    }
+                }, 1000);
+                break;
+            case "right":
+                arrowImg.setImageResource(R.drawable.arrow_right);
+                directionLayout.setVisibility(View.VISIBLE);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        directionLayout.setVisibility(View.GONE);
+                    }
+                }, 1000);
+                break;
+        }
     }
 
     public void sendGcmUsers() {
@@ -295,22 +402,22 @@ public class NavigationActivity extends BaseActivity {
                 .child(destinationRoom)
                 .child("users")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
 
-                for (String item : map.keySet()) {
-                    if (item.equals(uid)) {
-                        continue;
+                        for (String item : map.keySet()) {
+                            if (item.equals(uid)) {
+                                continue;
+                            }
+                            gcmSetting(users.get(item).getPushToken());
+                        }
                     }
-                    gcmSetting(users.get(item).getPushToken());
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
     }
 
     void gcmSetting(String pushToken) {
@@ -393,65 +500,25 @@ public class NavigationActivity extends BaseActivity {
             }
         });
         WebSettings webSet = web.getSettings();
-        webSet.setJavaScriptEnabled(true);
+        webSet.setJavaScriptEnabled(true); //자바스크립트 허용
         webSet.setUseWideViewPort(true);
         webSet.setBuiltInZoomControls(false);
         webSet.setAllowUniversalAccessFromFileURLs(true);
         webSet.setJavaScriptCanOpenWindowsAutomatically(true);
         webSet.setSupportMultipleWindows(true);
         webSet.setSaveFormData(false);
-        webSet.setSavePassword(false);
         webSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        webSet.setLoadWithOverviewMode(true);
+        webSet.setUseWideViewPort(true);
         web.setWebViewClient(new WebViewClient()); //페이지 로딩을 마쳤을 경우 작업
         web.loadUrl("file:///android_asset/index.html"); //웹뷰로드
         web.setHorizontalScrollBarEnabled(false);
         web.setVerticalScrollBarEnabled(false);
-        web.getSettings().setLoadWithOverviewMode(true);
-        web.getSettings().setUseWideViewPort(true);
-        web.getSettings().setJavaScriptEnabled(true); //자바스크립트 허용
+
         web.addJavascriptInterface(new NavigationActivity.TMapBridge(), "tmap");
     }
 
-    private class TMapBridge {
-        int i = 0;
-
-        @JavascriptInterface
-        public void setMessage(final String arg) {
-            mHandler.post(new Runnable() {
-                public void run() {
-                    naviList.add(i + " : " + arg + "\n");
-                    i += 1;
-                }
-            });
-        }
-
-        @JavascriptInterface
-        public void setTimeDistance(final String arg) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    String timeDistance = arg;
-                    String[] tdList = timeDistance.split(",");
-                    Log.d("tdList", tdList[0] + " , " + tdList[1]);
-                    textTime.setText(tdList[0]);
-                    textDistance.setText(tdList[1]);
-                }
-            });
-        }
-
-        @JavascriptInterface
-        public void setDescription(final String arg) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    descriptionList.add(i + " : " + arg);
-                    Log.d("description", i + arg);
-                }
-            });
-        }
-    }
-
-    /*본인 gps 얻어서 맵의 메인에 넣어주는 코드*/
+    //내 위치 갱신시 작업
     private LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             if (location != null) {
@@ -507,9 +574,17 @@ public class NavigationActivity extends BaseActivity {
                                 nextPoint = naviList.get(i + 1);
                                 //busProvider.post(nextPoint);
                                 Log.d("otto_lonlat : ", "" + nextPoint);
+                                /*final int finalI = i;
+                                final String nextNode = nextPoint;
                                 //테스트용 텍스트뷰
-                                beforeText.setText(naviList.get(i));
-                                nodeText.setText(nextPoint);
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        beforeText.setText(naviList.get(finalI));
+                                        nodeText.setText(nextNode);
+                                    }
+                                });*/
+
 
                                 //endConstraintLayout 수정
                                 descriptionChange(i);
@@ -571,9 +646,9 @@ public class NavigationActivity extends BaseActivity {
                 ActivityCompat.checkSelfPermission(this, CoarseLocation) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{CoarseLocation, fineLocation}, 1);
         }
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, mLocationListener);
+        //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자(실내에선 NETWORK_PROVIDER 권장)
-                1000, // 통지사이의 최소 시간간격 (miliSecond)
+                0, // 통지사이의 최소 시간간격 (miliSecond)
                 0, // 통지사이의 최소 변경거리 (m)
                 mLocationListener);
     }
@@ -619,5 +694,44 @@ public class NavigationActivity extends BaseActivity {
                 })
                 .create()
                 .show();
+    }
+
+    private class TMapBridge {
+        int i = 0;
+
+        @JavascriptInterface
+        public void setMessage(final String arg) {
+            mHandler.post(new Runnable() {
+                public void run() {
+                    naviList.add(i + " : " + arg + "\n");
+                    i += 1;
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void setTimeDistance(final String arg) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    String timeDistance = arg;
+                    String[] tdList = timeDistance.split(",");
+                    Log.d("tdList", tdList[0] + " , " + tdList[1]);
+                    textTime.setText(tdList[0]);
+                    textDistance.setText(tdList[1]);
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void setDescription(final String arg) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    descriptionList.add(i + " : " + arg);
+                    Log.d("description", i + arg);
+                }
+            });
+        }
     }
 }
