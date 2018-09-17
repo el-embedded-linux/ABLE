@@ -29,7 +29,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
@@ -113,6 +115,7 @@ public class NavigationActivity extends BaseActivity {
     private String clickText;
     private int directionStatus;
     private NavigationView navigationView;
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,11 +128,11 @@ public class NavigationActivity extends BaseActivity {
         web = findViewById(R.id.web);
         initWeb();
 
-        final DrawerLayout drawer = findViewById(R.id.drawerNavigation);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = findViewById(R.id.drawerNavigation);
+        /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState();*/
 
         View drawerShare = findViewById(R.id.drawer);
 
@@ -359,6 +362,25 @@ public class NavigationActivity extends BaseActivity {
         }
 
         setGps();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.navigation_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.navigationDrawerToggle) {
+            if(drawer.isDrawerOpen(GravityCompat.END)) {
+               drawer.closeDrawer(GravityCompat.END);
+            } else
+                drawer.openDrawer(GravityCompat.END);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void arrowViewVisible(String arrow) {
