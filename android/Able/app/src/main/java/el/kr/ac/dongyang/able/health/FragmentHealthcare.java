@@ -68,6 +68,7 @@ public class FragmentHealthcare extends BaseFragment {
         constraintLayoutHealth.setVisibility(View.GONE);
         constraintLayoutNone = view.findViewById(R.id.constraintLayoutNone);
         constraintLayoutNone.setVisibility(View.GONE);
+        informationTextView = view.findViewById(R.id.informationTextView);
 
         arcProgress = view.findViewById(R.id.arc_progress);
         mHandler = new Handler();

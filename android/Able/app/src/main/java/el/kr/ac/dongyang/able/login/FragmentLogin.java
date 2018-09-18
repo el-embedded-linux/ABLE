@@ -297,7 +297,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success");
-                    Snackbar.make(getView(), "Authentication Success.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "로그인 성공", Snackbar.LENGTH_SHORT).show();
                     FirebaseUser user = mAuth.getCurrentUser();
                     String uid = task.getResult().getUser().getUid();
                     UserModel userModel = new UserModel();
@@ -312,7 +312,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.getException());
-                    Snackbar.make(getView(), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "로그인 실패", Snackbar.LENGTH_SHORT).show();
                     //updateUI(null);
                 }
             }

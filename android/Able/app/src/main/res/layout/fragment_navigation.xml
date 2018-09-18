@@ -11,7 +11,7 @@
     android:focusable="true"
     tools:openDrawer="end">
 
-    <!--이게 툴바-->
+    <!--<editor-fold desc="툴바">-->
     <android.support.design.internal.ScrimInsetsFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,16 +27,17 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/naviToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="?android:attr/actionBarSize"
                 android:layout_alignParentTop="true"
                 android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
         </android.support.design.widget.AppBarLayout>
 
     </android.support.design.internal.ScrimInsetsFrameLayout>
+    <!--</editor-fold>-->
 
-    <!--이게 네비게이션-->
-        <android.support.constraint.ConstraintLayout
+    <!--<editor-fold desc="네비게이션 드로우어">-->
+    <android.support.constraint.ConstraintLayout
             android:id="@+id/drawer"
             android:layout_width="300dp"
             android:layout_height="match_parent"
@@ -51,7 +52,7 @@
                 android:id="@+id/navHeaderNavigation"
                 layout="@layout/nav_header_navigation"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/nav_header_height"
+                android:layout_height="100dp"
                 />
 
             <android.support.v7.widget.RecyclerView
@@ -65,39 +66,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 />
         </android.support.constraint.ConstraintLayout>
+    <!--</editor-fold>-->
 
-    <!--이게 메인-->
+    <!--메인-->
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="70dp">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/directionConstraintLayout"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/frame40"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/arrowImg"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/arrow_up_straight" />
-        </android.support.constraint.ConstraintLayout>
-
+        <!--<editor-fold desc="검색창">-->
         <android.support.constraint.ConstraintLayout
             android:id="@+id/searchLayout"
             android:layout_width="match_parent"
@@ -133,7 +111,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/locationImg"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </android.support.constraint.ConstraintLayout>
+        <!--</editor-fold>-->
 
         <WebView
             android:id="@+id/web"
@@ -150,6 +130,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchLayout" />
 
+        <!--<editor-fold desc="좌표테스트">-->
         <TextView
             android:id="@+id/beforeText"
             android:layout_width="match_parent"
@@ -173,7 +154,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/beforeText" />
+        <!--</editor-fold>-->
 
+        <!--<editor-fold desc="하단 인포">-->
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constLocationInfo"
             android:layout_width="match_parent"
@@ -184,6 +167,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
+            <!--<editor-fold desc="하단 출발,공유 인포">-->
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/startConstraintLayout"
                 android:layout_width="match_parent"
@@ -269,7 +253,9 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
+            <!--</editor-fold>-->
 
+            <!--<editor-fold desc="하단 종료 인포">-->
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/endConstraintLayout"
                 android:layout_width="match_parent"
@@ -323,22 +309,67 @@
                     tools:visibility="gone" />
 
             </android.support.constraint.ConstraintLayout>
-
+            <!--</editor-fold>-->
 
         </android.support.constraint.ConstraintLayout>
+        <!--</editor-fold>-->
 
-        <ProgressBar
-            android:id="@+id/naviCircleBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <!--<editor-fold desc="네비 방향 버튼">-->
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/arrowConstraintLayout"
+            android:layout_width="50dp"
+            android:layout_height="300dp"
+            android:background="@drawable/frame40"
+            app:layout_constraintStart_toStartOf="@+id/web"
+            app:layout_constraintBottom_toBottomOf="@+id/web"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/naviDrawerLeftArrow"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/arrow_left"
+                app:layout_constraintBottom_toTopOf="@+id/naviDrawerUpArrow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/naviDrawerUpArrow"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/arrow_up_straight"
+                app:layout_constraintBottom_toTopOf="@+id/naviDrawerRightArrow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/naviDrawerLeftArrow" />
+
+            <Button
+                android:id="@+id/naviDrawerRightArrow"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/arrow_right"
+                app:layout_constraintBottom_toTopOf="@+id/naviDrawerStop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/naviDrawerUpArrow" />
+
+            <Button
+                android:id="@+id/naviDrawerStop"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ic_cancel_black_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/naviDrawerRightArrow" />
+
+        </android.support.constraint.ConstraintLayout>
+        <!--</editor-fold>-->
 
         <Button
             android:id="@+id/currentBtn"
@@ -349,6 +380,34 @@
             android:background="@drawable/navigation_current_btn"
             app:layout_constraintBottom_toBottomOf="@+id/web"
             app:layout_constraintEnd_toEndOf="@+id/web" />
+
+        <!--<editor-fold desc="방향표시뷰">-->
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/directionConstraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/frame40"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="@+id/web"
+            app:layout_constraintStart_toStartOf="@+id/web"
+            app:layout_constraintTop_toTopOf="@+id/web"
+            app:layout_constraintBottom_toBottomOf="@+id/web"
+            >
+
+            <ImageView
+                android:id="@+id/arrowImg"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/arrow_up_straight" />
+        </android.support.constraint.ConstraintLayout>
+        <!--</editor-fold>-->
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v4.widget.DrawerLayout>

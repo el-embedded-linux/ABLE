@@ -23,7 +23,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
@@ -85,7 +84,7 @@ public class GroupMessageActivity extends BaseActivity {
         });
 
         destinationRoom = getIntent().getStringExtra("destinationRoom");
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        uid = firebaseUser.getUid();
         editText = findViewById(R.id.groupMessageActivity_editText);
         recyclerView = findViewById(R.id.groupMessageActivity_recyclerview);
 
@@ -250,7 +249,7 @@ public class GroupMessageActivity extends BaseActivity {
                         .load(users.get(comment.uid).getProfileImageUrl())
                         .apply(new RequestOptions().circleCrop())
                         .into(messageViewHolder.imageView_profile);
-                messageViewHolder.textview_name.setText(users.get(comment.uid).getUserName());
+                messageViewHolder.textView_name.setText(users.get(comment.uid).getUserName());
                 messageViewHolder.linearLayout_destination.setVisibility(View.VISIBLE);
                 messageViewHolder.linearLayout_text_btn.setBackgroundResource(R.drawable.leftbubble);
                 messageViewHolder.textView_message.setText(comment.message);
@@ -315,7 +314,7 @@ public class GroupMessageActivity extends BaseActivity {
         public class GroupMessageViewHodler extends RecyclerView.ViewHolder {
 
             TextView textView_message;
-            TextView textview_name;
+            TextView textView_name;
             ImageView imageView_profile;
             LinearLayout linearLayout_destination;
             LinearLayout linearLayout_main;
@@ -329,7 +328,7 @@ public class GroupMessageActivity extends BaseActivity {
                 super(view);
 
                 textView_message = view.findViewById(R.id.messageItem_textView_message);
-                textview_name = view.findViewById(R.id.messageItem_textview_name);
+                textView_name = view.findViewById(R.id.messageItem_textview_name);
                 imageView_profile = view.findViewById(R.id.messageItem_imageview_profile);
                 linearLayout_destination = view.findViewById(R.id.messageItem_linearlayout_destination);
                 linearLayout_main = view.findViewById(R.id.messageItem_linearlayout_main);
@@ -341,13 +340,9 @@ public class GroupMessageActivity extends BaseActivity {
                 groupRidingStartBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        reference.child("CHATROOMS").child(destinationRoom).child("groupUsers").child(uid).setValue(true);
                         ChatModel.Comment comment = comments.get(getAdapterPosition());
                         Intent intent = new Intent(GroupMessageActivity.this, NavigationActivity.class);
-                        /*intent.putExtra("destinationLatitude", comments.get(getAdapterPosition()).destinationLatitude);
-                        intent.putExtra("destinationLongitude", comments.get(getAdapterPosition()).destinationLongitude);
-                        intent.putExtra("destinationAddress", comments.get(getAdapterPosition()).destinationAddress);
-                        intent.putExtra("myLatitude", comments.get(getAdapterPosition()).myLatitude);
-                        intent.putExtra("myLonitude", comments.get(getAdapterPosition()).myLonitude);*/
                         intent.putExtra("clickBtn", "shareStart");
                         intent.putExtra("comment", comment);
                         intent.putExtra("uid", uid);

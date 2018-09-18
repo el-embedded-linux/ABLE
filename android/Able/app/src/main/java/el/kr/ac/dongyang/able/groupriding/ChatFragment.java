@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,14 +49,16 @@ public class ChatFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.chatfragment_recyclerview);
-        recyclerView.setAdapter(new ChatRecyclerViewAdapter());
-        recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
-
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
+        ConstraintLayout chatConstraintLayout = view.findViewById(R.id.chatConstraintLayout);
+        
+        if(firebaseUser != null) {
             uid = firebaseUser.getUid();
+            RecyclerView recyclerView = view.findViewById(R.id.chatfragment_recyclerview);
+            recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
             recyclerView.setAdapter(new ChatRecyclerViewAdapter());
+            chatConstraintLayout.setVisibility(View.GONE);
+        } else {
+
         }
 
         return view;

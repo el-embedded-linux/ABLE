@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -48,11 +49,18 @@ public class PeopleFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_people, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.peoplefragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
+        ConstraintLayout chatConstraintLayout = view.findViewById(R.id.chatConstraintLayout);
+        final FloatingActionsMenu menuMultipleActions = view.findViewById(R.id.multiple_actions);
 
-        if (firebaseUser != null) {
-            myUid = firebaseUser.getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            myUid = user.getUid();
             recyclerView.setAdapter(new PeopleFragmentRecyclerViewAdapter());
+            chatConstraintLayout.setVisibility(View.GONE);
+        } else {
+            menuMultipleActions.setEnabled(false);
         }
+
 
         //그룹채팅 유저 추가
         final FloatingActionButton actionA = view.findViewById(R.id.action_groupchatlist);
@@ -60,6 +68,7 @@ public class PeopleFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(view.getContext(),SelectFriendActivity.class));
+                menuMultipleActions.collapse();
             }
         });
 
@@ -76,10 +85,10 @@ public class PeopleFragment extends BaseFragment {
                 ft.replace(R.id.main_layout, fragment);
                 ft.addToBackStack(fragmentTag);
                 ft.commit();
+                menuMultipleActions.collapse();
             }
         });
 
-        //final FloatingActionsMenu menuMultipleActions = view.findViewById(R.id.multiple_actions);
         return view;
     }
 

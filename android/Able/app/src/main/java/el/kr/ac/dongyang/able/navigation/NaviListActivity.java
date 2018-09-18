@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +43,6 @@ public class NaviListActivity extends AppCompatActivity {
     private List<TMapPOIItem> endList = new ArrayList<>();
     private List<String> busitem = new ArrayList<>();
     private ConstraintLayout checkEndPointLayout;
-    private Bus busProvider = BusProvider.getInstance();
     private NaviListRecyclerViewAdapter recyclerViewAdapter;
     private Handler handler;
 
@@ -72,10 +72,14 @@ public class NaviListActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkEndPointLayout.setVisibility(View.GONE);
-                startBtn.setVisibility(View.VISIBLE);
-                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
-                searchAllPoi();
+                if(nEnd.getText().toString().equals("")) {
+                    Toast.makeText(NaviListActivity.this, "목적지를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                } else {
+                    checkEndPointLayout.setVisibility(View.GONE);
+                    startBtn.setVisibility(View.VISIBLE);
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+                    searchAllPoi();
+                }
             }
         });
 
@@ -92,7 +96,7 @@ public class NaviListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //조건 다르게 변경 필요함
-                if(busitem.get(0) != null) {
+                if(busitem.size() != 0) {
 
                     Intent intent = new Intent();
                     intent.putExtra("endName", busitem.get(0));
@@ -145,25 +149,28 @@ public class NaviListActivity extends AppCompatActivity {
         public NaviListRecyclerViewAdapter() {
         }
         //리사이클러뷰 뷰 생성
+        @NonNull
         @Override
-        public NaviListRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public NaviListRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_navilist,parent,false);
             return new NaviListRecyclerViewAdapter.ViewHolder(view);
         }
         //리사이클러뷰의 내용을 넣음.
         @Override
         public void onBindViewHolder(NaviListRecyclerViewAdapter.ViewHolder holder, final int position) {
-            holder.nameText.setText(poiList.get(position).getPOIName());
-            holder.addressText.setText(poiList.get(position).getPOIAddress());
-            holder.imageView.setOnClickListener(new View.OnClickListener() {
+
+            final TMapPOIItem tMapPOIItem = poiList.get(position);
+            holder.nameText.setText(tMapPOIItem.getPOIName());
+            holder.addressText.setText(tMapPOIItem.getPOIAddress());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    nEnd.setText(poiList.get(position).getPOIName());
+                    nEnd.setText(tMapPOIItem.getPOIName());
                     endList.clear();
                     busitem.clear();
-                    String address = poiList.get(position).getPOIName();
-                    String lon = Double.toString(poiList.get(position).getPOIPoint().getLongitude());
-                    String lat = Double.toString(poiList.get(position).getPOIPoint().getLatitude());
+                    String address = tMapPOIItem.getPOIName();
+                    String lon = Double.toString(tMapPOIItem.getPOIPoint().getLongitude());
+                    String lat = Double.toString(tMapPOIItem.getPOIPoint().getLatitude());
                     busitem.add(address);
                     busitem.add(lon);
                     busitem.add(lat);

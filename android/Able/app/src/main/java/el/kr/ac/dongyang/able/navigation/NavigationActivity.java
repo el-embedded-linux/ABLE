@@ -21,44 +21,37 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.skt.Tmap.TMapTapi;
-import com.skt.Tmap.TMapView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,7 +63,6 @@ import java.util.StringTokenizer;
 import el.kr.ac.dongyang.able.BaseActivity;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.ChatModel;
-import el.kr.ac.dongyang.able.model.DirectionModel;
 import el.kr.ac.dongyang.able.model.NotificationModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 import okhttp3.Call;
@@ -90,23 +82,21 @@ public class NavigationActivity extends BaseActivity {
     private List<String> descriptionList = new ArrayList<>();
     private WebView web;
     private Handler mHandler = new Handler();
-    private Thread thread;
 
     private EditText searchAddressEditText;
-    private Button startBtn, currentBtn, endBtn, shareBtn;
     private ConstraintLayout constLocationInfo, endConstraintLayout, startConstraintLayout;
-    private TextView nodeText, beforeText, textTime, textDistance, textDirection;
-    private ProgressBar naviWebLoadingBar;
+    private TextView textTime;
+    private TextView textDistance;
+    private TextView textDirection;
     private ImageView directionImg;
 
     private NotificationManager notificationManager;
-    private RemoteViews contentView;
-    private NotificationCompat.Builder mBuilder;
     private static final int NAVILIST_CODE = 3000;
     private String destinationRoom;
     private String uid;
 
     private ConstraintLayout directionLayout;
+    private ConstraintLayout arrowLayout;
     private ImageView arrowImg;
 
     String address;
@@ -114,8 +104,9 @@ public class NavigationActivity extends BaseActivity {
     String endLat;
     private String clickText;
     private int directionStatus;
-    private NavigationView navigationView;
     DrawerLayout drawer;
+    RecyclerView recyclerView;
+    private SideUserAdapter sideUserAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,45 +116,42 @@ public class NavigationActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         setTitle("Navigation");
 
+        arrowImg = findViewById(R.id.arrowImg);
+        directionLayout = findViewById(R.id.directionConstraintLayout);
+        arrowLayout = findViewById(R.id.arrowConstraintLayout);
+
         web = findViewById(R.id.web);
         initWeb();
 
         drawer = findViewById(R.id.drawerNavigation);
-        /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();*/
-
-        ConstraintLayout drawerLayout = findViewById(R.id.drawer);
 
         //<editor-fold desc="드로우어 방향화살표 클릭">
-        drawerLayout.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(NavigationActivity.this, "버튼클릭1", Toast.LENGTH_SHORT).show();
                 directionStatus = 1;
                 reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("left");
-                //drawer.closeDrawer(GravityCompat.END);
             }
         });
-        drawerLayout.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.naviDrawerUpArrow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(NavigationActivity.this, "버튼클릭2", Toast.LENGTH_SHORT).show();
-
                 directionStatus = 1;
                 reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("up");
-                //drawer.closeDrawer(GravityCompat.END);
             }
         });
-        drawerLayout.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.naviDrawerRightArrow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(NavigationActivity.this, "버튼클릭3", Toast.LENGTH_SHORT).show();
-
                 directionStatus = 1;
                 reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("right");
-                //drawer.closeDrawer(GravityCompat.END);
+            }
+        });
+        findViewById(R.id.naviDrawerStop).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                directionStatus = 1;
+                reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("stop");
             }
         });
         //</editor-fold>
@@ -182,8 +170,8 @@ public class NavigationActivity extends BaseActivity {
             }
         });
 
-        nodeText = findViewById(R.id.nodetext);
-        beforeText = findViewById(R.id.beforeText);
+        TextView nodeText = findViewById(R.id.nodetext);
+        TextView beforeText = findViewById(R.id.beforeText);
         nodeText.setVisibility(View.GONE);
         beforeText.setVisibility(View.GONE);
 
@@ -197,10 +185,8 @@ public class NavigationActivity extends BaseActivity {
 
         textTime = findViewById(R.id.textTime);
         textDistance = findViewById(R.id.textDistance);
-        naviWebLoadingBar = findViewById(R.id.naviCircleBar);
-        naviWebLoadingBar.setVisibility(View.GONE);
 
-        endBtn = findViewById(R.id.endBtn);
+        Button endBtn = findViewById(R.id.endBtn);
         endBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -228,7 +214,7 @@ public class NavigationActivity extends BaseActivity {
                         .show();
             }
         });
-        shareBtn = findViewById(R.id.shareBtn);
+        Button shareBtn = findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -275,9 +261,8 @@ public class NavigationActivity extends BaseActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (directionStatus != 0) {
-                                DirectionModel direction = dataSnapshot.getValue(DirectionModel.class);
-                                String arrow = direction.getDirection();
-                                arrowViewVisible(arrow);
+                                String arrow = (String) dataSnapshot.getValue();
+                                if (arrow != null) arrowViewVisible(arrow);
                             }
                         }
 
@@ -287,10 +272,54 @@ public class NavigationActivity extends BaseActivity {
                     });
         }
 
-        startBtn = findViewById(R.id.startBtn);
+        Button startBtn = findViewById(R.id.startBtn);
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clickText.equals("shareStart")) {
+                    arrowLayout.setVisibility(View.VISIBLE);
+                    reference
+                            .child("CHATROOMS")
+                            .child(destinationRoom)
+                            .child("groupUsers")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    List<String> groupUserKeys = new ArrayList<>();
+                                    for (DataSnapshot item : dataSnapshot.getChildren()) {
+                                        String key = item.getKey();
+                                        groupUserKeys.add(key);
+                                    }
+                                    for (String groupUserKey : groupUserKeys) {
+                                        reference
+                                                .child("USER")
+                                                .child(groupUserKey)
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    UserModel userModel = new UserModel();
+
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        userModel = dataSnapshot.getValue(UserModel.class);
+                                                        sideUserAdapter.add(userModel);
+                                                        sideUserAdapter.notifyDataSetChanged();
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+                                                    }
+                                                });
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                }
+                            });
+                    //리사이클러뷰에 어댑터 붙여줌
+
+                }
+                searchAddressEditText.setEnabled(false);
                 Toast.makeText(NavigationActivity.this, "주행이 시작됩니다.", Toast.LENGTH_SHORT).show();
                 startConstraintLayout.setVisibility(View.GONE);
                 endConstraintLayout.setVisibility(View.VISIBLE);
@@ -314,7 +343,7 @@ public class NavigationActivity extends BaseActivity {
             }
         });
 
-        currentBtn = findViewById(R.id.currentBtn);
+        Button currentBtn = findViewById(R.id.currentBtn);
         currentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -341,6 +370,12 @@ public class NavigationActivity extends BaseActivity {
                     shareBtn.setVisibility(View.VISIBLE);
                     break;
                 case "shareStart":
+                    recyclerView = findViewById(R.id.recyclerViewNavigation);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    sideUserAdapter = new SideUserAdapter(NavigationActivity.this);
+                    recyclerView.setAdapter(sideUserAdapter);
+
+                    searchAddressEditText.setEnabled(false);
                     startConstraintLayout.setVisibility(View.VISIBLE);
                     constLocationInfo.setVisibility(View.VISIBLE);
                     endConstraintLayout.setVisibility(View.GONE);
@@ -357,7 +392,7 @@ public class NavigationActivity extends BaseActivity {
                                             comment.destinationLongitude + "', '" +
                                             comment.destinationLatitude + "')");
                         }
-                    },2000);
+                    }, 2000);
                     searchAddressEditText.setText(comment.destinationAddress);
             }
         } catch (Exception e) {
@@ -369,18 +404,20 @@ public class NavigationActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.navigation_toolbar, menu);
-        return true;
+        if (clickText.equals("shareStart")) {
+            getMenuInflater().inflate(R.menu.navigation_toolbar, menu);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.navigationDrawerToggle) {
-            Toast.makeText(this, "toggle", Toast.LENGTH_SHORT).show();
-            if(drawer.isDrawerOpen(GravityCompat.END)) {
-               drawer.closeDrawer(GravityCompat.END);
+        if (id == R.id.navigationDrawerToggle) {
+            if (drawer.isDrawerOpen(GravityCompat.END)) {
+                drawer.closeDrawer(GravityCompat.END);
             } else
                 drawer.openDrawer(GravityCompat.END);
         }
@@ -391,35 +428,24 @@ public class NavigationActivity extends BaseActivity {
         switch (arrow) {
             case "left":
                 arrowImg.setImageResource(R.drawable.arrow_left);
-                directionLayout.setVisibility(View.VISIBLE);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        directionLayout.setVisibility(View.GONE);
-                    }
-                }, 1000);
                 break;
             case "up":
                 arrowImg.setImageResource(R.drawable.arrow_up_straight);
-                directionLayout.setVisibility(View.VISIBLE);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        directionLayout.setVisibility(View.GONE);
-                    }
-                }, 1000);
                 break;
             case "right":
                 arrowImg.setImageResource(R.drawable.arrow_right);
-                directionLayout.setVisibility(View.VISIBLE);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        directionLayout.setVisibility(View.GONE);
-                    }
-                }, 1000);
+                break;
+            case "stop":
+                arrowImg.setImageResource(R.drawable.ic_cancel_black_24dp);
                 break;
         }
+        directionLayout.setVisibility(View.VISIBLE);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                directionLayout.setVisibility(View.GONE);
+            }
+        }, 1000);
     }
 
     public void sendGcmUsers() {
@@ -431,12 +457,13 @@ public class NavigationActivity extends BaseActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
-
-                        for (String item : map.keySet()) {
-                            if (item.equals(uid)) {
-                                continue;
+                        if (map != null) {
+                            for (String item : map.keySet()) {
+                                if (item.equals(uid)) {
+                                    continue;
+                                }
+                                gcmSetting(users.get(item).getPushToken());
                             }
-                            gcmSetting(users.get(item).getPushToken());
                         }
                     }
 
@@ -499,13 +526,12 @@ public class NavigationActivity extends BaseActivity {
         Intent intent2 = new Intent(NavigationActivity.this, NavigationActivity.class);
         PendingIntent pintent2 = PendingIntent.getActivity(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        contentView = new RemoteViews(this.getPackageName(), R.layout.remoteview);
+        RemoteViews contentView = new RemoteViews(this.getPackageName(), R.layout.remoteview);
         contentView.setTextViewText(R.id.remoteViewEndPoint, searchAddressEditText.getText().toString());
 
-        mBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, id)
                 .setSmallIcon(R.drawable.playstore_icon_null)
                 .setContent(contentView)
-                .setChannelId(id)
                 .setContentIntent(pintent2);
 
         notificationManager.notify(1, mBuilder.build());
@@ -516,13 +542,11 @@ public class NavigationActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                naviWebLoadingBar.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                naviWebLoadingBar.setVisibility(View.GONE);
             }
         });
         WebSettings webSet = web.getSettings();
@@ -634,7 +658,7 @@ public class NavigationActivity extends BaseActivity {
     };
 
     private void descriptionChange(final int position) {
-        thread = new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 StringTokenizer st = new StringTokenizer(descriptionList.get(position));
