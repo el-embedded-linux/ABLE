@@ -134,33 +134,36 @@ public class NavigationActivity extends BaseActivity {
         drawer.addDrawerListener(toggle);
         toggle.syncState();*/
 
-        View drawerShare = findViewById(R.id.drawer);
+        ConstraintLayout drawerLayout = findViewById(R.id.drawer);
 
         //<editor-fold desc="드로우어 방향화살표 클릭">
-        drawerShare.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
+        drawerLayout.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(NavigationActivity.this, "버튼클릭1", Toast.LENGTH_SHORT).show();
                 directionStatus = 1;
                 reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("left");
-                drawer.closeDrawer(GravityCompat.END);
+                //drawer.closeDrawer(GravityCompat.END);
             }
         });
-
-        drawerShare.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
+        drawerLayout.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(NavigationActivity.this, "버튼클릭2", Toast.LENGTH_SHORT).show();
+
                 directionStatus = 1;
                 reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("up");
-                drawer.closeDrawer(GravityCompat.END);
+                //drawer.closeDrawer(GravityCompat.END);
             }
         });
-
-        drawerShare.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
+        drawerLayout.findViewById(R.id.naviDrawerLeftArrow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(NavigationActivity.this, "버튼클릭3", Toast.LENGTH_SHORT).show();
+
                 directionStatus = 1;
                 reference.child("CHATROOMS").child(destinationRoom).child("direction").setValue("right");
-                drawer.closeDrawer(GravityCompat.END);
+                //drawer.closeDrawer(GravityCompat.END);
             }
         });
         //</editor-fold>
@@ -375,6 +378,7 @@ public class NavigationActivity extends BaseActivity {
         int id = item.getItemId();
 
         if(id == R.id.navigationDrawerToggle) {
+            Toast.makeText(this, "toggle", Toast.LENGTH_SHORT).show();
             if(drawer.isDrawerOpen(GravityCompat.END)) {
                drawer.closeDrawer(GravityCompat.END);
             } else
