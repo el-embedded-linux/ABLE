@@ -123,7 +123,9 @@ public class GroupMessageActivity extends BaseActivity {
     }
 
     public void sendGcmUsers() {
-        reference.child("CHATROOMS").child(destinationRoom).child("users")
+        reference.child("CHATROOMS")
+                .child(destinationRoom)
+                .child("users")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -150,6 +152,7 @@ public class GroupMessageActivity extends BaseActivity {
         NotificationModel notificationModel = new NotificationModel();
         notificationModel.to = pushToken;
         notificationModel.notification.title = userName;
+        //그룹라이딩 지도 넣으면 종료됨
         notificationModel.notification.text = editText.getText().toString();
         notificationModel.data.title = userName;
         notificationModel.data.text = editText.getText().toString();

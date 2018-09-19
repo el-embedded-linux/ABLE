@@ -260,6 +260,7 @@ public class NavigationActivity extends BaseActivity {
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            //0이니까 한번 눌러야 받네 하
                             if (directionStatus != 0) {
                                 String arrow = (String) dataSnapshot.getValue();
                                 if (arrow != null) arrowViewVisible(arrow);
@@ -481,9 +482,9 @@ public class NavigationActivity extends BaseActivity {
         NotificationModel notificationModel = new NotificationModel();
         notificationModel.to = pushToken;
         notificationModel.notification.title = userName;
-        notificationModel.notification.text = "[ " + searchAddressEditText.getText().toString() + " ]\n그룹라이딩 시작";
+        notificationModel.notification.text = "[ " + searchAddressEditText.getText().toString() + " ] 그룹라이딩 시작";
         notificationModel.data.title = userName;
-        notificationModel.data.text = "[ " + searchAddressEditText.getText().toString() + " ]\n그룹라이딩 시작";
+        notificationModel.data.text = "[ " + searchAddressEditText.getText().toString() + " ] 그룹라이딩 시작";
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"), gson.toJson(notificationModel));
 
@@ -696,7 +697,7 @@ public class NavigationActivity extends BaseActivity {
                 ActivityCompat.checkSelfPermission(this, CoarseLocation) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{CoarseLocation, fineLocation}, 1);
         }
-        //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자(실내에선 NETWORK_PROVIDER 권장)
                 0, // 통지사이의 최소 시간간격 (miliSecond)
                 0, // 통지사이의 최소 변경거리 (m)

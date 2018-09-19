@@ -242,7 +242,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                     Toast.makeText(getActivity(), "비밀번호는 최소 6자리 이상이어야 합니다.", Toast.LENGTH_SHORT).show();
                 } else if (!registerEmailEditText.getText().toString().trim().matches(emailPattern)) {
                     Toast.makeText(getActivity(), "이메일이 같지 않습니다.", Toast.LENGTH_SHORT).show();
-                } else if (!checkBox.isChecked()){
+                } else if (!checkBox.isChecked()) {
                     Toast.makeText(getActivity(), "개인정보 약관에 동의하여 주십시오.", Toast.LENGTH_SHORT).show();
                 } else {
                     createUser(registerEmailEditText.getText().toString(), registerPwEditText.getText().toString());
@@ -324,7 +324,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
     @Override
     public void onStart() {
         super.onStart();
-        if(registerNum == 1){
+        if (registerNum == 1) {
             loginView.setVisibility(View.GONE);
             emailView.setVisibility(View.GONE);
             registerView.setVisibility(View.VISIBLE);
@@ -364,12 +364,15 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
     }
 
     private void passPushTokenToServer() {
-        String uid = firebaseUser.getUid();
-        String token = FirebaseInstanceId.getInstance().getToken();
-        Map<String, Object> map = new HashMap<>();
-        map.put("pushToken", token);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = firebaseUser.getUid();
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Map<String, Object> map = new HashMap<>();
+            map.put("pushToken", token);
 
-        reference.child("USER").child(uid).updateChildren(map);
+            reference.child("USER").child(uid).updateChildren(map);
+        }
     }
 
     //버튼들 기능
@@ -418,7 +421,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                     userModel = dataSnapshot.getValue(UserModel.class);
                     if (userModel != null) {
                         userName = userModel.getUserName();
-                        if(userModel.getProfileImageUrl() != null) {
+                        if (userModel.getProfileImageUrl() != null) {
                             Glide.with(getActivity())
                                     .load(userModel.getProfileImageUrl())
                                     .apply(new RequestOptions().circleCrop())
@@ -428,6 +431,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                         naviSubTitle.setText(userModel.getComment());
                     }
                 }
+
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }
@@ -478,7 +482,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                             //Toast.makeText(getActivity(), "회원가입 성공", Toast.LENGTH_SHORT).show();
                             final String uid = task.getResult().getUser().getUid();
 
-                             profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(userNameEditText.getText().toString()).build();
+                            profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(userNameEditText.getText().toString()).build();
                             task.getResult().getUser().updateProfile(profileChangeRequest);
 
                             //이메일과 uid를 받아서 데이터베이스에 저장하는데 사용

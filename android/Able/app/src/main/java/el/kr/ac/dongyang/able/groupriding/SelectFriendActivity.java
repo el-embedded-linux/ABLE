@@ -65,7 +65,7 @@ public class SelectFriendActivity extends BaseActivity {
                     chatModel.setUsers(user);
                     FirebaseDatabase.getInstance().getReference().child("CHATROOMS").push().setValue(chatModel);
                     user.clear();
-                    selectFriendRecyclerViewAdapter.notifyDataSetChanged();
+                    //selectFriendRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         });
