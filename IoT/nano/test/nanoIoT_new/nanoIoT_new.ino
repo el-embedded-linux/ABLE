@@ -71,6 +71,9 @@ volatile int mx_min = 0;
 volatile int my_min = 0;
 volatile int mz_min = 0;
 
+float Mxyz[3];
+float Axyz[3];
+
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(64, PIN, NEO_GRB + NEO_KHZ800);
 
 //Thread
@@ -79,36 +82,6 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(64, PIN, NEO_GRB + NEO_KHZ800);
 
 ThreadController controll = ThreadController();
 Thread myThread_mpu = Thread();
-Thread myThread_reed = Thread();
-Thread myThread_btLCD = Thread();
-Thread myThread_tftLCD = Thread();
-
-Adafruit_ILI9340 tft = Adafruit_ILI9340(_cs, _dc, _rst);
-
-int btLCD; // LCD버튼
-int chmod=1; // lcd 모드를 변경해줌
-
-String today;
-
-
-void btLCDCallback(){
-    btLCD = digitalRead(BTLCD);
-  if(btLCD == LOW){
-    if(chmod>1001){
-      chmod=1;
-    }else{
-    chmod +=1;
-    }
-  }
-}
-
-void tftLCDCallback(){
-  if(chmod%2==0){
-    distanceText();
-  }else if(chmod%2==1){
-    speedText();
-  }
-}
 
 void mpuCallback()
 {
@@ -225,43 +198,13 @@ void setup() {
     // initialize device
     Serial.println("Initializing I2C devices...");
     accelgyro.initialize();
-  while (!Serial);
-  pinMode(BTLCD, INPUT);//LCD버튼
-  setTime(01,37,0,10,8,18);
-  date();
-  Serial.println(today);
-
-  tft.begin();
-  tft.setRotation(3);
+    while (!Serial);
   
-  //HeartRate
-    Serial.begin(9600);
-  Serial.println("Initializing...");
-
-  // Initialize sensor
-  if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
-  {
-    Serial.println("MAX30105 was not found. Please check wiring/power. ");
-    while (1);
-  }
-  
-    // verify connection
-    Serial.println("Testing device connections...");
-    Serial.println(accelgyro.testConnection() ? "MPU9250 connection successful" : "MPU9250 connection failed");
-
-    delay(1000);
-    Serial.println("     ");
 
     //thread
     myThread_mpu.onRun(mpuCallback);
-    myThread_btLCD.onRun(btLCDCallback);
-    myThread_tftLCD.onRun(tftLCDCallback);
-    myThread_mpu.setInterval(1000); //tftLCD의 초기화 주기를 늦추기 위해서
 
-    controll.add(&myThread_reed);
     controll.add(&myThread_mpu);
-    controll.add(&myThread_btLCD);
-    controll.add(&myThread_tftLCD);
 
 }
 
@@ -273,85 +216,6 @@ void loop() {
     myThread_reed.run();*/
   randNumber = random(360);//randNumber 대신 RaspberryPI에서 받아오면 됨
   controll.run();
-}
-
-
-void date(){
-  today=year();
-  today = today+"-";
-  today = today+month();
-  today = today+"-";
-  today = today+day();
-}
-
-unsigned long testFillScreen() {
-  unsigned long start = micros();
-  tft.fillScreen(ILI9340_BLACK);
-  tft.fillScreen(ILI9340_RED);
-  return micros() - start;
-}
-
-unsigned long distanceText() {
-  tft.fillScreen(ILI9340_BLACK);
-  unsigned long start = micros();
-  
-  tft.setCursor(85, 40);
-  tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(3);
-  tft.println(today);
-
-  tft.setCursor(85, 70);
-  tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(3);
-  tft.println("Distance");
-  tft.println("");
-
-  if(distance <10){
-    tft.setCursor(20, 120);
-  }
-  else if (distance <100){
-    tft.setCursor(10, 120);
-  }
-  else if (distance <1000){
-    tft.setCursor(40, 120);
-  }
-
-   tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(8);
-   tft.print(distance);
-   tft.println("km");
-
-  return micros() - start;
-}
-
-
-unsigned long speedText() {
-  tft.fillScreen(ILI9340_BLACK);
-  unsigned long start = micros();
-  
-  tft.setCursor(85, 40);
-  tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(3);
-  tft.println(today);
-
-  tft.setCursor(110, 70);
-  tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(3);
-  tft.println("Speed");
-  tft.println("");
-
-
-  //속도 출력
-  if(bySpeed <10){
-    tft.setCursor(50, 110);
-  }
-  else if (bySpeed <100){
-    tft.setCursor(60, 110);
-  }
-
-   tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(8);
-   tft.println(bySpeed);
-
-   tft.setCursor(120, 180);
-   tft.setTextSize(3);
-   tft.println("km/s");
-
-  return micros() - start;
 }
 
 void colorWipe(int i, uint32_t c, uint8_t wait) {
