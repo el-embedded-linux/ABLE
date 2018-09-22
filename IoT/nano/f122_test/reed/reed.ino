@@ -1,7 +1,4 @@
 #include <heartRate.h>
-
-#include <spo2_algorithm.h>
-
 #include <Time.h>
 #include <TimeLib.h>
 #include <LiquidCrystal.h>
@@ -10,7 +7,6 @@
 #include "SPI.h"
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9340.h"
-#include <Wire.h>
 #include "MAX30105.h"
 #include "heartRate.h"
 
@@ -87,18 +83,19 @@ void heartCallback(){
     }
   }
 
-  Serial.print(", BPM=");
-  Serial.print(beatsPerMinute);
-  Serial.print(", Avg BPM=");
-  Serial.print(beatAvg);
-
-  if (irValue < 50000)
-    Serial.print(" No finger?");
-  Serial.println();
+//  Serial.print(", BPM=");
+//  Serial.print(beatsPerMinute);
+//  Serial.print(", Avg BPM=");
+//  Serial.print(beatAvg);
+//
+//  if (irValue < 50000)
+//    Serial.print(" No finger?");
+//  Serial.println();
 }
 void btLCDCallback(){
     btLCD = digitalRead(BTLCD);
   if(btLCD == LOW){
+    tft.fillScreen(ILI9340_BLACK);
     if(chmod>1001){
       chmod=1;
     }else{
@@ -171,13 +168,14 @@ void setup() {
   
   tft.begin();
   tft.setRotation(3);
+  tft.fillScreen(ILI9340_BLACK);
 
   //thread
   myThread_reed.onRun(reedCallback);
   myThread_btLCD.onRun(btLCDCallback);
   myThread_heart.onRun(heartCallback);
   myThread_tftLCD.onRun(tftLCDCallback);
-  myThread_tftLCD.setInterval(2000);//tftLCD의 초기화 주기를 늦추기 위해서
+//  myThread_tftLCD.setInterval(2000);//tftLCD의 초기화 주기를 늦추기 위해서
   
 
   controll.add(&myThread_btLCD);
@@ -207,7 +205,7 @@ unsigned long testFillScreen() {
 }
 
 unsigned long distanceText() {
-  tft.fillScreen(ILI9340_BLACK);
+//  tft.fillScreen(ILI9340_BLACK);
   unsigned long start = micros();
   
   tft.setCursor(85, 40);
@@ -229,7 +227,7 @@ unsigned long distanceText() {
     tft.setCursor(40, 120);
   }
 
-   tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(8);
+   tft.setTextColor(ILI9340_WHITE, ILI9340_BLACK);    tft.setTextSize(8);
    distance = distance/1000;
    tft.print(distance);
    tft.println("km");
@@ -238,7 +236,7 @@ unsigned long distanceText() {
 }
 
 unsigned long speedText() {
-  tft.fillScreen(ILI9340_BLACK);
+//  tft.fillScreen(ILI9340_BLACK);
   unsigned long start = micros();
   
   tft.setCursor(85, 40);
@@ -259,7 +257,7 @@ unsigned long speedText() {
     tft.setCursor(60, 110);
   }
 
-   tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(8);
+   tft.setTextColor(ILI9340_WHITE, ILI9340_BLACK);    tft.setTextSize(8);
    tft.println(bySpeed);
 
    tft.setCursor(120, 180);
@@ -269,7 +267,7 @@ unsigned long speedText() {
   return micros() - start;
 }
 unsigned int heartText(){
-  tft.fillScreen(ILI9340_BLACK);
+//  tft.fillScreen(ILI9340_BLACK);
   unsigned long start = micros();
   
   tft.setCursor(85, 40);
@@ -282,15 +280,15 @@ unsigned int heartText(){
   tft.println("");
 
   //심박도 출력
-  if(beatsPerMinute <100){
+  if(beatAvg <100){
     tft.setCursor(60, 110);
   }
   else if (beatsPerMinute >=100){
     tft.setCursor(70, 110);
   }
 
-   tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(8);
-   tft.println(beatsPerMinute);
+   tft.setTextColor(ILI9340_WHITE, ILI9340_BLACK);    tft.setTextSize(8);
+   tft.println(beatAvg);
 
    tft.setCursor(120, 180);
    tft.setTextSize(3);
@@ -298,4 +296,3 @@ unsigned int heartText(){
    //손가락이 있는지 없는지 감지하는 부분 안넣었다.
    return micros() - start;
 }
-
