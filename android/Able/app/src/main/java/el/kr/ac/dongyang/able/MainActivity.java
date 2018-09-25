@@ -54,15 +54,10 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private String TAG = "Able";
-    FragmentTransaction ft;
     FragmentManager manager;
-    FirebaseUser firebaseUser;
     NavigationView navigationView;
     TextView naviTitle, naviSubTitle;
     ImageView naviImg;
-
-    TextView weatherIcon, temperature, temp_max, temp_min;
-    WeatherIconManager weatherIconManager;
 
     FragmentHome fragmentHome;
     FragmentFriend fragmentFriend;
@@ -101,13 +96,6 @@ public class MainActivity extends BaseActivity
         naviSubTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewSubTitle);
         naviImg = headerView.findViewById(R.id.NaviHeaderMainImageView);
 
-        weatherIcon = findViewById(R.id.weather);
-        temperature = findViewById(R.id.Temperature);
-        temp_max = findViewById(R.id.Temp_max);
-        temp_min = findViewById(R.id.Temp_min);
-        weatherIconManager = new WeatherIconManager();
-        setWeather();
-
         //getHashKey();
     }
 
@@ -139,20 +127,6 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private void setWeather() {
-        String font = "fonts/weathericons-regular-webfont.ttf";
-        weatherIcon.setTypeface(weatherIconManager.get_icons(font, this));
-
-        WeatherFunction.placeIdTask asyncTask = new WeatherFunction.placeIdTask(new WeatherFunction.AsyncResponse() {
-            public void processFinish(String temperature, String temp_max, String temp_min, String updatedOn, String iconText, String sun_rise) {
-                weatherIcon.setText(Html.fromHtml(iconText));
-                MainActivity.this.temperature.setText(temperature);
-                MainActivity.this.temp_max.setText(temp_max);
-                MainActivity.this.temp_min.setText(temp_min);
-            }
-        });
-        asyncTask.execute("37.500774", "126.867899");
-    }
 
     private void passPushTokenToServer(String uid) {
         String token = FirebaseInstanceId.getInstance().getToken();

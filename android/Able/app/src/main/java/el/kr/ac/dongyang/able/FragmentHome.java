@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,12 +32,14 @@ public class FragmentHome extends BaseFragment{
 
     Button naviBtn;
     TextView textId;
-    FragmentTransaction ft;
     FragmentManager manager;
-    String fragmentTag;
     FirebaseUser user;
     private UserModel userModel;
     private String userName;
+    String uid;
+
+    TextView weatherIcon, temperature, temp_max, temp_min;
+    WeatherIconManager weatherIconManager;
 
     public FragmentHome() {
     }
@@ -65,9 +67,15 @@ public class FragmentHome extends BaseFragment{
         });
         textId = view.findViewById(R.id.name);
 
+        weatherIcon = view.findViewById(R.id.weather);
+        temperature = view.findViewById(R.id.Temperature);
+        temp_max = view.findViewById(R.id.Temp_max);
+        temp_min = view.findViewById(R.id.Temp_min);
+        weatherIconManager = new WeatherIconManager();
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null) {
-            final String uid = user.getUid();
+            uid = user.getUid();
             userModel = new UserModel();
             progressOn();
             FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addValueEventListener(new ValueEventListener() {
@@ -77,6 +85,7 @@ public class FragmentHome extends BaseFragment{
                     if (userModel != null) {
                         userName = userModel.getUserName();
                         textId.setText(userName);
+                        setWeather();
                         progressOff();
                     }
                 }
@@ -107,5 +116,38 @@ public class FragmentHome extends BaseFragment{
     public void finishLoad(UserEvent userEvent){
         textId.setText(userEvent.getUserId());
         Log.d("finishLoad", userEvent.getUserId());
+    }
+
+    private void setWeather() {
+        progressOn();
+        String font = "fonts/weathericons-regular-webfont.ttf";
+        weatherIcon.setTypeface(weatherIconManager.get_icons(font, getActivity()));
+
+        final WeatherFunction.placeIdTask asyncTask = new WeatherFunction.placeIdTask(new WeatherFunction.AsyncResponse() {
+            public void processFinish(String temperature, String temp_max, String temp_min, String updatedOn, String iconText, String sun_rise) {
+                weatherIcon.setText(Html.fromHtml(iconText));
+                FragmentHome.this.temperature.setText(temperature);
+                FragmentHome.this.temp_max.setText(temp_max);
+                FragmentHome.this.temp_min.setText(temp_min);
+            }
+        });
+
+        reference.child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserModel userModel = new UserModel();
+                userModel = dataSnapshot.getValue(UserModel.class);
+                if(userModel.getLatitude() != null) {
+                    asyncTask.execute(userModel.getLatitude(), userModel.getLongitude());
+                } else {
+                    asyncTask.execute("37.500774", "126.867899");
+                }
+                progressOff();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

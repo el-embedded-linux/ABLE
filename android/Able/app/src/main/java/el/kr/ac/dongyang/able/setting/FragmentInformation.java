@@ -3,10 +3,11 @@ package el.kr.ac.dongyang.able.setting;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
+import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapPOIItem;
+import com.skt.Tmap.TMapTapi;
+
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
@@ -46,9 +58,6 @@ public class FragmentInformation extends BaseFragment{
     private static final int PICK_FROM_ALBUM = 10;
     private Uri imageUri;
 
-    public FragmentInformation() {
-    }
-
     Button infoSave;
     EditText mName, mAddress, mHeight, mWeight, mComment, mGoal;
     FirebaseUser user;
@@ -56,12 +65,22 @@ public class FragmentInformation extends BaseFragment{
     UserModel userModel;
     String uid;
     ImageView infoImg;
+    TMapTapi tMapTapi;
+    TMapData tMapData;
+    List<TMapPOIItem> poiList = new ArrayList<>();
+
+    public FragmentInformation() {
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_userinfo,container,false);
         getActivity().setTitle("내 정보 수정");
+
+        tMapTapi = new TMapTapi(getActivity());
+        tMapTapi.setSKTMapAuthentication("2414ee00-3784-4c78-913d-32bf5fa9c107");
+        tMapData = new TMapData();
 
         infoImg = view.findViewById(R.id.infoImg);
         infoImg.setOnClickListener(new View.OnClickListener() {
@@ -123,12 +142,22 @@ public class FragmentInformation extends BaseFragment{
         infoSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(imageUri != null){
-                    FirebaseStorage.getInstance().getReference()
-                            .child("userImages")
-                            .child(uid)
-                            .putFile(imageUri)
-                            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                informationSave();
+                getActivity().onBackPressed();
+            }
+        });
+
+        return view;
+    }
+
+    private void informationSave() {
+        progressOn();
+        if(imageUri != null){
+            FirebaseStorage.getInstance().getReference()
+                    .child("userImages")
+                    .child(uid)
+                    .putFile(imageUri)
+                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             final String imagePath = task.getResult().getStorage().getPath();
@@ -136,45 +165,54 @@ public class FragmentInformation extends BaseFragment{
                                     .child(imagePath)
                                     .getDownloadUrl()
                                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    //데이터베이스 저장
-                                    reference.child("USER").child(uid).child("profileImageUrl").setValue(uri.toString());
-                                }
-                            });
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            //데이터베이스 저장
+                                            reference.child("USER").child(uid).child("profileImageUrl").setValue(uri.toString());
+                                        }
+                                    });
                         }
                     });
+        }
+        if(mName.length() != 0) {
+            userModel.setUserName(mName.getText().toString());
+            reference.child("USER").child(uid).child("userName").setValue(userModel.getUserName());
+            SharedPref.getInstance(getContext()).setData("userName", userModel.getUserName());
+        }
+        if(mAddress.length() != 0) {
+            userModel.setAddress(mAddress.getText().toString());
+            reference.child("USER").child(uid).child("address").setValue(userModel.getAddress());
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        poiList = tMapData.findAddressPOI(mAddress.getText().toString());
+                        reference.child("USER").child(uid).child("latitude").setValue(poiList.get(0).noorLat);
+                        reference.child("USER").child(uid).child("longitude").setValue(poiList.get(0).noorLon);
+                    } catch (IOException | ParserConfigurationException | SAXException e) {
+                        e.printStackTrace();
+                    }
                 }
-                if(mName.length() != 0) {
-                    userModel.setUserName(mName.getText().toString());
-                    reference.child("USER").child(uid).child("userName").setValue(userModel.getUserName());
-                    SharedPref.getInstance(getContext()).setData("userName", userModel.getUserName());
-                }
-                if(mAddress.length() != 0) {
-                    userModel.setAddress(mAddress.getText().toString());
-                    reference.child("USER").child(uid).child("destinationAddress").setValue(userModel.getAddress());
-                }
-                if(mHeight.length() != 0) {
-                    userModel.setHeight(mHeight.getText().toString());
-                    reference.child("USER").child(uid).child("height").setValue(userModel.getHeight());
-                }
-                if(mWeight.length() != 0) {
-                    userModel.setWeight(mWeight.getText().toString());
-                    reference.child("USER").child(uid).child("weight").setValue(userModel.getWeight());
-                }
-                if(mComment.length() != 0) {
-                    userModel.setComment(mComment.getText().toString());
-                    reference.child("USER").child(uid).child("comment").setValue(userModel.getComment());
-                }
-                if(mGoal.length() != 0) {
-                    userModel.setGoal(mGoal.getText().toString());
-                    reference.child("USER").child(uid).child("goal").setValue(userModel.getGoal());
-                }
-                getActivity().onBackPressed();
-            }
-        });
-
-        return view;
+            });
+            thread.start();
+        }
+        if(mHeight.length() != 0) {
+            userModel.setHeight(mHeight.getText().toString());
+            reference.child("USER").child(uid).child("height").setValue(userModel.getHeight());
+        }
+        if(mWeight.length() != 0) {
+            userModel.setWeight(mWeight.getText().toString());
+            reference.child("USER").child(uid).child("weight").setValue(userModel.getWeight());
+        }
+        if(mComment.length() != 0) {
+            userModel.setComment(mComment.getText().toString());
+            reference.child("USER").child(uid).child("comment").setValue(userModel.getComment());
+        }
+        if(mGoal.length() != 0) {
+            userModel.setGoal(mGoal.getText().toString());
+            reference.child("USER").child(uid).child("goal").setValue(userModel.getGoal());
+        }
+        progressOff();
     }
 
     @Override
