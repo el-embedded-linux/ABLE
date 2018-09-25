@@ -35,4 +35,14 @@ public class BaseActivity extends AppCompatActivity {
             ft.commit();
         }
     }
+
+    public void progressOn() {
+        BaseApplication.getInstance().progressOn(this, null);
+    }
+    public void progressOn(String message) {
+        BaseApplication.getInstance().progressOn(this, message);
+    }
+    public void progressOff() {
+        BaseApplication.getInstance().progressOff();
+    }
 }

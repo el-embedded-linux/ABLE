@@ -28,4 +28,14 @@ public class BaseFragment extends Fragment {
             ft.commit();
         }
     }
+
+    public void progressOn() {
+        BaseApplication.getInstance().progressOn(getActivity(), null);
+    }
+    public void progressOn(String message) {
+        BaseApplication.getInstance().progressOn(getActivity(), message);
+    }
+    public void progressOff() {
+        BaseApplication.getInstance().progressOff();
+    }
 }

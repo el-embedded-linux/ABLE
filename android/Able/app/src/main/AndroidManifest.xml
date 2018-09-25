@@ -20,7 +20,7 @@
         android:icon="@drawable/playstore_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".login.KakaoLoginApplication"
+        android:name=".BaseApplication"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.kakao.sdk.AppKey"

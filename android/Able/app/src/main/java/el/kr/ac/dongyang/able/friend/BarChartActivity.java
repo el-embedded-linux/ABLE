@@ -78,7 +78,7 @@ public class BarChartActivity extends BaseActivity {
                 //data.setBarWidth(0.5f); // set custom bar width
                 chart.setData(data);
                 chart.setFitBars(true); // make the x-axis fit exactly all bars
-                chart.animateY(3000, Easing.EasingOption.EaseInOutBounce);
+                chart.animateY(3000, Easing.EasingOption.EaseInOutBack);
                 chart.invalidate(); // refresh
             }
         };
@@ -149,7 +149,7 @@ public class BarChartActivity extends BaseActivity {
         xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(16f);
-        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextColor(Color.WHITE);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // interval 1

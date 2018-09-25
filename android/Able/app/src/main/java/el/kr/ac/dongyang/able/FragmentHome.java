@@ -28,7 +28,7 @@ import el.kr.ac.dongyang.able.navigation.NavigationActivity;
  * Created by impro on 2018-03-30.
  */
 
-public class FragmentHome extends android.support.v4.app.Fragment{
+public class FragmentHome extends BaseFragment{
 
     Button naviBtn;
     TextView textId;
@@ -69,6 +69,7 @@ public class FragmentHome extends android.support.v4.app.Fragment{
         if(user != null) {
             final String uid = user.getUid();
             userModel = new UserModel();
+            progressOn();
             FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -76,6 +77,7 @@ public class FragmentHome extends android.support.v4.app.Fragment{
                     if (userModel != null) {
                         userName = userModel.getUserName();
                         textId.setText(userName);
+                        progressOff();
                     }
                 }
                 @Override

@@ -75,14 +75,7 @@ public class FragmentFriend extends BaseFragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new FragmentUserlist();
-                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-                Log.i("fagmentTag", fragmentTag);
-                getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.main_layout, fragment);
-                ft.addToBackStack(fragmentTag);
-                ft.commit();
+                replaceFragment(new FragmentUserlist());
             }
         });
         btn.setVisibility(View.GONE);
@@ -91,22 +84,10 @@ public class FragmentFriend extends BaseFragment {
         delbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new FragmentDelFriend();
-                fragmentTag = fragment.getClass().getSimpleName();  //FragmentLogin
-                Log.i("fagmentTag", fragmentTag);
-                getActivity().getSupportFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.main_layout, fragment);
-                ft.addToBackStack(fragmentTag);
-                ft.commit();
+                replaceFragment(new FragmentDelFriend());
             }
         });
         delbtn.setVisibility(View.GONE);
-
-        RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview_friend);
-        recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
-        recyclerView.setAdapter(new FriendlistRecyclerViewAdapter());
-        recyclerView.setVisibility(View.GONE);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -114,7 +95,11 @@ public class FragmentFriend extends BaseFragment {
             btn.setVisibility(View.VISIBLE);
             gobtn.setVisibility(View.VISIBLE);
             delbtn.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.VISIBLE);
+            progressOn();
+            RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview_friend);
+            recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
+            recyclerView.setAdapter(new FriendlistRecyclerViewAdapter());
+            progressOff();
             loginConstraintLayout.setVisibility(View.GONE);
         }
 
