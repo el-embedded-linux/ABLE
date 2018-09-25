@@ -71,6 +71,7 @@ public class MessageActivity extends BaseActivity {
     private ValueEventListener valueEventListener;
     private Map<String, Boolean> user = new HashMap<>();
     int peopleCount = 0;
+    ChatModel chatModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,19 +83,18 @@ public class MessageActivity extends BaseActivity {
         destinationUid = getIntent().getStringExtra("destinationUid");
         button = findViewById(R.id.messageActivity_button);
         editText = findViewById(R.id.messageActivity_editText);
+        chatModel = new ChatModel();
+        user.put(uid,true);
+        user.put(destinationUid, true);
+        chatModel.setUsers(user);
 
         recyclerView = findViewById(R.id.messageActivity_reclclerview);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ChatModel chatModel = new ChatModel();
-                user.put(uid,true);
-                user.put(destinationUid, true);
-                chatModel.setUsers(user);
-
                 if (chatRoomUid == null) {
                     button.setEnabled(false);
-                    FirebaseDatabase.getInstance().getReference().child("CHATROOMS").push().setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    reference.child("CHATROOMS").push().setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             checkChatRoom();
@@ -102,7 +102,7 @@ public class MessageActivity extends BaseActivity {
                     });
                 } else {
                     ChatModel.Comment comment = new ChatModel.Comment(uid, editText.getText().toString(), ServerValue.TIMESTAMP);
-                    FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(chatRoomUid).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    referenceComments.push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             sendGcm();
@@ -151,7 +151,7 @@ public class MessageActivity extends BaseActivity {
     }
 
     void checkChatRoom() {
-        FirebaseDatabase.getInstance().getReference().child("CHATROOMS").orderByChild("users/" + uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child("CHATROOMS").orderByChild("users/" + uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot item : dataSnapshot.getChildren()) {
@@ -179,7 +179,7 @@ public class MessageActivity extends BaseActivity {
         public RecyclerViewAdapter() {
             comments = new ArrayList<>();
 
-            FirebaseDatabase.getInstance().getReference().child("USER").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child("USER").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     destinationUserModel = dataSnapshot.getValue(UserModel.class);
