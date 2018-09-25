@@ -12,7 +12,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class BaseFragment extends Fragment {
 
     public DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    public FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public void replaceFragment(Fragment fragment) {
         String fragmentTag;

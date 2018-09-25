@@ -14,7 +14,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class BaseActivity extends AppCompatActivity {
 
     public DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    public FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public void toastText(String text){
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();

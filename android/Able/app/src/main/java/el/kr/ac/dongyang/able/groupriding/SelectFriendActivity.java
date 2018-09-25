@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -65,6 +66,8 @@ public class SelectFriendActivity extends BaseActivity {
                     chatModel.setUsers(user);
                     FirebaseDatabase.getInstance().getReference().child("CHATROOMS").push().setValue(chatModel);
                     user.clear();
+                    toastText("채팅방 생성 완료!");
+                    finish();
                     //selectFriendRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }

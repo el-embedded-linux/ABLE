@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ServerValue;
@@ -84,6 +85,7 @@ public class GroupMessageActivity extends BaseActivity {
         });
 
         destinationRoom = getIntent().getStringExtra("destinationRoom");
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = firebaseUser.getUid();
         editText = findViewById(R.id.groupMessageActivity_editText);
         recyclerView = findViewById(R.id.groupMessageActivity_recyclerview);

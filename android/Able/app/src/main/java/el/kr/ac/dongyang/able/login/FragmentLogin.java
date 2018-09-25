@@ -366,6 +366,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
     private void passPushTokenToServer() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             String uid = firebaseUser.getUid();
             String token = FirebaseInstanceId.getInstance().getToken();
             Map<String, Object> map = new HashMap<>();
