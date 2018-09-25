@@ -72,6 +72,7 @@ public class FragmentHome extends BaseFragment{
         temp_max = view.findViewById(R.id.Temp_max);
         temp_min = view.findViewById(R.id.Temp_min);
         weatherIconManager = new WeatherIconManager();
+        setWeather();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null) {
@@ -85,7 +86,6 @@ public class FragmentHome extends BaseFragment{
                     if (userModel != null) {
                         userName = userModel.getUserName();
                         textId.setText(userName);
-                        setWeather();
                         progressOff();
                     }
                 }
@@ -131,23 +131,25 @@ public class FragmentHome extends BaseFragment{
                 FragmentHome.this.temp_min.setText(temp_min);
             }
         });
-
-        reference.child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UserModel userModel = new UserModel();
-                userModel = dataSnapshot.getValue(UserModel.class);
-                if(userModel.getLatitude() != null) {
-                    asyncTask.execute(userModel.getLatitude(), userModel.getLongitude());
-                } else {
-                    asyncTask.execute("37.500774", "126.867899");
+        if (uid != null) {
+            reference.child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserModel userModel = new UserModel();
+                    userModel = dataSnapshot.getValue(UserModel.class);
+                    if(userModel.getLatitude() != null) {
+                        asyncTask.execute(userModel.getLatitude(), userModel.getLongitude());
+                    } else {
+                        asyncTask.execute("37.500774", "126.867899");
+                    }
+                    progressOff();
                 }
-                progressOff();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        } else {
+            asyncTask.execute("37.500774", "126.867899");
+            progressOff();
+        }
     }
 }

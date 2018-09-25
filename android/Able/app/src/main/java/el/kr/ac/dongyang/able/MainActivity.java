@@ -1,5 +1,6 @@
 package el.kr.ac.dongyang.able;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -96,7 +98,19 @@ public class MainActivity extends BaseActivity
         naviSubTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewSubTitle);
         naviImg = headerView.findViewById(R.id.NaviHeaderMainImageView);
 
+        locationPermissionRequest();
+
         //getHashKey();
+    }
+
+    private void locationPermissionRequest() {
+        String fineLocation = android.Manifest.permission.ACCESS_FINE_LOCATION;
+        String CoarseLocation = Manifest.permission.ACCESS_COARSE_LOCATION;
+
+        if (ActivityCompat.checkSelfPermission(this, fineLocation) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, CoarseLocation) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{CoarseLocation, fineLocation}, 1);
+        }
     }
 
     @Override
