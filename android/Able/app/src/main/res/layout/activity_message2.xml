@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/frame"
         tools:listitem="@layout/item_message"
-        app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.RecyclerView>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
         android:id="@+id/messageActivity_editText"

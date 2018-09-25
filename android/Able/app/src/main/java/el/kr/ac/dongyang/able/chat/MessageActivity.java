@@ -91,12 +91,10 @@ public class MessageActivity extends BaseActivity {
                 user.put(uid,true);
                 user.put(destinationUid, true);
                 chatModel.setUsers(user);
-                user.clear();
 
                 if (chatRoomUid == null) {
-
                     button.setEnabled(false);
-                    reference.child("CHATROOMS").push().setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    FirebaseDatabase.getInstance().getReference().child("CHATROOMS").push().setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             checkChatRoom();
@@ -104,7 +102,7 @@ public class MessageActivity extends BaseActivity {
                     });
                 } else {
                     ChatModel.Comment comment = new ChatModel.Comment(uid, editText.getText().toString(), ServerValue.TIMESTAMP);
-                    reference.child("CHATROOMS").child(chatRoomUid).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    FirebaseDatabase.getInstance().getReference().child("CHATROOMS").child(chatRoomUid).child("comments").push().setValue(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             sendGcm();
@@ -153,7 +151,7 @@ public class MessageActivity extends BaseActivity {
     }
 
     void checkChatRoom() {
-        reference.child("CHATROOMS").orderByChild("users/" + uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("CHATROOMS").orderByChild("users/" + uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot item : dataSnapshot.getChildren()) {
@@ -181,7 +179,7 @@ public class MessageActivity extends BaseActivity {
         public RecyclerViewAdapter() {
             comments = new ArrayList<>();
 
-            reference.child("USER").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("USER").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     destinationUserModel = dataSnapshot.getValue(UserModel.class);
