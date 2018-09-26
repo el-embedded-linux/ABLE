@@ -300,6 +300,7 @@ public class NavigationActivity extends BaseActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     List<String> groupUserKeys = new ArrayList<>();
+                                    sideUserAdapter.listClear();
                                     for (DataSnapshot item : dataSnapshot.getChildren()) {
                                         String key = item.getKey();
                                         groupUserKeys.add(key);

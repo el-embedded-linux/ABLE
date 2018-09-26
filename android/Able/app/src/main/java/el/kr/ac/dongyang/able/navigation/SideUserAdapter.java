@@ -32,6 +32,10 @@ public class SideUserAdapter extends RecyclerView.Adapter<SideUserAdapter.ViewHo
         this.list.add(userModel);
     }
 
+    public void listClear() {
+        list.clear();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,6 +58,8 @@ public class SideUserAdapter extends RecyclerView.Adapter<SideUserAdapter.ViewHo
     public int getItemCount() {
         return list.size();
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView imageView;
