@@ -38,6 +38,13 @@ int btLCD_up, btLCD_down;
 #define BTLCD_UP 5//TFTLCD 위로 버튼
 #define BTLCD_DOWN 4//TFTLCD 아래 버튼
 int chmod=1000; //lcd모드를 변경해줌
+#define BTR 7 //오른쪽
+#define BTL 6 //왼쪽
+int btLeft, btRight;  // 좌우 버튼
+//int c = 0;                  // 버튼 동시 제어 변수
+int presRead;               // 압력센서
+int presPoint;
+#define PRESSURE A0
 
 //Heart_Beat
 #include "MAX30105.h"
@@ -57,10 +64,94 @@ int beatAvg = 0;
 #include <ThreadController.h>
 #include <Stepper.h>
 ThreadController controll = ThreadController();
+
 Thread myThread_tftLCD = Thread();
-Thread myThread_btn = Thread();
+Thread myThread_btnLCD = Thread();
 Thread myThread_reed = Thread();
 Thread myThread_heart = Thread();
+Thread myThread_press = Thread();
+Thread myThread_btn = Thread();
+
+//LED
+#include <Adafruit_NeoPixel.h>
+#define BARWING 3     // 바 LED
+#define ADAMATRIX 2  // 매트릭스 LED
+#define NUMPIXELS 64  // 매트릭스 LED개수
+#define BARPIXELS 28  // 바 LED개수
+
+Adafruit_NeoPixel matrix = Adafruit_NeoPixel(NUMPIXELS, ADAMATRIX, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel bar = Adafruit_NeoPixel(BARPIXELS, BARWING, NEO_GRB + NEO_KHZ800);
+
+//LED arrays
+int humi[4][64]={
+  { 0, 0, 0, 1, 0, 0, 0, 0,
+    0, 0, 1, 1, 0, 0, 0, 0,
+    0, 1, 1, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    0, 1, 1, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 0, 0, 0, 0,
+    0, 0, 0, 1, 0, 0, 0, 0
+  }, 
+  { 0, 0, 0, 0, 1, 0, 0, 0,
+    0, 0, 0, 0, 1, 1, 0, 0,
+    0, 0, 0, 0, 0, 1, 1, 0,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    0, 0, 0, 0, 0, 1, 1, 0,
+    0, 0, 0, 0, 1, 1, 0, 0,
+    0, 0, 0, 0, 1, 0, 0, 0
+  },
+  { 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 0, 0, 0, 0, 1, 1,
+    1, 0, 1, 0, 0, 1, 0, 1,
+    1, 0, 0, 1, 1, 0, 0, 1,
+    1, 0, 0, 1, 1, 0, 0, 1,
+    1, 0, 1, 0, 0, 1, 0, 1,
+    1, 1, 0, 0, 0, 0, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1
+  },
+  { 0, 0, 1, 1, 1, 1, 0, 0,
+    0, 1, 1, 0, 0, 1, 1, 0,
+    1, 1, 0, 0, 1, 1, 1, 1,
+    1, 0, 0, 1, 1, 1, 0, 1,
+    1, 0, 1, 1, 1, 0, 0, 1,
+    1, 1, 1, 1, 0, 0, 1, 1,
+    0, 1, 1, 0, 0, 1, 1, 0,
+    0, 0, 1, 1, 1, 1, 0, 0
+  }
+};
+
+int matrixColor[4][3] = {
+  {0, 20, 0},
+  {0, 20, 0},
+  {40, 0, 0},
+  {40, 0, 0},
+};
+
+int barShape[3][28] = {
+  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+};
+
+int barColor[3][3] = {
+  {0, 20, 0}, {0, 20, 0}, {40, 0, 0}
+};
+
+void btnCallback(){
+  // Matrix LED + Bar LED
+  showMatrix();
+  showPres(presRead, PRESSURE, presPoint);
+}
+
+void pressCallback()
+{
+  int SensorReading = analogRead(PRESSURE); 
+ 
+  int mfsr_r18 = map(SensorReading, 0, 1024, 0, 255);
+  Serial.println(mfsr_r18);
+}
 
 void reedCallback(){
   boolean check = digitalRead(A1); // 리드스위치의 상태를 확인합니다.(SIG=A1)
@@ -155,6 +246,8 @@ void setup() {
   setTime(01,37,0,22,9,18);
   date();
   Serial.println(today);
+
+ 
   if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
   {
     Serial.println("MAX30105 was not found. Please check wiring/power. ");
@@ -166,7 +259,7 @@ void setup() {
   particleSensor.setPulseAmplitudeGreen(0); //Turn off Green LED
   
   Serial.println("Place your index finger on the sensor with steady pressure.");
-  
+
   tft.begin();
   tft.setRotation(3);
   tft.fillScreen(ILI9340_BLACK);
@@ -174,11 +267,16 @@ void setup() {
   //thread
   myThread_tftLCD.onRun(tftLCDCallback);
   myThread_reed.onRun(reedCallback);
-  myThread_btn.onRun(btLCDCallback);
+  myThread_btnLCD.onRun(btLCDCallback);
+  myThread_press.onRun(pressCallback);
+  myThread_btn.onRun(btnCallback);
   myThread_heart.onRun(heartCallback);
   
   controll.add(&myThread_reed);
   controll.add(&myThread_tftLCD);
+  controll.add(&myThread_btnLCD);
+  controll.add(&myThread_heart);
+  controll.add(&myThread_press);
   controll.add(&myThread_btn);
   controll.add(&myThread_heart);
 }
@@ -187,19 +285,34 @@ void loop(void) {
   controll.run();
 }
 
+void showPres(int presRead1, int PRESSURE1, int presPoint1)
+{
+  presRead1 = analogRead(PRESSURE1);
+  presPoint1 = map(presRead1, 0, 1024, 0,255);
+  Serial.println(presPoint1);
+  if(presPoint1 >= 15) {  // 값을 수정해야할지도
+    for(int i=0;i<64;i++) {
+      matrix.setPixelColor(i, matrix.Color(humi[2][i]*matrixColor[2][0], humi[2][i]*matrixColor[2][1], humi[2][i]*matrixColor[2][2]));
+    }
+    for(int i=0;i<28;i++) {
+      bar.setPixelColor(i,bar.Color(barShape[2][i]*barColor[2][0], barShape[2][i]*barColor[2][1], barShape[2][i]*barColor[2][2]));
+    }
+  matrix.show();
+  bar.show();
+  }
+}
+
+void showMatrix() 
+{
+  
+}
+
 void date(){
-  today=year();
+  today = year();
   today = today+"-";
   today = today+month();
   today = today+"-";
   today = today+day();
-}
-
-unsigned long testFillScreen() {
-  unsigned long start = micros();
-  tft.fillScreen(ILI9340_BLACK);
-  tft.fillScreen(ILI9340_RED);
-  return micros() - start;
 }
 
 unsigned long distanceText() {
@@ -266,7 +379,7 @@ unsigned int heartText(){
 //  tft.fillScreen(ILI9340_BLACK);
 //  long irValue = particleSensor.getIR();
   unsigned long start = micros();
-  
+  beatsPerMinute = 30;
   tft.setCursor(85, 40);
   tft.setTextColor(ILI9340_WHITE);    tft.setTextSize(3);
   tft.println(today);
