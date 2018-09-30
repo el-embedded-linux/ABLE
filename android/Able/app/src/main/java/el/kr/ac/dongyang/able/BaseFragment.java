@@ -12,7 +12,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class BaseFragment extends Fragment {
 
     public DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    public FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public void replaceFragment(Fragment fragment) {
         String fragmentTag;
@@ -28,5 +27,15 @@ public class BaseFragment extends Fragment {
                     .addToBackStack(null);
             ft.commit();
         }
+    }
+
+    public void progressOn() {
+        BaseApplication.getInstance().progressOn(getActivity(), null);
+    }
+    public void progressOn(String message) {
+        BaseApplication.getInstance().progressOn(getActivity(), message);
+    }
+    public void progressOff() {
+        BaseApplication.getInstance().progressOff();
     }
 }

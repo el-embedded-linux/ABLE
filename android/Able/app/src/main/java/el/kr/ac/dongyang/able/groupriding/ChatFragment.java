@@ -50,7 +50,8 @@ public class ChatFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         ConstraintLayout chatConstraintLayout = view.findViewById(R.id.chatConstraintLayout);
-        
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if(firebaseUser != null) {
             uid = firebaseUser.getUid();
             RecyclerView recyclerView = view.findViewById(R.id.chatfragment_recyclerview);

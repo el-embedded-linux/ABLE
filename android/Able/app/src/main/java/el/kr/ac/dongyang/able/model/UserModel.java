@@ -16,6 +16,8 @@ public class UserModel {
     private String height;
     private String weight;
     private String goal;
+    private String latitude;
+    private String longitude;
 
     public String getEmail() {
         return email;
@@ -103,5 +105,21 @@ public class UserModel {
 
     public void setGoal(String goal) {
         this.goal = goal;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

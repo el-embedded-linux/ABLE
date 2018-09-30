@@ -32,7 +32,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -107,6 +109,8 @@ public class NavigationActivity extends BaseActivity {
     DrawerLayout drawer;
     RecyclerView recyclerView;
     private SideUserAdapter sideUserAdapter;
+    private MyLocationListener listener;
+    private LocationManager lm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,12 +120,15 @@ public class NavigationActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         setTitle("Navigation");
 
+        web = findViewById(R.id.web);
+
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        listener = new MyLocationListener();
+        setGps();
+
         arrowImg = findViewById(R.id.arrowImg);
         directionLayout = findViewById(R.id.directionConstraintLayout);
         arrowLayout = findViewById(R.id.arrowConstraintLayout);
-
-        web = findViewById(R.id.web);
-        initWeb();
 
         drawer = findViewById(R.id.drawerNavigation);
 
@@ -200,6 +207,11 @@ public class NavigationActivity extends BaseActivity {
 
                                 //노티바 제거
                                 notificationManager.cancel(1);
+
+                                //그룹리스트 제거
+                                if(clickText.equals("shareStart")) {
+                                    reference.child("CHATROOMS").child(destinationRoom).child("groupUsers").child(uid).removeValue();
+                                }
                                 //액티비티 종료
                                 finish();
                             }
@@ -260,10 +272,12 @@ public class NavigationActivity extends BaseActivity {
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            //0이니까 한번 눌러야 받네 하
                             if (directionStatus != 0) {
                                 String arrow = (String) dataSnapshot.getValue();
                                 if (arrow != null) arrowViewVisible(arrow);
                             }
+                            directionStatus = 1;
                         }
 
                         @Override
@@ -286,6 +300,7 @@ public class NavigationActivity extends BaseActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     List<String> groupUserKeys = new ArrayList<>();
+                                    sideUserAdapter.listClear();
                                     for (DataSnapshot item : dataSnapshot.getChildren()) {
                                         String key = item.getKey();
                                         groupUserKeys.add(key);
@@ -392,14 +407,12 @@ public class NavigationActivity extends BaseActivity {
                                             comment.destinationLongitude + "', '" +
                                             comment.destinationLatitude + "')");
                         }
-                    }, 2000);
+                    }, 3000);
                     searchAddressEditText.setText(comment.destinationAddress);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        setGps();
     }
 
     @Override
@@ -481,9 +494,9 @@ public class NavigationActivity extends BaseActivity {
         NotificationModel notificationModel = new NotificationModel();
         notificationModel.to = pushToken;
         notificationModel.notification.title = userName;
-        notificationModel.notification.text = "[ " + searchAddressEditText.getText().toString() + " ]\n그룹라이딩 시작";
+        notificationModel.notification.text = "[ " + searchAddressEditText.getText().toString() + " ] 그룹라이딩 시작";
         notificationModel.data.title = userName;
-        notificationModel.data.text = "[ " + searchAddressEditText.getText().toString() + " ]\n그룹라이딩 시작";
+        notificationModel.data.text = "[ " + searchAddressEditText.getText().toString() + " ] 그룹라이딩 시작";
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"), gson.toJson(notificationModel));
 
@@ -547,6 +560,10 @@ public class NavigationActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                if(latitude_r != 0) {
+                    web.loadUrl("javascript:geoLo('" + latitude_r + "', '" + longitude_r + "')");
+                }
+                progressOff();
             }
         });
         WebSettings webSet = web.getSettings();
@@ -558,18 +575,161 @@ public class NavigationActivity extends BaseActivity {
         webSet.setSupportMultipleWindows(true);
         webSet.setSaveFormData(false);
         webSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        webSet.setLoadWithOverviewMode(true);
-        webSet.setUseWideViewPort(true);
-        web.setWebViewClient(new WebViewClient()); //페이지 로딩을 마쳤을 경우 작업
+        web.setWebChromeClient(new WebChromeClient() {
+            public boolean onConsoleMessage(ConsoleMessage cm) {
+                Log.d("MyApplication", cm.message() + " -- From line "
+                        + cm.lineNumber() + " of "
+                        + cm.sourceId() + ", " + cm);
+                return true;
+            }
+        });
         web.loadUrl("file:///android_asset/index.html"); //웹뷰로드
         web.setHorizontalScrollBarEnabled(false);
         web.setVerticalScrollBarEnabled(false);
-
         web.addJavascriptInterface(new NavigationActivity.TMapBridge(), "tmap");
     }
 
-    //내 위치 갱신시 작업
-    private LocationListener mLocationListener = new LocationListener() {
+    private void descriptionChange(final int position) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                StringTokenizer st = new StringTokenizer(descriptionList.get(position));
+                int countTokens = st.countTokens();
+                for (int i = 0; i < countTokens; i++) {
+                    final String token = st.nextToken();
+                    final char meter = token.charAt(token.length() - 1);
+                    handlerDirectionJob(token, Character.toString(meter));
+                }
+            }
+        });
+        thread.start();
+    }
+
+    private void handlerDirectionJob(final String text, final String meter) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (text.equals("좌회전"))
+                    directionImg.setImageResource(R.drawable.arrow_left);
+                else if (text.equals("우회전"))
+                    directionImg.setImageResource(R.drawable.arrow_right);
+                else if (meter.equals("m")) textDirection.setText(text);
+                else directionImg.setImageResource(R.drawable.arrow_up_straight);
+            }
+        });
+    }
+
+    public void setGps() {
+        progressOn();
+        String fineLocation = Manifest.permission.ACCESS_FINE_LOCATION;
+        String CoarseLocation = Manifest.permission.ACCESS_COARSE_LOCATION;
+
+        if (ActivityCompat.checkSelfPermission(this, fineLocation) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, CoarseLocation) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{CoarseLocation, fineLocation}, 1);
+        }
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자(실내에선 NETWORK_PROVIDER 권장)
+                0, // 통지사이의 최소 시간간격 (miliSecond)
+                0, // 통지사이의 최소 변경거리 (m)
+                listener);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initWeb();
+            }
+        },1000);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NAVILIST_CODE && resultCode == RESULT_OK) {
+            address = data.getStringExtra("endName");
+            endLong = data.getStringExtra("endLong");
+            endLat = data.getStringExtra("endLat");
+            searchAddressEditText.setText(address);
+            web.loadUrl("javascript:distance('" + startlist[0] + "', '" + startlist[1] + "', '" + Double.parseDouble(endLong) + "', '" + Double.parseDouble(endLat) + "')");
+            endConstraintLayout.setVisibility(View.GONE);
+            startConstraintLayout.setVisibility(View.VISIBLE);
+            constLocationInfo.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        lm.removeUpdates(listener);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("네비게이션을 종료하시겠습니까?")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //중간에 꺼도 데이터 저장 필요
+
+                        //노티바 제거
+                        if(notificationManager != null) notificationManager.cancel(1);
+
+                        if(clickText.equals("shareStart")) {
+                            reference.child("CHATROOMS").child(destinationRoom).child("groupUsers").child(uid).removeValue();
+                        }
+                        NavigationActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private class TMapBridge {
+        int i = 0;
+
+        @JavascriptInterface
+        public void setMessage(final String arg) {
+            mHandler.post(new Runnable() {
+                public void run() {
+                    naviList.add(i + " : " + arg + "\n");
+                    i += 1;
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void setTimeDistance(final String arg) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    String timeDistance = arg;
+                    String[] tdList = timeDistance.split(",");
+                    Log.d("tdList", tdList[0] + " , " + tdList[1]);
+                    textTime.setText(tdList[0]);
+                    textDistance.setText(tdList[1]);
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void setDescription(final String arg) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    descriptionList.add(i + " : " + arg);
+                    Log.d("description", i + arg);
+                }
+            });
+        }
+    }
+
+    private class MyLocationListener implements LocationListener {
+        @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
                 latitude_r = location.getLatitude();
@@ -647,141 +807,11 @@ public class NavigationActivity extends BaseActivity {
             }
         }
 
-        public void onProviderDisabled(String provider) {
-        }
-
-        public void onProviderEnabled(String provider) {
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-    };
-
-    private void descriptionChange(final int position) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                StringTokenizer st = new StringTokenizer(descriptionList.get(position));
-                int countTokens = st.countTokens();
-                for (int i = 0; i < countTokens; i++) {
-                    final String token = st.nextToken();
-                    final char meter = token.charAt(token.length() - 1);
-                    handlerDirectionJob(token, Character.toString(meter));
-                }
-            }
-        });
-        thread.start();
-    }
-
-    private void handlerDirectionJob(final String text, final String meter) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (text.equals("좌회전"))
-                    directionImg.setImageResource(R.drawable.arrow_left);
-                else if (text.equals("우회전"))
-                    directionImg.setImageResource(R.drawable.arrow_right);
-                else if (meter.equals("m")) textDirection.setText(text);
-                else directionImg.setImageResource(R.drawable.arrow_up_straight);
-            }
-        });
-    }
-
-    public void setGps() {
-        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        String fineLocation = Manifest.permission.ACCESS_FINE_LOCATION;
-        String CoarseLocation = Manifest.permission.ACCESS_COARSE_LOCATION;
-
-        if (ActivityCompat.checkSelfPermission(this, fineLocation) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, CoarseLocation) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{CoarseLocation, fineLocation}, 1);
-        }
-        //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자(실내에선 NETWORK_PROVIDER 권장)
-                0, // 통지사이의 최소 시간간격 (miliSecond)
-                0, // 통지사이의 최소 변경거리 (m)
-                mLocationListener);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == NAVILIST_CODE && resultCode == RESULT_OK) {
-            address = data.getStringExtra("endName");
-            endLong = data.getStringExtra("endLong");
-            endLat = data.getStringExtra("endLat");
-            searchAddressEditText.setText(address);
-            web.loadUrl("javascript:distance('" + startlist[0] + "', '" + startlist[1] + "', '" + Double.parseDouble(endLong) + "', '" + Double.parseDouble(endLat) + "')");
-            endConstraintLayout.setVisibility(View.GONE);
-            startConstraintLayout.setVisibility(View.VISIBLE);
-            constLocationInfo.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.removeUpdates(mLocationListener);
-        mLocationListener = null;
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setTitle("네비게이션을 종료하시겠습니까?")
-                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //중간에 꺼도 데이터 저장 필요
-                        NavigationActivity.super.onBackPressed();
-                    }
-                })
-                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                })
-                .create()
-                .show();
-    }
-
-    private class TMapBridge {
-        int i = 0;
-
-        @JavascriptInterface
-        public void setMessage(final String arg) {
-            mHandler.post(new Runnable() {
-                public void run() {
-                    naviList.add(i + " : " + arg + "\n");
-                    i += 1;
-                }
-            });
-        }
-
-        @JavascriptInterface
-        public void setTimeDistance(final String arg) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    String timeDistance = arg;
-                    String[] tdList = timeDistance.split(",");
-                    Log.d("tdList", tdList[0] + " , " + tdList[1]);
-                    textTime.setText(tdList[0]);
-                    textDistance.setText(tdList[1]);
-                }
-            });
-        }
-
-        @JavascriptInterface
-        public void setDescription(final String arg) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    descriptionList.add(i + " : " + arg);
-                    Log.d("description", i + arg);
-                }
-            });
-        }
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {}
+        @Override
+        public void onProviderEnabled(String s) {}
+        @Override
+        public void onProviderDisabled(String s) {}
     }
 }

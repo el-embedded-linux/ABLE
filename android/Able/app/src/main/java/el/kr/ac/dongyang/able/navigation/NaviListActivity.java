@@ -45,6 +45,7 @@ public class NaviListActivity extends AppCompatActivity {
     private ConstraintLayout checkEndPointLayout;
     private NaviListRecyclerViewAdapter recyclerViewAdapter;
     private Handler handler;
+    private StringBuffer address = new StringBuffer();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -161,7 +162,12 @@ public class NaviListActivity extends AppCompatActivity {
 
             final TMapPOIItem tMapPOIItem = poiList.get(position);
             holder.nameText.setText(tMapPOIItem.getPOIName());
-            holder.addressText.setText(tMapPOIItem.getPOIAddress());
+
+            address.append(tMapPOIItem.upperAddrName + " " + tMapPOIItem.middleAddrName + " " + tMapPOIItem.lowerAddrName);
+            if(tMapPOIItem.firstNo != null) address.append(" " + tMapPOIItem.firstNo);
+            if(tMapPOIItem.secondNo != null) address.append("-" + tMapPOIItem.secondNo);
+            holder.addressText.setText(address);
+            address.setLength(0);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -3,10 +3,13 @@ package el.kr.ac.dongyang.able.setting;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,17 +29,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -68,6 +67,9 @@ public class FragmentSetting extends BaseFragment {
     int day, month, year;
 
     Switch bluetoothSwitch;
+    Switch gpsSwitch;
+
+    LocationManager locationManager;
 
     Calendar cal;
 
@@ -117,6 +119,22 @@ public class FragmentSetting extends BaseFragment {
         month = cal.get(Calendar.MONTH) + 1;
         year = cal.get(Calendar.YEAR);
         date = year + "-" + month + "-" + day;
+
+        gpsSwitch = view.findViewById(R.id.gps_switch);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            gpsSwitch.setChecked(true);
+        } else {
+            gpsSwitch.setChecked(false);
+        }
+        gpsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    startActivity(intent);
+            }
+        });
 
         bluetoothSwitch = view.findViewById(R.id.bluetooth_switch);
         bluetoothSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

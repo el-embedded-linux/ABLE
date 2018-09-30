@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ServerValue;
@@ -84,6 +85,7 @@ public class GroupMessageActivity extends BaseActivity {
         });
 
         destinationRoom = getIntent().getStringExtra("destinationRoom");
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = firebaseUser.getUid();
         editText = findViewById(R.id.groupMessageActivity_editText);
         recyclerView = findViewById(R.id.groupMessageActivity_recyclerview);
@@ -123,7 +125,9 @@ public class GroupMessageActivity extends BaseActivity {
     }
 
     public void sendGcmUsers() {
-        reference.child("CHATROOMS").child(destinationRoom).child("users")
+        reference.child("CHATROOMS")
+                .child(destinationRoom)
+                .child("users")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -150,6 +154,7 @@ public class GroupMessageActivity extends BaseActivity {
         NotificationModel notificationModel = new NotificationModel();
         notificationModel.to = pushToken;
         notificationModel.notification.title = userName;
+        //그룹라이딩 지도 넣으면 종료됨
         notificationModel.notification.text = editText.getText().toString();
         notificationModel.data.title = userName;
         notificationModel.data.text = editText.getText().toString();

@@ -14,7 +14,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class BaseActivity extends AppCompatActivity {
 
     public DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    public FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public void toastText(String text){
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
@@ -35,5 +34,15 @@ public class BaseActivity extends AppCompatActivity {
                     .addToBackStack(null);
             ft.commit();
         }
+    }
+
+    public void progressOn() {
+        BaseApplication.getInstance().progressOn(this, null);
+    }
+    public void progressOn(String message) {
+        BaseApplication.getInstance().progressOn(this, message);
+    }
+    public void progressOff() {
+        BaseApplication.getInstance().progressOff();
     }
 }

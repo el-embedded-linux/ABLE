@@ -48,7 +48,8 @@
                 android:id="@+id/groupRidingStartBtn"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
-                android:background="@color/white"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/frame"
                 android:visibility="gone"
                 android:text="시작" />
         </LinearLayout>

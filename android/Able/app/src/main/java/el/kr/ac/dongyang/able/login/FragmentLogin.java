@@ -242,7 +242,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                     Toast.makeText(getActivity(), "비밀번호는 최소 6자리 이상이어야 합니다.", Toast.LENGTH_SHORT).show();
                 } else if (!registerEmailEditText.getText().toString().trim().matches(emailPattern)) {
                     Toast.makeText(getActivity(), "이메일이 같지 않습니다.", Toast.LENGTH_SHORT).show();
-                } else if (!checkBox.isChecked()){
+                } else if (!checkBox.isChecked()) {
                     Toast.makeText(getActivity(), "개인정보 약관에 동의하여 주십시오.", Toast.LENGTH_SHORT).show();
                 } else {
                     createUser(registerEmailEditText.getText().toString(), registerPwEditText.getText().toString());
@@ -324,7 +324,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
     @Override
     public void onStart() {
         super.onStart();
-        if(registerNum == 1){
+        if (registerNum == 1) {
             loginView.setVisibility(View.GONE);
             emailView.setVisibility(View.GONE);
             registerView.setVisibility(View.VISIBLE);
@@ -339,6 +339,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        progressOn();
         //페이스북쪽으로..
         mcallBackManager.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
@@ -361,15 +362,20 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
             imageUri = data.getData();  // 이미지 경로 원본
             registerNum = 1;
         }
+        progressOff();
     }
 
     private void passPushTokenToServer() {
-        String uid = firebaseUser.getUid();
-        String token = FirebaseInstanceId.getInstance().getToken();
-        Map<String, Object> map = new HashMap<>();
-        map.put("pushToken", token);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            String uid = firebaseUser.getUid();
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Map<String, Object> map = new HashMap<>();
+            map.put("pushToken", token);
 
-        reference.child("USER").child(uid).updateChildren(map);
+            reference.child("USER").child(uid).updateChildren(map);
+        }
     }
 
     //버튼들 기능
@@ -418,7 +424,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                     userModel = dataSnapshot.getValue(UserModel.class);
                     if (userModel != null) {
                         userName = userModel.getUserName();
-                        if(userModel.getProfileImageUrl() != null) {
+                        if (userModel.getProfileImageUrl() != null) {
                             Glide.with(getActivity())
                                     .load(userModel.getProfileImageUrl())
                                     .apply(new RequestOptions().circleCrop())
@@ -428,6 +434,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                         naviSubTitle.setText(userModel.getComment());
                     }
                 }
+
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }
@@ -450,6 +457,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
 
     //이메일, 패스워드로 로그인
     private void loginUser(String email, String password) {
+        progressOn("로그인 중...");
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -458,7 +466,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-
+                            progressOff();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -470,6 +478,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
 
     //이메일, 패스워드로 유저를 생성할 때, 로그인 버튼 클릭시 수행됨
     private void createUser(final String email, final String password) {
+        progressOn("회원가입 중...");
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -478,7 +487,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                             //Toast.makeText(getActivity(), "회원가입 성공", Toast.LENGTH_SHORT).show();
                             final String uid = task.getResult().getUser().getUid();
 
-                             profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(userNameEditText.getText().toString()).build();
+                            profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(userNameEditText.getText().toString()).build();
                             task.getResult().getUser().updateProfile(profileChangeRequest);
 
                             //이메일과 uid를 받아서 데이터베이스에 저장하는데 사용
@@ -504,6 +513,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
                                             Toast.makeText(getActivity(), "회원가입되었습니다.", Toast.LENGTH_SHORT).show();
                                             FirebaseUser user = mAuth.getCurrentUser();
                                             updateUI(user);
+                                            progressOff();
                                         }
                                     });
                                 }
@@ -514,6 +524,7 @@ public class FragmentLogin extends BaseFragment implements GoogleApiClient.OnCon
             @Override
             public void onFailure(@NonNull Exception e) {
                 e.printStackTrace();
+                progressOff();
             }
         });
     }
