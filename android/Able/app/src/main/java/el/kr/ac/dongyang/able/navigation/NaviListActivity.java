@@ -26,14 +26,13 @@ import android.widget.Toast;
 
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapPOIItem;
-import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import el.kr.ac.dongyang.able.BusProvider;
 import el.kr.ac.dongyang.able.R;
 
+//네비게이션 액티비티에서 목적지 검색을 하기위한 Activity
 public class NaviListActivity extends AppCompatActivity {
 
     private EditText nEnd;
@@ -61,6 +60,7 @@ public class NaviListActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.fragment_naviList);
         initRecyclerView();
 
+        //검색 뷰
         nEnd = findViewById(R.id.naviEnd);
         nEnd.setFocusableInTouchMode(true);
         nEnd.requestFocus();
@@ -96,9 +96,7 @@ public class NaviListActivity extends AppCompatActivity {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //조건 다르게 변경 필요함
                 if(busitem.size() != 0) {
-
                     Intent intent = new Intent();
                     intent.putExtra("endName", busitem.get(0));
                     intent.putExtra("endLong", busitem.get(1));
@@ -118,6 +116,7 @@ public class NaviListActivity extends AppCompatActivity {
         recyclerViewAdapter.notifyDataSetChanged();
     }
 
+    //tmap api 의 지오코딩 검색 메소드를 사용
     private void searchAllPoi() {
         final String strDataEnd = nEnd.getText().toString();
         TMapData tMapData = new TMapData();
@@ -193,7 +192,6 @@ public class NaviListActivity extends AppCompatActivity {
             return poiList.size();
         }
 
-        //커스텀뷰를 위해 필수
         public class ViewHolder extends RecyclerView.ViewHolder {
             public ImageView imageView;
             public TextView nameText, addressText;

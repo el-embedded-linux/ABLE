@@ -1,9 +1,5 @@
 package el.kr.ac.dongyang.able;
 
-/**
- * Created by user on 2018-04-02.
- */
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -17,11 +13,8 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 
-
+//오픈웨더맵의 날씨를 받아오는 클래스
 public class WeatherFunction {
-
-    // Project Created by Ferdousur Rahman Shajib
-    // www.androstock.com
 
     private static final String OPEN_WEATHER_MAP_URL =
             "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=metric";
@@ -57,16 +50,10 @@ public class WeatherFunction {
         return icon;
     }
 
-
-
     public interface AsyncResponse {
 
         void processFinish(String output1, String output2, String output3, String output4, String output5, String output6);
     }
-
-
-
-
 
     public static class placeIdTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -86,7 +73,6 @@ public class WeatherFunction {
                 Log.d("Error", "Cannot process JSON results", e);
             }
 
-
             return jsonWeather;
         }
 
@@ -98,8 +84,6 @@ public class WeatherFunction {
                     JSONObject main = json.getJSONObject("main");
                     DateFormat df = DateFormat.getDateTimeInstance();
 
-
-
                     String temperature = String.valueOf(main.getInt("temp"));
                     String temp_min = String.valueOf(main.getInt("temp_min"));
                     String temp_max = String.valueOf(main.getInt("temp_max"));
@@ -109,25 +93,13 @@ public class WeatherFunction {
                             json.getJSONObject("sys").getLong("sunrise") * 1000,
                             json.getJSONObject("sys").getLong("sunset") * 1000);
 
-
-
-
                     delegate.processFinish(temperature, temp_min,temp_max, updatedOn, iconText, ""+ (json.getJSONObject("sys").getLong("sunrise") * 1000));
 
                 }
             } catch (JSONException e) {
-                //Log.e(LOG_TAG, "Cannot process JSON results", e);
             }
-
-
-
         }
     }
-
-
-
-
-
 
     public static JSONObject getWeatherJSON(String lat, String lon){
         try {

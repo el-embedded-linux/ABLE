@@ -63,6 +63,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import el.kr.ac.dongyang.able.BaseActivity;
+import el.kr.ac.dongyang.able.BusProviderSetting;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.ChatModel;
 import el.kr.ac.dongyang.able.model.NotificationModel;
@@ -75,6 +76,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+//티맵 api를 사용하여 지도를 표현하고 네비게이션 기능을 제공하는 액티비티
 public class NavigationActivity extends BaseActivity {
 
     Map<String, UserModel> users = new HashMap<>();
@@ -100,7 +102,6 @@ public class NavigationActivity extends BaseActivity {
     private ConstraintLayout directionLayout;
     private ConstraintLayout arrowLayout;
     private ImageView arrowImg;
-
     String address;
     String endLong;
     String endLat;
@@ -177,10 +178,6 @@ public class NavigationActivity extends BaseActivity {
             }
         });
 
-        TextView nodeText = findViewById(R.id.nodetext);
-        TextView beforeText = findViewById(R.id.beforeText);
-        nodeText.setVisibility(View.GONE);
-        beforeText.setVisibility(View.GONE);
 
         textDirection = findViewById(R.id.directionTextView);
         directionImg = findViewById(R.id.directionImageView);
@@ -193,6 +190,7 @@ public class NavigationActivity extends BaseActivity {
         textTime = findViewById(R.id.textTime);
         textDistance = findViewById(R.id.textDistance);
 
+        //종료 버튼
         Button endBtn = findViewById(R.id.endBtn);
         endBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,8 +201,8 @@ public class NavigationActivity extends BaseActivity {
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //종료했을때 운동데이터 저장(거리, 속도, 시간, 칼로리
-
+                                //종료했을때 운동데이터 저장
+                                BusProviderSetting.getInstance().post("end");
                                 //노티바 제거
                                 notificationManager.cancel(1);
 
@@ -226,6 +224,8 @@ public class NavigationActivity extends BaseActivity {
                         .show();
             }
         });
+
+        //공유 버튼
         Button shareBtn = findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,12 +251,11 @@ public class NavigationActivity extends BaseActivity {
                                 sendGcmUsers();
                             }
                         });
-                //그룹라이딩에서 값을 통해서 방향지시 해주고 싶다면 기본값 1로 저장하고
-                //숫자를 디비에 넣고 리스너로 계속 받아주면 되겠네
                 finish();
             }
         });
 
+        //분기 설정, 공유를 하기 위함인지, 공유된 경로로 이동할 목적인지
         Intent intent = getIntent();
         clickText = intent.getStringExtra("clickBtn");
         if (clickText.equals("share")) {
@@ -286,6 +285,7 @@ public class NavigationActivity extends BaseActivity {
                     });
         }
 
+        //출발 버튼
         Button startBtn = findViewById(R.id.startBtn);
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -343,6 +343,7 @@ public class NavigationActivity extends BaseActivity {
             }
         });
 
+        //티맵 api 설정
         TMapTapi tmaptapi = new TMapTapi(this);
         tmaptapi.setSKTMapAuthentication("2414ee00-3784-4c78-913d-32bf5fa9c107");
 
@@ -358,6 +359,7 @@ public class NavigationActivity extends BaseActivity {
             }
         });
 
+        //현재 위치 버튼
         Button currentBtn = findViewById(R.id.currentBtn);
         currentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -415,6 +417,7 @@ public class NavigationActivity extends BaseActivity {
         }
     }
 
+    //옵션 메뉴 생성
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (clickText.equals("shareStart")) {
@@ -424,6 +427,7 @@ public class NavigationActivity extends BaseActivity {
         return false;
     }
 
+    //옵션 메뉴 클릭시 드로우어 호출
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -437,6 +441,7 @@ public class NavigationActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //그룹라이딩시 화살표뷰가 나오는 함수
     private void arrowViewVisible(String arrow) {
         switch (arrow) {
             case "left":
@@ -461,6 +466,7 @@ public class NavigationActivity extends BaseActivity {
         }, 1000);
     }
 
+    //푸시알림 함수
     public void sendGcmUsers() {
         reference
                 .child("CHATROOMS")
@@ -486,6 +492,7 @@ public class NavigationActivity extends BaseActivity {
                 });
     }
 
+    //푸시알림 설정
     void gcmSetting(String pushToken) {
 
         Gson gson = new Gson();
@@ -518,6 +525,7 @@ public class NavigationActivity extends BaseActivity {
         });
     }
 
+    //앱 작업표시줄에 노티피케이션 설정하는 함수
     private void startNotification() {
         String id = "my_channel_01";
         CharSequence name = "test";
@@ -550,6 +558,7 @@ public class NavigationActivity extends BaseActivity {
         notificationManager.notify(1, mBuilder.build());
     }
 
+    //웹뷰 구현 함수
     private void initWeb() {
         web.setWebViewClient(new WebViewClient() {
             @Override
@@ -589,6 +598,7 @@ public class NavigationActivity extends BaseActivity {
         web.addJavascriptInterface(new NavigationActivity.TMapBridge(), "tmap");
     }
 
+    //현재 위치가 바뀔때 방향과 거리를 보여주는 함수
     private void descriptionChange(final int position) {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -605,6 +615,7 @@ public class NavigationActivity extends BaseActivity {
         thread.start();
     }
 
+    //화살표 뷰의 이미지를 변경하는 함수
     private void handlerDirectionJob(final String text, final String meter) {
         mHandler.post(new Runnable() {
             @Override
@@ -619,6 +630,7 @@ public class NavigationActivity extends BaseActivity {
         });
     }
 
+    //현재 gps 값을 받아주는 리스너를 등록하는 함수
     public void setGps() {
         progressOn();
         String fineLocation = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -641,6 +653,7 @@ public class NavigationActivity extends BaseActivity {
         },1000);
     }
 
+    //네비리스트 액티비티에서 데이터를 받아서 웹뷰에 거리를 등록
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == NAVILIST_CODE && resultCode == RESULT_OK) {
@@ -668,8 +681,8 @@ public class NavigationActivity extends BaseActivity {
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //중간에 꺼도 데이터 저장 필요
-
+                        //운동데이터 저장
+                        BusProviderSetting.getInstance().post("end");
                         //노티바 제거
                         if(notificationManager != null) notificationManager.cancel(1);
 
@@ -689,6 +702,7 @@ public class NavigationActivity extends BaseActivity {
                 .show();
     }
 
+    //웹뷰에서 데이터를 받아오는 함수
     private class TMapBridge {
         int i = 0;
 
@@ -729,6 +743,7 @@ public class NavigationActivity extends BaseActivity {
     }
 
     private class MyLocationListener implements LocationListener {
+        //사용자의 위치가 변경될때마다 위치 좌표 갱신
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
@@ -752,7 +767,7 @@ public class NavigationActivity extends BaseActivity {
                         try {
                             startPoint = naviList.get(0);
                             //셋팅에서 돌기 위한건데 흠..
-                            //busProvider.post(startPoint);
+                            BusProviderSetting.getInstance().post(startPoint);
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                         }
@@ -782,19 +797,8 @@ public class NavigationActivity extends BaseActivity {
                         if (latitudeint >= resultlat2m && latitudeint <= resultlat2p) {
                             if (longitudeint >= resultlon2m && longitudeint <= resultlon2p) {
                                 nextPoint = naviList.get(i + 1);
-                                //busProvider.post(nextPoint);
+                                BusProviderSetting.getInstance().post(nextPoint);
                                 Log.d("otto_lonlat : ", "" + nextPoint);
-                                /*final int finalI = i;
-                                final String nextNode = nextPoint;
-                                //테스트용 텍스트뷰
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        beforeText.setText(naviList.get(finalI));
-                                        nodeText.setText(nextNode);
-                                    }
-                                });*/
-
 
                                 //endConstraintLayout 수정
                                 descriptionChange(i);
@@ -802,11 +806,14 @@ public class NavigationActivity extends BaseActivity {
                                 break;
                             }
                         }
+                        if(nextPoint.equals(naviList.get(naviList.size()-1))) {
+                            toastText("주행이 종료되었습니다.");
+                            finish();
+                        }
                     }
                 }
             }
         }
-
         @Override
         public void onStatusChanged(String s, int i, Bundle bundle) {}
         @Override

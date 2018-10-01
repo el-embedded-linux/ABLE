@@ -17,6 +17,7 @@ import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
+//친구목록에서 친구를 클릭시 친구의 정보를 표시
 public class ProfileActivity extends BaseActivity {
 
     private ImageView imageView;
@@ -40,6 +41,7 @@ public class ProfileActivity extends BaseActivity {
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         friendUid = getIntent().getStringExtra("friendUid");
 
+        //DB에서 친구의 uid를 호출
         reference.child("USER").child(friendUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -56,6 +58,7 @@ public class ProfileActivity extends BaseActivity {
                 goal.setText(userModel.getGoal());
                 message.setText(userModel.getComment());
 
+                //DB에서 친구의 운동기록을 호출
                 reference.child("TOTALHEALTH").child(friendUid).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

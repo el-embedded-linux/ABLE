@@ -19,6 +19,7 @@ import java.util.List;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.UserModel;
 
+// Navigation Activity 에서 그룹라이딩시 우측 드로우어에 유저리스트를 추가하는 recyclerView 어댑터
 public class SideUserAdapter extends RecyclerView.Adapter<SideUserAdapter.ViewHolder> {
 
     private Context context;
@@ -59,8 +60,6 @@ public class SideUserAdapter extends RecyclerView.Adapter<SideUserAdapter.ViewHo
         return list.size();
     }
 
-
-
     public class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView imageView;
         public TextView userName;
@@ -73,13 +72,6 @@ public class SideUserAdapter extends RecyclerView.Adapter<SideUserAdapter.ViewHo
             userName.setTextColor(Color.BLACK);
             comment = itemView.findViewById(R.id.frienditem_textview_comment);
             comment.setVisibility(View.GONE);
-            /*itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view){
-                    Intent intent = new Intent(view.getContext(), ProfileActivity.class);
-                    context.startActivity(intent);
-                }
-            });*/
         }
     }
 }

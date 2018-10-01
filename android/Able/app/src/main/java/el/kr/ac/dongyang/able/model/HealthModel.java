@@ -1,9 +1,6 @@
 package el.kr.ac.dongyang.able.model;
 
-/**
- * Created by impro on 2018-06-07.
- */
-
+//헬스케어에 필요한 데이터클래스
 public class HealthModel {
     private String kcal;
     private String speed;

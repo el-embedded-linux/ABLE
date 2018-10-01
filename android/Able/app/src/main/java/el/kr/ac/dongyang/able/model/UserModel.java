@@ -1,9 +1,6 @@
 package el.kr.ac.dongyang.able.model;
 
-/**
- * Created by impro on 2018-05-08.
- */
-
+//유저 정보에 필요한 데이터클래스
 public class UserModel {
     private String email;
     private String password;

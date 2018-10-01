@@ -26,6 +26,7 @@ import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.UserModel;
 
+//친구목록에서 친구를 삭제하는 뷰
 public class FragmentDelFriend extends BaseFragment {
 
     FirebaseUser user;
@@ -36,6 +37,8 @@ public class FragmentDelFriend extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_del_friend,container,false);
         getActivity().setTitle("DelFriend");
+
+        //recycler View 설정
         RecyclerView recyclerView = view.findViewById(R.id.fragment_recyclerview_delfriend);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new DelFriendAdapter());
@@ -49,6 +52,7 @@ public class FragmentDelFriend extends BaseFragment {
         return view;
     }
 
+    //친구 삭제하는 recyclerView 어댑터 클래스 설정
     class DelFriendAdapter extends RecyclerView.Adapter<DelFriendAdapter.CustomViewHolder> {
         private List<String> keys = new ArrayList<>();
         private List<String> friendUsers = new ArrayList<>();
@@ -100,6 +104,8 @@ public class FragmentDelFriend extends BaseFragment {
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
+
+            //친구 삭제 버튼
             holder.delBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

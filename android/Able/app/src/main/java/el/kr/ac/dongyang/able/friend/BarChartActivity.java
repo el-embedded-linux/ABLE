@@ -34,6 +34,7 @@ import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
+//친구들의 기록을 볼 수 있는 차트 Activity
 public class BarChartActivity extends BaseActivity {
 
     private List<String> userNames = new ArrayList<>();
@@ -50,13 +51,12 @@ public class BarChartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barchart);
 
+        //차트를 생성하는데 필요한 기본 설정
         initBarChart();
 
         handler = new Handler() {
             public void handleMessage(Message msg) {
-                //chart.setVisibleXRangeMaximum((float)userNames.size());
                 xAxis.setAxisMaximum((float)userNames.size()-1); // the axis maximum is 100
-                //xAxis.setAxisMaximum(6f); // the axis maximum is 100
                 Log.d("username","is" + userNames.size());
                 xAxis.setValueFormatter(new IAxisValueFormatter() {
                     @Override
@@ -67,7 +67,6 @@ public class BarChartActivity extends BaseActivity {
 
                 //데이터셋
                 set = new BarDataSet(entries, "BarDataSet");
-                //set.setColors(new int[] {Color.RED, Color.GRAY, Color.GREEN, Color.BLACK, Color.RED, Color.GRAY});
                 set.setColors(ColorTemplate.VORDIPLOM_COLORS);
 
                 //데이터 저장
@@ -75,7 +74,6 @@ public class BarChartActivity extends BaseActivity {
                 data.setValueFormatter(new MyValueFormatter());
                 data.setValueTextColor(Color.GREEN);
                 data.setValueTextSize(14f);
-                //data.setBarWidth(0.5f); // set custom bar width
                 chart.setData(data);
                 chart.setFitBars(true); // make the x-axis fit exactly all bars
                 chart.animateY(3000, Easing.EasingOption.EaseInOutBack);
@@ -85,6 +83,7 @@ public class BarChartActivity extends BaseActivity {
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        //DB에서 친구 리스트를 불러오고 데이터를 호출한다음, 차트에 넣는다.
         reference.child("FRIEND").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -128,6 +127,7 @@ public class BarChartActivity extends BaseActivity {
         });
     }
 
+    //차트를 생성하는데 필요한 기본 설정
     private void initBarChart() {
         chart = findViewById(R.id.chart1);
         chart.setBackgroundColor(Color.TRANSPARENT);
@@ -137,7 +137,6 @@ public class BarChartActivity extends BaseActivity {
         chart.setGridBackgroundColor(Color.BLUE);
         chart.setDrawBorders(false);
         chart.setBorderColor(Color.BLACK);
-        //chart.setDragEnabled(false);            //드래그 비활성화
         chart.setScaleEnabled(false);           //차트 배율 비활성화
         chart.setPinchZoom(false);              //줌 비활성화
         chart.setDoubleTapToZoomEnabled(false); //두번 탭 비활성화
@@ -146,6 +145,7 @@ public class BarChartActivity extends BaseActivity {
         Legend legend = chart.getLegend();
         legend.setEnabled(false);
 
+        //X축
         xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(16f);
@@ -155,7 +155,6 @@ public class BarChartActivity extends BaseActivity {
         xAxis.setGranularity(1f); // interval 1
 
         //Y축 왼쪽
-        // data has AxisDependency.LEFT
         YAxis left = chart.getAxisLeft();
         left.setValueFormatter(new MyAxisValueFormatter());
         left.setDrawAxisLine(true); // no axis line
@@ -163,19 +162,6 @@ public class BarChartActivity extends BaseActivity {
         left.setDrawZeroLine(true); // draw a zero line
         chart.getAxisRight().setEnabled(false); // no right axis
         left.setTextSize(12f); // set the text size
-        //left.setAxisMinimum(0f); // start at zero
-        //left.setAxisMaximum(10f); // the axis maximum is 100
         left.setTextColor(Color.BLUE);
-        //left.setGranularity(1f); // interval 1
-        //left.setLabelCount(6, true); // force 6 labels*/
-
-        /*//엔트리
-        entries.add(new BarEntry(0f, 30f));
-        entries.add(new BarEntry(1f, 80f));
-        entries.add(new BarEntry(2f, 60f));
-        entries.add(new BarEntry(3f, 50f));
-        // gap of 2f
-        entries.add(new BarEntry(5f, 70f));
-        entries.add(new BarEntry(6f, 60f));*/
     }
 }
