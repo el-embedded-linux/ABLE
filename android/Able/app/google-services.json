@@ -31,6 +31,14 @@
           }
         },
         {
+          "client_id": "911680645537-rs9jgbl24lf5j9m1hgrolg7dsrq6m965.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "el.kr.ac.dongyang.able",
+            "certificate_hash": "5181eebcdcb47d1acc80cdc9bcfcf44f30722563"
+          }
+        },
+        {
           "client_id": "911680645537-rsean58aei55la1fpoqqvnrdv9sfpccq.apps.googleusercontent.com",
           "client_type": 3
         }

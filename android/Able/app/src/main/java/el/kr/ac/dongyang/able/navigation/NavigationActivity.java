@@ -54,6 +54,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.skt.Tmap.TMapTapi;
+import com.squareup.otto.Bus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,6 +64,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import el.kr.ac.dongyang.able.BaseActivity;
+import el.kr.ac.dongyang.able.BusProvider;
+import el.kr.ac.dongyang.able.BusProviderSetting;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.ChatModel;
 import el.kr.ac.dongyang.able.model.NotificationModel;
@@ -100,7 +103,6 @@ public class NavigationActivity extends BaseActivity {
     private ConstraintLayout directionLayout;
     private ConstraintLayout arrowLayout;
     private ImageView arrowImg;
-
     String address;
     String endLong;
     String endLat;
@@ -658,6 +660,7 @@ public class NavigationActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         lm.removeUpdates(listener);
+        BusProvider.getInstance().unregister(this);
         super.onDestroy();
     }
 
@@ -752,7 +755,7 @@ public class NavigationActivity extends BaseActivity {
                         try {
                             startPoint = naviList.get(0);
                             //셋팅에서 돌기 위한건데 흠..
-                            //busProvider.post(startPoint);
+                            BusProviderSetting.getInstance().post(startPoint);
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                         }
@@ -782,19 +785,8 @@ public class NavigationActivity extends BaseActivity {
                         if (latitudeint >= resultlat2m && latitudeint <= resultlat2p) {
                             if (longitudeint >= resultlon2m && longitudeint <= resultlon2p) {
                                 nextPoint = naviList.get(i + 1);
-                                //busProvider.post(nextPoint);
+                                BusProviderSetting.getInstance().post(nextPoint);
                                 Log.d("otto_lonlat : ", "" + nextPoint);
-                                /*final int finalI = i;
-                                final String nextNode = nextPoint;
-                                //테스트용 텍스트뷰
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        beforeText.setText(naviList.get(finalI));
-                                        nodeText.setText(nextNode);
-                                    }
-                                });*/
-
 
                                 //endConstraintLayout 수정
                                 descriptionChange(i);
