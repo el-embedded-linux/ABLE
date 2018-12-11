@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+//로딩화면을 구현하는 함수 클래스
 public class BaseApplication extends Application {
     private static BaseApplication baseApplication;
     AppCompatDialog progressDialog;
@@ -30,6 +31,7 @@ public class BaseApplication extends Application {
             return;
         }
 
+        //다이얼로스 설정
         if(progressDialog != null && progressDialog.isShowing()) {
             progressSet(message);
         } else {
@@ -40,6 +42,7 @@ public class BaseApplication extends Application {
             progressDialog.show();
         }
 
+        //이미지뷰, 텍스트뷰 설정
         ImageView imgLoadingFrame = progressDialog.findViewById(R.id.ivFrameLoading);
         Glide.with(this)
                 .load(R.raw.animate_day_night_color)
@@ -50,6 +53,7 @@ public class BaseApplication extends Application {
         }
     }
 
+    //로딩화면 설정
     public void progressSet(String message) {
         if(progressDialog == null || !progressDialog.isShowing()) {
             return;
@@ -60,6 +64,7 @@ public class BaseApplication extends Application {
         }
     }
 
+    //로딩화면 종료
     public void progressOff() {
         if(progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();

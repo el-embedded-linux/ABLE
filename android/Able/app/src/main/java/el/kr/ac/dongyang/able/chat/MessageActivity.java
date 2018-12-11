@@ -26,7 +26,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
@@ -54,6 +53,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+//개인 메세지 채팅
 public class MessageActivity extends BaseActivity {
 
     private String destinationUid;
@@ -88,7 +88,12 @@ public class MessageActivity extends BaseActivity {
         user.put(destinationUid, true);
         chatModel.setUsers(user);
 
+        //개인 챗 목록을 recyclerView 로 띄운다.
         recyclerView = findViewById(R.id.messageActivity_reclclerview);
+
+        //메세지 전송 버튼
+        //처음 눌렀을때는 채팅방을 생성하고
+        //기존에 생성된 방이 있으면 채팅메시지가 전송된다.
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,9 +117,11 @@ public class MessageActivity extends BaseActivity {
                 }
             }
         });
+        //채팅룸이 있는지 확인
         checkChatRoom();
     }
 
+    // DB에 저장된 pushToken 을 이용하여 기기마다 채팅 알림 메시지를 전송한다.
     void sendGcm() {
 
         Gson gson = new Gson();
@@ -150,6 +157,7 @@ public class MessageActivity extends BaseActivity {
         });
     }
 
+    //DB에서 기존의 채팅룸이 있는지 확인
     void checkChatRoom() {
         reference.child("CHATROOMS").orderByChild("users/" + uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -172,6 +180,7 @@ public class MessageActivity extends BaseActivity {
         });
     }
 
+    //개인 채팅 recyclerView 어댑터 클래스 생성
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         List<ChatModel.Comment> comments;
@@ -193,6 +202,7 @@ public class MessageActivity extends BaseActivity {
             });
         }
 
+        //메시지 목록을 불러온다.
         void getMessageList() {
             referenceComments = reference.child("CHATROOMS").child(chatRoomUid).child("comments");
             valueEventListener = referenceComments.addValueEventListener(new ValueEventListener() {
@@ -205,7 +215,6 @@ public class MessageActivity extends BaseActivity {
                         String key = item.getKey();
                         ChatModel.Comment comment_origin = item.getValue(ChatModel.Comment.class);
                         ChatModel.Comment comment_modify = item.getValue(ChatModel.Comment.class);
-                        //읽었구나
                         comment_modify.readUsers.put(uid, true);
 
                         readUsersMap.put(key, comment_modify);
@@ -245,6 +254,7 @@ public class MessageActivity extends BaseActivity {
             return new MessageViewHolder(view);
         }
 
+        //내가 보낸 메세지와 상대방이 보낸 메세지를 뷰의 양끝에 다르게 부른다.
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             MessageViewHolder messageViewHolder = ((MessageViewHolder) holder);
@@ -279,6 +289,7 @@ public class MessageActivity extends BaseActivity {
             messageViewHolder.textView_timestamp.setText(time);
         }
 
+        //메시지를 읽은 사람수 체크
         void setReadCounter(final int position, final TextView textView) {
             if (peopleCount == 0) {
                 reference.child("CHATROOMS").child(chatRoomUid).child("users").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -317,6 +328,7 @@ public class MessageActivity extends BaseActivity {
             return comments.size();
         }
 
+        //각각의 뷰에 들어갈 변수 맵핑
         private class MessageViewHolder extends RecyclerView.ViewHolder {
             TextView textView_message;
             TextView textView_name;

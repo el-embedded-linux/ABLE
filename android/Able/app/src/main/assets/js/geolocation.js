@@ -78,7 +78,7 @@ function moveCoordinate (value, x, y) {
     lonlat = new Tmap.LonLat(x, y).transform(PR_4326, PR_3857);
     setXY(value, x, y);
     setMarker(value,lonlat);
-    map.setCenter(lonlat,15); // geolocation으로 얻어온 좌표로 지도의 중심을 설정합니다.
+    map.setCenter(lonlat,17); // geolocation으로 얻어온 좌표로 지도의 중심을 설정합니다.
 }
 
 //네이티브에서 좌표 받아서 지도에 표시

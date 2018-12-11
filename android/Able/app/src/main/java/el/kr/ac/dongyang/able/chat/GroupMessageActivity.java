@@ -52,6 +52,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+//단체 메세지 채팅
 public class GroupMessageActivity extends BaseActivity {
     Map<String, UserModel> users = new HashMap<>();
     String destinationRoom;
@@ -72,6 +73,7 @@ public class GroupMessageActivity extends BaseActivity {
         setContentView(R.layout.activity_group_message);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
+        //그룹라이딩 시 지도 좌표 설정을 위한 버튼
         groupRidingMapBtn = findViewById(R.id.groupRidingBtn);
         groupRidingMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +92,7 @@ public class GroupMessageActivity extends BaseActivity {
         editText = findViewById(R.id.groupMessageActivity_editText);
         recyclerView = findViewById(R.id.groupMessageActivity_recyclerview);
 
+        //firebase DB 에서 전체 유저의 uid 키값을 가져온다.
         reference.child("USER").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -97,6 +100,7 @@ public class GroupMessageActivity extends BaseActivity {
                     users.put(item.getKey(), item.getValue(UserModel.class));
                 }
 
+                //채팅 전송 버튼
                 Button button = findViewById(R.id.groupMessageActivity_button);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -113,6 +117,8 @@ public class GroupMessageActivity extends BaseActivity {
                         });
                     }
                 });
+
+                //채팅 목록이 되는 recyclerView 설정
                 recyclerView.setAdapter(new GroupMessageRecyclerViewAdapter());
                 recyclerView.setLayoutManager(new LinearLayoutManager(GroupMessageActivity.this));
             }
@@ -124,6 +130,7 @@ public class GroupMessageActivity extends BaseActivity {
         });
     }
 
+    // DB에 저장된 pushToken 을 이용하여 기기마다 채팅 알림 메시지를 전송한다.
     public void sendGcmUsers() {
         reference.child("CHATROOMS")
                 .child(destinationRoom)
@@ -146,6 +153,7 @@ public class GroupMessageActivity extends BaseActivity {
         });
     }
 
+    //gcm 의 설정
     void gcmSetting(String pushToken) {
 
         Gson gson = new Gson();
@@ -154,7 +162,6 @@ public class GroupMessageActivity extends BaseActivity {
         NotificationModel notificationModel = new NotificationModel();
         notificationModel.to = pushToken;
         notificationModel.notification.title = userName;
-        //그룹라이딩 지도 넣으면 종료됨
         notificationModel.notification.text = editText.getText().toString();
         notificationModel.data.title = userName;
         notificationModel.data.text = editText.getText().toString();
@@ -163,7 +170,7 @@ public class GroupMessageActivity extends BaseActivity {
 
         Request request = new Request.Builder()
                 .header("Content-Type", "application/json")
-                .addHeader("Authorization", "key=AIzaSyAXArVX1TeAhf2L9MNlTuKgumJgPK1Y0BU")
+                .addHeader("Authorization", getResources().getString(R.string.Authorization))
                 .url("https://gcm-http.googleapis.com/gcm/send")
                 .post(requestBody)
                 .build();
@@ -179,12 +186,14 @@ public class GroupMessageActivity extends BaseActivity {
         });
     }
 
+    //recyclerView에 붙는 Adapter 클래스 생성
     class GroupMessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public GroupMessageRecyclerViewAdapter() {
             getMessageList();
         }
 
+        //메시지 목록을 불러온다.
         void getMessageList() {
             reference.child("CHATROOMS").child(destinationRoom).child("comments").addValueEventListener(new ValueEventListener() {
                 @Override
@@ -235,6 +244,7 @@ public class GroupMessageActivity extends BaseActivity {
             return new GroupMessageViewHodler(view);
         }
 
+        //내가 보낸 메세지와 상대방이 보낸 메세지를 뷰의 양끝에 다르게 부른다.
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             GroupMessageViewHodler messageViewHolder = ((GroupMessageViewHodler) holder);
@@ -277,6 +287,7 @@ public class GroupMessageActivity extends BaseActivity {
 
         }
 
+        //메시지를 읽은 사람수 체크
         void setReadCounter(final int position, final TextView textView) {
             if (peopleCount == 0) {
                 reference.child("CHATROOMS").child(destinationRoom).child("users")
@@ -316,6 +327,8 @@ public class GroupMessageActivity extends BaseActivity {
             return comments.size();
         }
 
+
+        //각각의 뷰에 들어갈 변수 맵핑
         public class GroupMessageViewHodler extends RecyclerView.ViewHolder {
 
             TextView textView_message;

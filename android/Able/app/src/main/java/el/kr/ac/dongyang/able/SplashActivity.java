@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+//어플리케이션 실행시 로고와 애니메이션을 띄우는 Activity
 public class SplashActivity extends Activity {
 
     @Override
@@ -24,6 +25,7 @@ public class SplashActivity extends Activity {
 
             @Override
             public void onAnimationEnd(Animator animator) {
+                //설정된 애니메이션이 끝나면 메인 액티비티를 호출
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }

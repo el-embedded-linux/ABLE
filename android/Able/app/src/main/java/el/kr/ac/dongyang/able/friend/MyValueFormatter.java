@@ -6,6 +6,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DecimalFormat;
 
+//차트 생성시 막대그래프의 거리(km) 표시
 public class MyValueFormatter implements IValueFormatter {
 
     private DecimalFormat mFormat;

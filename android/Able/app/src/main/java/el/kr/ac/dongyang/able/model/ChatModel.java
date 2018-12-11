@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+//채팅에 필요한 데이터클래스
 public class ChatModel {
 
     private Map<String, Boolean> users = new HashMap<>();    //채팅방의 유저들

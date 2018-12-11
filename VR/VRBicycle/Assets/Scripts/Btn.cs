@@ -8,7 +8,7 @@ public class Btn : MonoBehaviour {
 
     public int whatAreYouDoing = 0; // 뭐할지 (시작할지 종료할지)
 
-    SerialPort sp = new SerialPort("COM5", 9600);
+	SerialPort sp = new SerialPort("\\\\.\\COM16", 9600);
 
     // Use this for initialization
     void Start()
@@ -36,13 +36,13 @@ public class Btn : MonoBehaviour {
         {
             if (whatAreYouDoing == 0)               // UI가 위에 있을 때는
             {
-                transform.Translate(0, -43, 0);     // UI Y좌표를 -43
+				transform.Translate((float)0,(float)-0.065, (float)0);     // UI Y좌표를 -43
                 Debug.Log(transform.position.y);
                 whatAreYouDoing = 1;
             }
             else if (whatAreYouDoing == 1)          // 아래에 있을 때는
             {
-                transform.Translate(0, 43, 0);      // UI Y좌표를 다시 +43
+				transform.Translate((float)0, (float)0.065, (float)0);      // UI Y좌표를 다시 +43
                 Debug.Log(transform.position.y);
                 whatAreYouDoing = 0;
             }
@@ -53,10 +53,12 @@ public class Btn : MonoBehaviour {
             gameObject = GameObject.Find("Outline");
             if (whatAreYouDoing == 0)
             {
+				sp.Close ();
                 SceneManager.LoadScene("03_Mapselect");
             }
             else if (whatAreYouDoing == 1)
             {
+				sp.Close ();
                 SceneManager.LoadScene("01_Login");
             }
         }

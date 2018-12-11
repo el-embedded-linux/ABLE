@@ -14,23 +14,17 @@
 #include <Thread.h>
 #include <ThreadController.h>
 
-#define BARWING 7     // 바 LED
-#define ADAMATRIX 6  // 매트릭스 LED
+
 #define RINGLED 5
-#define BTR 4        // 우측 버튼
-#define BTL 3        // 좌측 버튼
-#define NUMPIXELS 64  // 매트릭스 LED개수
-#define BARPIXELS 28  // 바 LED개수
-#define RINGPIXELS 64
-#define PRESSURE A0
+
+#define RINGPIXELS 24
+
 
 #ifdef __AVR__
 #include <avr/power.h>
 #endif
 
 // LEDs
-Adafruit_NeoPixel matrix = Adafruit_NeoPixel(NUMPIXELS, ADAMATRIX, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel bar = Adafruit_NeoPixel(BARPIXELS, BARWING, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel ring = Adafruit_NeoPixel(RINGPIXELS, RINGLED, NEO_GRB + NEO_KHZ800);
 
 float Mxyz[3];
@@ -67,10 +61,6 @@ volatile int mx_min = 0;
 volatile int my_min = 0;
 volatile int mz_min = 0;
 
-int btLeft, btRight;  // 좌우 버튼
-//int c = 0;                  // 버튼 동시 제어 변수
-int presRead;               // 압력센서
-int presPoint;
 
 //LED arrays
 int humi[4][64]={
@@ -146,7 +136,7 @@ void pressCallback()
   int SensorReading = analogRead(PRESSURE); 
  
   int mfsr_r18 = map(SensorReading, 0, 1024, 0, 255);
-  Serial.println(mfsr_r18); 
+  Serial.println(mfsr_r18);
 }
 
 void mpuCallback()
@@ -273,12 +263,12 @@ void setup() {
     Serial.println("     ");
 
     //thread
-    myThread_mpu.onRun(mpuCallback);
-    myThread_press.onRun(pressCallback);
-    //myThread_btn.onRun(btnCallback);
-    myThread_mpu.setInterval(1000); //주기
+   myThread_mpu.onRun(mpuCallback);
+   myThread_press.onRun(pressCallback);
+   //myThread_btn.onRun(btnCallback);
+   myThread_mpu.setInterval(1000); //주기
     
-    controll.add(&myThread_mpu);
+   controll.add(&myThread_mpu);
    controll.add(&myThread_press);
    //controll.add(&myThread_btn);
 }
@@ -428,6 +418,6 @@ void showMatrix()
       bar.setPixelColor(i,bar.Color(0,0,0));
     }
    matrix.show();
-   bar.show();
+   bar.show( );
   }
 }

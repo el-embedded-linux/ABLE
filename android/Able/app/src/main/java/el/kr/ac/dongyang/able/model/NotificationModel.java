@@ -1,9 +1,6 @@
 package el.kr.ac.dongyang.able.model;
 
-/**
- * Created by myeongsic on 2017. 12. 4..
- */
-
+//푸시알림에 필요한 데이터클래스
 public class NotificationModel {
 
     public String to;

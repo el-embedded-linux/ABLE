@@ -28,14 +28,6 @@ import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-/**
- * Created by impro on 2018-05-08.
- * 전체 유저의 목록을 데이터베이스로부터 불러와 리사이클러뷰로 보여준다.
- * 전체 유저라서 본인까지 뜨는 문제.
- * 예외를 두려면 어떻게 해야할지 고민해야 함.
- * 이미지뷰도 아직 안넣었음.
- */
-
 public class FragmentUserlist extends BaseFragment{
 
     public FragmentUserlist() {
@@ -60,7 +52,7 @@ public class FragmentUserlist extends BaseFragment{
         return view;
     }
 
-    //어댑터 클래스
+    //회원목록을 불러오는 recyclerView 어댑터 클래스
     class UserlistRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         //userModels라는 리스트를 만들고 addValueEventListerner와 DataSnapshot을 이용해 데이터 호출

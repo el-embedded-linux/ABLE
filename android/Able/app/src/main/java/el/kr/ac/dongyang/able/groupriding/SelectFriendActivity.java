@@ -14,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -36,6 +35,7 @@ import el.kr.ac.dongyang.able.chat.MessageActivity;
 import el.kr.ac.dongyang.able.model.ChatModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
+//채팅할 그룹유저를 추가하여 채팅방을 생성하는 액티비티
 public class SelectFriendActivity extends BaseActivity {
     ChatModel chatModel = new ChatModel();
     Map<String, Boolean> user = new HashMap<>();
@@ -50,6 +50,7 @@ public class SelectFriendActivity extends BaseActivity {
         RecyclerView recyclerView = findViewById(R.id.selectFriendActivity_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        //로그인한 상태 검사
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             myUid = firebaseUser.getUid();
@@ -57,6 +58,7 @@ public class SelectFriendActivity extends BaseActivity {
             recyclerView.setAdapter(selectFriendRecyclerViewAdapter);
         }
 
+        //체크된 유저로 채팅방 생성
         Button button = findViewById(R.id.selectFriendActivity_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

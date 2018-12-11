@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5143c8ac-d3b3-4ef2-a663-5a63b7778202" name="Default" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="test.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/WayPoint/test.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="325">
+              <caret line="22" column="68" lean-forward="true" selection-start-line="22" selection-start-column="68" selection-end-line="22" selection-end-column="68" />
+              <folding>
+                <marker date="1540209330000" expanded="false" signature="6:52" ph="..." />
+                <marker date="1540209330000" expanded="true" signature="88:1782" ph="{...}" />
+                <marker date="1540209330000" expanded="true" signature="273:396" ph="{...}" />
+                <marker date="1540209330000" expanded="true" signature="421:802" ph="{...}" />
+                <marker date="1540209330000" expanded="true" signature="658:796" ph="/* 마지막 노드 (웨이포인트)로 도착하였을 때는 초기화 시켜준다 _ 이 부분을 읽음으로써 ... */" />
+                <marker date="1540209330000" expanded="true" signature="824:973" ph="{...}" />
+                <marker date="1540209330000" expanded="true" signature="1026:1780" ph="{...}" />
+                <marker date="1540209330000" expanded="true" signature="1077:1774" ph="{...}" />
+                <marker date="1540209330000" expanded="true" signature="1320:1764" ph="{...}" />
+                <marker date="1540209330000" expanded="true" signature="1374:1750" ph="{...}" />
+                <marker date="1540209330000" expanded="true" signature="1607:1732" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="reeed.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Assets/ARDUnity/Scripts/Ardunity1/reeed.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="405">
+              <caret line="54" column="24" lean-forward="true" selection-start-line="54" selection-start-column="24" selection-end-line="54" selection-end-column="24" />
+              <folding>
+                <marker date="1543807891016" expanded="false" signature="6:173" ph="..." />
+                <marker date="1543807891016" expanded="true" signature="209:2750" ph="{...}" />
+                <marker date="1543807891016" expanded="true" signature="1029:1117" ph="{...}" />
+                <marker date="1543807891016" expanded="true" signature="1132:1293" ph="{...}" />
+                <marker date="1543807891016" expanded="true" signature="1325:1464" ph="{...}" />
+                <marker date="1543807891016" expanded="true" signature="1505:2748" ph="{...}" />
+                <marker date="1543807891016" expanded="true" signature="1547:1695" ph="{...}" />
+                <marker date="1543807891016" expanded="true" signature="1739:2384" ph="{...}" />
+                <marker date="1543807891016" expanded="true" signature="2405:2554" ph="{...}" />
+                <marker date="1543807891016" expanded="true" signature="2478:2550" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>speed</find>
+      <find>reeed</find>
+    </findStrings>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/WayPoint/test.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/ARDUnity/Scripts/Ardunity1/reeed.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Assets/ARDUnity/Scripts/Ardunity1/reeed.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="27" />
+    <option name="y" value="138" />
+    <option name="width" value="1113" />
+    <option name="height" value="830" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="UnityExplorer" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scratches" />
+      <pane id="SolutionExplorer">
+        <option name="show-file-system" value="false" />
+        <option name="show-all-items" value="false" />
+      </pane>
+      <pane id="UnityExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="ad4990d8:FileSystemViewPaneBase$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="VRBicycle" type="483dac07:UnityExplorerNode$Root" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-hidden-items" value="false" />
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5143c8ac-d3b3-4ef2-a663-5a63b7778202" name="Default" comment="" />
+      <created>1543803063101</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1543803063101</updated>
+      <workItem from="1543803073578" duration="1478000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1478000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <layout>
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Errors In Solution" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Unit Tests" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Unity" />
+      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.32897604" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="NuGet" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" isUnityUI="true" />
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/WayPoint/test.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="22" column="68" lean-forward="true" selection-start-line="22" selection-start-column="68" selection-end-line="22" selection-end-column="68" />
+          <folding>
+            <marker date="1540209330000" expanded="false" signature="6:52" ph="..." />
+            <marker date="1540209330000" expanded="true" signature="88:1782" ph="{...}" />
+            <marker date="1540209330000" expanded="true" signature="273:396" ph="{...}" />
+            <marker date="1540209330000" expanded="true" signature="421:802" ph="{...}" />
+            <marker date="1540209330000" expanded="true" signature="658:796" ph="/* 마지막 노드 (웨이포인트)로 도착하였을 때는 초기화 시켜준다 _ 이 부분을 읽음으로써 ... */" />
+            <marker date="1540209330000" expanded="true" signature="824:973" ph="{...}" />
+            <marker date="1540209330000" expanded="true" signature="1026:1780" ph="{...}" />
+            <marker date="1540209330000" expanded="true" signature="1077:1774" ph="{...}" />
+            <marker date="1540209330000" expanded="true" signature="1320:1764" ph="{...}" />
+            <marker date="1540209330000" expanded="true" signature="1374:1750" ph="{...}" />
+            <marker date="1540209330000" expanded="true" signature="1607:1732" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/ARDUnity/Scripts/Ardunity1/reeed.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="54" column="24" lean-forward="true" selection-start-line="54" selection-start-column="24" selection-end-line="54" selection-end-column="24" />
+          <folding>
+            <marker date="1543807891016" expanded="false" signature="6:173" ph="..." />
+            <marker date="1543807891016" expanded="true" signature="209:2750" ph="{...}" />
+            <marker date="1543807891016" expanded="true" signature="1029:1117" ph="{...}" />
+            <marker date="1543807891016" expanded="true" signature="1132:1293" ph="{...}" />
+            <marker date="1543807891016" expanded="true" signature="1325:1464" ph="{...}" />
+            <marker date="1543807891016" expanded="true" signature="1505:2748" ph="{...}" />
+            <marker date="1543807891016" expanded="true" signature="1547:1695" ph="{...}" />
+            <marker date="1543807891016" expanded="true" signature="1739:2384" ph="{...}" />
+            <marker date="1543807891016" expanded="true" signature="2405:2554" ph="{...}" />
+            <marker date="1543807891016" expanded="true" signature="2478:2550" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

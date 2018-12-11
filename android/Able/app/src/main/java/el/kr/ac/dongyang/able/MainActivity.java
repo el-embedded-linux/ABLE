@@ -1,23 +1,18 @@
 package el.kr.ac.dongyang.able;
 
 import android.Manifest;
-import android.animation.ObjectAnimator;
-import android.animation.StateListAnimator;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -43,13 +38,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import el.kr.ac.dongyang.able.friend.FragmentFriend;
-import el.kr.ac.dongyang.able.groupriding.PeopleFragment;
+import el.kr.ac.dongyang.able.groupriding.FragmentUser;
 import el.kr.ac.dongyang.able.health.FragmentHealthcare;
 import el.kr.ac.dongyang.able.login.FragmentLogin;
 import el.kr.ac.dongyang.able.model.UserModel;
 import el.kr.ac.dongyang.able.navigation.NavigationActivity;
 import el.kr.ac.dongyang.able.setting.FragmentSetting;
-
 
 //기본적으로 프래그먼트홈이 뜨도록 되어있음. content_xml에서 설정됨.
 public class MainActivity extends BaseActivity
@@ -66,7 +60,7 @@ public class MainActivity extends BaseActivity
     FragmentLogin fragmentLogin;
     FragmentHealthcare fragmentHealthcare;
     FragmentSetting fragmentSetting;
-    PeopleFragment peopleFragment;
+    FragmentUser fragmentUser;
     private long pressedTime;
 
     @Override
@@ -76,14 +70,16 @@ public class MainActivity extends BaseActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //프래그먼트 생성
         manager = getSupportFragmentManager();
         fragmentHome = new FragmentHome();
         fragmentFriend = new FragmentFriend();
         fragmentLogin = new FragmentLogin();
         fragmentHealthcare = new FragmentHealthcare();
         fragmentSetting = new FragmentSetting();
-        peopleFragment = new PeopleFragment();
+        fragmentUser = new FragmentUser();
 
+        //네비게이션 드로우어 설정
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -98,11 +94,13 @@ public class MainActivity extends BaseActivity
         naviSubTitle = headerView.findViewById(R.id.NaviHeaderMainTextViewSubTitle);
         naviImg = headerView.findViewById(R.id.NaviHeaderMainImageView);
 
+        //위치정보 권한 요청
         locationPermissionRequest();
 
         //getHashKey();
     }
 
+    //위치정보 권한 요청 함수
     private void locationPermissionRequest() {
         String fineLocation = android.Manifest.permission.ACCESS_FINE_LOCATION;
         String CoarseLocation = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -116,6 +114,8 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        //로그인 상태 검사하고 네비게이션 드로우어에 회원정보를 뷰로 보여준다.
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String uid = user.getUid();
@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity
         }
     }
 
-
+    //서버에 푸시토큰을 저장하는 함수
     private void passPushTokenToServer(String uid) {
         String token = FirebaseInstanceId.getInstance().getToken();
         Map<String, Object> map = new HashMap<>();
@@ -190,6 +190,7 @@ public class MainActivity extends BaseActivity
         }
     }
 
+    //옵션 메뉴 생성
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -197,7 +198,7 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-    //메뉴 아이템에 무엇을 넣을 것인지, 더 추가도 가능. 현재는 친구목록 : FragmentFriend로 이동
+    //메뉴 아이템에 무엇을 넣을 것인지 넣는 메소드. 친구목록 : FragmentFriend로 이동
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -233,7 +234,7 @@ public class MainActivity extends BaseActivity
                 replaceFragment(fragmentHealthcare);
                 break;
             case R.id.nav_groupriding:
-                replaceFragment(peopleFragment);
+                replaceFragment(fragmentUser);
                 break;
             case R.id.nav_setting:
                 replaceFragment(fragmentSetting);

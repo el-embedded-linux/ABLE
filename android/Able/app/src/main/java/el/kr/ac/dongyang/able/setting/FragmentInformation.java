@@ -3,11 +3,9 @@ package el.kr.ac.dongyang.able.setting;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,13 +44,7 @@ import el.kr.ac.dongyang.able.model.UserModel;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * Created by impro on 2018-05-08.
- * 설정 - 내 정보 수정 에서 데이터 저장 가능.
- * 주소를 넣을때 큰 범위에선 특정 위치명만 선택할 수 있도록 바꿀까 고민중.
- * 이미지 저장 - 스토리지,디비 아직 미구현
- */
-
+//회원 정보를 변경하고 저장하는 뷰
 public class FragmentInformation extends BaseFragment{
 
     private static final int PICK_FROM_ALBUM = 10;
@@ -108,7 +100,6 @@ public class FragmentInformation extends BaseFragment{
 
         //user가 있으면 기존에 저장된 값을 호출함.
         if (user != null) {
-            // User is signed in
             reference.child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -150,6 +141,7 @@ public class FragmentInformation extends BaseFragment{
         return view;
     }
 
+    //회원정보를 저장
     private void informationSave() {
         progressOn();
         if(imageUri != null){

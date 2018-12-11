@@ -10,11 +10,11 @@ public class PlaySpeedController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        
+		speedText.text = "0";
     }
 	
 	// Update is called once per frame
 	void Update () {
-        speedText.text = NewBehaviourScript.curSpeed;
+        speedText.text = reeed.curSpeed;
     }
 }

@@ -3,7 +3,6 @@ package el.kr.ac.dongyang.able.health;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
@@ -28,18 +27,8 @@ import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.HealthModel;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-/**
- * Created by user on 2018-05-13.
- * <p>
- * 클릭시 데이터가 있으면 데이터있는 화면을 표시
- * 데이터가 없으면 오늘은 운동을 안했다고 표시
- *
- * <p>
- * 몸무게 받아와서 칼로리 계산은 성공.
- */
-
+//유저의 운동기록을 달력으로 구현하는 프래그먼트
 public class FragmentHealthcare extends BaseFragment {
-    private static final String LOG_TAG = "FragmentNavigation";
 
     ConstraintLayout constraintLayoutHealth, constraintLayoutNone;
 
@@ -70,11 +59,11 @@ public class FragmentHealthcare extends BaseFragment {
         constraintLayoutNone.setVisibility(View.GONE);
         informationTextView = view.findViewById(R.id.informationTextView);
 
+        //하루의 운동기록이 미리 설정된 목표에 도달했는지 프로그레스바로 표현
         arcProgress = view.findViewById(R.id.arc_progress);
         mHandler = new Handler();
 
         //칼로리 부분
-
         speedTextView = view.findViewById(R.id.speed_text);
         kcalTextView = view.findViewById(R.id.burnUpTextView);
         distanceTextView = view.findViewById(R.id.distanceTextView);
@@ -87,6 +76,7 @@ public class FragmentHealthcare extends BaseFragment {
         userModel = new UserModel();
         healthModel = new HealthModel();
 
+        //달력을 이동하면서 해당일의 기록 확인 가능
         collapsibleCalendar = view.findViewById(R.id.collapsibleCalendarView);
         collapsibleCalendar.setState(0);
         collapsibleCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
@@ -122,12 +112,14 @@ public class FragmentHealthcare extends BaseFragment {
         return view;
     }
 
+    //달력의 날짜를 클릭했을때 실행.
     private void healthDataInit() {
         Day day = collapsibleCalendar.getSelectedDay();
         collapsibleCalendar.collapse(0);
         userModel = new UserModel();
         final String dayFormat = day.getYear() + "-" + (day.getMonth() + 1) + "-" + day.getDay();
 
+        //DB에서 헬스기록을 받아온다.
         FirebaseDatabase.getInstance().getReference().child("HEALTH").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             HealthModel healthModel = new HealthModel();
             @Override
@@ -141,6 +133,7 @@ public class FragmentHealthcare extends BaseFragment {
                     distanceTextView.setText(healthModel.getDistance());
                     speedTextView.setText(healthModel.getSpeed());
 
+                    //유저의 운동목표를 받아온다. 목표와 운동기록을 비교하여 화면에 다른 텍스트를 표시
                     FirebaseDatabase.getInstance().getReference().child("USER").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -161,6 +154,7 @@ public class FragmentHealthcare extends BaseFragment {
                                 currentGoal = 100;
                                 goalTextView.setText("오늘의 목표를 달성했습니다!");
                             }
+                            //운동기록에 따라 프로그레스 바의 값이 올라간다.
                             Thread t = new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -172,12 +166,6 @@ public class FragmentHealthcare extends BaseFragment {
                                             anim.setInterpolator(new DecelerateInterpolator());
                                             anim.setDuration(1000);
                                             anim.start();
-
-                                            //페이드인 되는 코드
-                                                /*AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.progress_anim);
-                                                set.setInterpolator(new DecelerateInterpolator());
-                                                set.setTarget(arcProgress);
-                                                set.start();*/
                                         }
                                     });
                                 }
@@ -200,57 +188,6 @@ public class FragmentHealthcare extends BaseFragment {
                 Log.d("databaseError", databaseError.getMessage());
             }
         });
-    }
-
-    public void setdate(String isdate){
-        if (user != null) {
-            // User is signed in
-            if (reference.child("HEALTH").child(uid).getKey() != null) {
-                reference.child("HEALTH").child(uid).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        healthModel = dataSnapshot.child(date).getValue(HealthModel.class);
-                        if (healthModel != null) {
-                            kcalTextView.setText(healthModel.getKcal() + "kcal");
-                            speedTextView.setText(healthModel.getSpeed() + "km");
-                        }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-            } else {
-            }
-        } else {
-            // No user is signed in
-        }
-    }
-    private void handleMessage(Message msg) { // 핸들러가 gui수정
-        kcalTextView.setText(cal2 + "kcal");
-        speedTextView.setText(speedTextView + "km");
-        Log.d(LOG_TAG, "mhcal2:  " + cal2+"mhspeed: "+cal2);
-    }
-
-    public void onStart() {
-        super.onStart();
-
-        if(user != null) {
-            reference.child("HEALTH").child(uid).child("2018-08-13").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    healthModel = dataSnapshot.getValue(HealthModel.class);
-                    if (healthModel != null) {
-                        cal2 = healthModel.getKcal();
-                        Log.d(LOG_TAG, "cal2:  " + cal2 + "speed: " + cal2);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("databaseError", databaseError.getMessage());
-                }
-            });
-        }
     }
 
     @Override

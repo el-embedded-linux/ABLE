@@ -130,32 +130,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchLayout" />
 
-        <!--<editor-fold desc="좌표테스트">-->
-        <TextView
-            android:id="@+id/beforeText"
-            android:layout_width="match_parent"
-            android:layout_height="18dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="현재노드"
-            android:textSize="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/web" />
-
-        <TextView
-            android:id="@+id/nodetext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="다음노드"
-            android:textSize="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/beforeText" />
-        <!--</editor-fold>-->
-
         <!--<editor-fold desc="하단 인포">-->
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constLocationInfo"

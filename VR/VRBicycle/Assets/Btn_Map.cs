@@ -9,11 +9,11 @@ public class Btn_Map : MonoBehaviour
 
     public int whereAreYouGoing = 0; // 무슨 맵 할지
 
-    SerialPort sp = new SerialPort("COM5", 9600);
+	SerialPort sp = new SerialPort("\\\\.\\COM16", 9600);
 
     // Use this for initialization
     void Start()
-    {
+    {	
         sp.Open();
         sp.ReadTimeout = 1;
     }
@@ -37,19 +37,15 @@ public class Btn_Map : MonoBehaviour
         {
             if (whereAreYouGoing == 0)              // UI가 왼쪽에 있을 때는
             {
-                transform.Translate(230, 0, 0);     // UI X좌표를 +230 이동
+				Debug.Log (transform.position.x);
+				transform.Translate((float)0.5,(float)0, (float)0);     // UI X좌표를 +230 이동
                 Debug.Log(transform.position.x);
                 whereAreYouGoing = 1;
             }
             else if (whereAreYouGoing == 1)
-            {
-                transform.Translate(220, 0, 0);     // UI X좌표를 +220 이동 (숫자는 UI 구성에 맞게 수치를 구한거)
-                Debug.Log(transform.position.x);
-                whereAreYouGoing = 2;
-            }
-            else if (whereAreYouGoing == 2)
-            {
-                transform.Translate(-450, 0, 0);
+			{
+				Debug.Log (transform.position.x);
+				transform.Translate((float)-0.5,(float)0, (float)0);     // UI X좌표를 +220 이동 (숫자는 UI 구성에 맞게 수치를 구한거)
                 Debug.Log(transform.position.x);
                 whereAreYouGoing = 0;
             }
@@ -60,16 +56,15 @@ public class Btn_Map : MonoBehaviour
             gameObject2 = GameObject.Find("Outline");
             if (whereAreYouGoing == 0)  // 첫번째 맵
             {
-                SceneManager.LoadScene("04_Main");
+				sp.Close ();
+				SceneManager.LoadScene("04_MainMap");
             }
             else if (whereAreYouGoing == 1) // 두번째 맵
             {
-                SceneManager.LoadScene("03_Mapselect");
+				sp.Close ();
+				SceneManager.LoadScene("05_Game_Map");
             }
-            else if (whereAreYouGoing == 2)   // 세번째 맵
-            {
-                SceneManager.LoadScene("05_End");
-            }
+      
         }
     }
 }

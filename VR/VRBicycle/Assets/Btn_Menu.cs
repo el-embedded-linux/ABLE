@@ -10,7 +10,7 @@ public class Btn_Menu : MonoBehaviour
 
     public static int menu = 0;            // 무슨 메뉴를 선택할지
 
-    SerialPort sp = new SerialPort("COM5", 9600);
+	SerialPort sp = new SerialPort("\\\\.\\COM16", 9600);
 
     // Use this for initialization
     void Start()

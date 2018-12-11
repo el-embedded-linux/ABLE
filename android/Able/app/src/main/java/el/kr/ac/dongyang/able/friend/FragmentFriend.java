@@ -5,12 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,19 +29,9 @@ import el.kr.ac.dongyang.able.BaseFragment;
 import el.kr.ac.dongyang.able.R;
 import el.kr.ac.dongyang.able.model.UserModel;
 
-/**
- * Created by impro on 2018-05-08.
- * 친구추가 버튼으로 유저목록으로 넘어감.
- * 아직 친구에 대한 버튼 이벤트 없음.
- * 현재 on/off 미구현
- * 마지막 접속시간 미구현
- */
-
 public class FragmentFriend extends BaseFragment {
 
     Button btn, gobtn ,delbtn;
-    FragmentTransaction ft;
-    String fragmentTag;
     FirebaseUser user;
     String uid;
 
@@ -60,6 +46,7 @@ public class FragmentFriend extends BaseFragment {
 
         ConstraintLayout loginConstraintLayout = view.findViewById(R.id.directionConstraintLayout);
 
+        // BarChardActivity 로 이동하는 버튼
         gobtn = view.findViewById(R.id.go_rank);
         gobtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +57,7 @@ public class FragmentFriend extends BaseFragment {
         });
         gobtn.setVisibility(View.GONE);
 
-        //친구 추가 : 유저목록으로 넘어감
+        // FragmentUserlist 로 이동하는 버튼
         btn = view.findViewById(R.id.insert_friend);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +67,7 @@ public class FragmentFriend extends BaseFragment {
         });
         btn.setVisibility(View.GONE);
 
+        // FragmentDelFriend 로 이동하는 버튼
         delbtn = view.findViewById(R.id.delete_friend);
         delbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +77,7 @@ public class FragmentFriend extends BaseFragment {
         });
         delbtn.setVisibility(View.GONE);
 
+        //현재 유저 정보를 받고 null(미로그인) 이 아닐때 친구목록과 버튼들을 보여준다.
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             uid = user.getUid();
@@ -106,6 +95,7 @@ public class FragmentFriend extends BaseFragment {
         return view;
     }
 
+    //친구 목록을 보여주는 recyclerView 어댑터 클래스 설정
     class FriendlistRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private List<String> keys = new ArrayList<>();

@@ -5,10 +5,7 @@ import android.graphics.Typeface;
 
 import java.util.Hashtable;
 
-/**
- * Created by user on 2018-07-08.
- */
-
+//오픈웨더맵의 아이콘을 얻는 클래스
 public class WeatherIconManager {
 
     private static Hashtable<String,Typeface> cached_icons = new Hashtable<>();

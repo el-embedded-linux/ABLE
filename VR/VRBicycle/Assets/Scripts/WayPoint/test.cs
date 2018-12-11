@@ -18,7 +18,7 @@ public class test : MonoBehaviour {
             GotoNext(); //목적지까지의 거리가 2이하거나 도착했으면 함수실행
         if (currentNode == waypoint.Count)
             currentNode = 0;
-        agent.speed = NewBehaviourScript.bySpeed;
+        agent.speed = reeed.bySpeed;
         //마지막 노드 (웨이포인트)로 도착하였을 때는 초기화 시켜준다 _ 이 부분을 읽음으로써
         //웨이포인트를 연결해주는 편이 좋습니다. 되돌아오게 하고 싶다면  currentNode -= currentNode 정도로 해주는게 좋겠습니다.
     }

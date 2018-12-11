@@ -1,4 +1,7 @@
 <resources>
+
+    <string name="Authorization">key=AIzaSyAXArVX1TeAhf2L9MNlTuKgumJgPK1Y0BU</string>
+
     <string name="app_name">Able</string>
     <string name="naviTitle">User</string>
     <string name="naviSubTitle">EL project Able</string>

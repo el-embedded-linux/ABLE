@@ -12,26 +12,15 @@ import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-/**
- * Created by myeongsic on 2017. 12. 11..
- */
-
+//파이어베이스의 메시지 푸시알림을 생성하는 클래스
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // ...
-
-
-        // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             String title = remoteMessage.getData().get("title").toString();
             String text = remoteMessage.getData().get("text").toString();
             sendNotification(title,text);
         }
-
-
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
     }
 
     //푸시알람을 만들어줌
