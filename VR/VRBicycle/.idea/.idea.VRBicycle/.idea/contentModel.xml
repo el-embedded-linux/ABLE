@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Wookwang\.Rider2018.1\system\resharper-host\local\Transient\ReSharperHost\v12\SolutionCaches\_VRBicycle.-1011949607.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Wookwang\Desktop\VRBicycle\VRBicycle" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets\ARDUnity" t="Include">
+        <e p="Examples" t="Include">
+          <e p="Buzzer" t="Include">
+            <e p="SampleSongs.txt" t="Include" />
+          </e>
+          <e p="Custom Controller" t="Include">
+            <e p="MyController.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Plugins" t="Include">
+          <e p="Android" t="Include">
+            <e p="AndroidManifest.xml" t="Include" />
+          </e>
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="Ardunity1" t="Include">
+            <e p="mapsin.cs" t="Include" />
+            <e p="reeed.cs" t="Include" />
+            <e p="Sin1.cs" t="Include" />
+            <e p="sin2.cs" t="Include" />
+          </e>
+          <e p="Bridge" t="Include">
+            <e p="AxisInput.cs" t="Include" />
+            <e p="BitFlagInput.cs" t="Include" />
+            <e p="ColorInput.cs" t="Include" />
+            <e p="ColorOutput.cs" t="Include" />
+            <e p="CurveOutput.cs" t="Include" />
+            <e p="DragInput.cs" t="Include" />
+            <e p="Editor" t="Include">
+              <e p="AxisInputEditor.cs" t="Include" />
+              <e p="BitFlagInputEditor.cs" t="Include" />
+              <e p="ColorInputEditor.cs" t="Include" />
+              <e p="ColorOutputEditor.cs" t="Include" />
+              <e p="CurveOutputEditor.cs" t="Include" />
+              <e p="DragInputEditor.cs" t="Include" />
+              <e p="FloatProbeEditor.cs" t="Include" />
+              <e p="ImpulseInputEditor.cs" t="Include" />
+              <e p="InputFilterEditor.cs" t="Include" />
+              <e p="MappingInputEditor.cs" t="Include" />
+              <e p="OutputCombineEditor.cs" t="Include" />
+              <e p="RTTTLSongEditor.cs" t="Include" />
+              <e p="ToggleInputEditor.cs" t="Include" />
+              <e p="ToneOutputEditor.cs" t="Include" />
+              <e p="TriggerInputEditor.cs" t="Include" />
+              <e p="ValueOutputEditor.cs" t="Include" />
+            </e>
+            <e p="FloatProbe.cs" t="Include" />
+            <e p="ImpulseInput.cs" t="Include" />
+            <e p="InputFilter.cs" t="Include" />
+            <e p="MappingInput.cs" t="Include" />
+            <e p="OutputCombine.cs" t="Include" />
+            <e p="RTTTLSong.cs" t="Include" />
+            <e p="ToggleInput.cs" t="Include" />
+            <e p="ToneOutput.cs" t="Include" />
+            <e p="TriggerInput.cs" t="Include" />
+            <e p="ValueOutput.cs" t="Include" />
+          </e>
+          <e p="CommSocket" t="Include">
+            <e p="CommBluetooth.cs" t="Include" />
+            <e p="CommSerial.cs" t="Include" />
+            <e p="CommWifi.cs" t="Include" />
+            <e p="Editor" t="Include">
+              <e p="CommBluetoothEditor.cs" t="Include" />
+              <e p="CommSerialEditor.cs" t="Include" />
+              <e p="CommWifiEditor.cs" t="Include" />
+              <e p="HM10Editor.cs" t="Include" />
+            </e>
+            <e p="HM10.cs" t="Include" />
+          </e>
+          <e p="Controller" t="Include">
+            <e p="AnalogInput.cs" t="Include" />
+            <e p="AnalogOutput.cs" t="Include" />
+            <e p="CapSense.cs" t="Include" />
+            <e p="DHT11.cs" t="Include" />
+            <e p="DigitalInput.cs" t="Include" />
+            <e p="DigitalOutput.cs" t="Include" />
+            <e p="Editor" t="Include">
+              <e p="AnalogInputEditor.cs" t="Include" />
+              <e p="AnalogOutputEditor.cs" t="Include" />
+              <e p="CapSenseEditor.cs" t="Include" />
+              <e p="DHT11Editor.cs" t="Include" />
+              <e p="DigitalInputEditor.cs" t="Include" />
+              <e p="DigitalOutputEditor.cs" t="Include" />
+              <e p="GenericMotorEditor.cs" t="Include" />
+              <e p="GenericServoEditor.cs" t="Include" />
+              <e p="GenericStepperEditor.cs" t="Include" />
+              <e p="GenericToneEditor.cs" t="Include" />
+              <e p="HCSR04Editor.cs" t="Include" />
+              <e p="MPR121Editor.cs" t="Include" />
+              <e p="MPUSeriesEditor.cs" t="Include" />
+              <e p="PulseOutputEditor.cs" t="Include" />
+            </e>
+            <e p="GenericMotor.cs" t="Include" />
+            <e p="GenericServo.cs" t="Include" />
+            <e p="GenericStepper.cs" t="Include" />
+            <e p="GenericTone.cs" t="Include" />
+            <e p="HCSR04.cs" t="Include" />
+            <e p="MPR121.cs" t="Include" />
+            <e p="MPUSeries.cs" t="Include" />
+            <e p="PulseOutput.cs" t="Include" />
+          </e>
+          <e p="Internal" t="Include">
+            <e p="ControllerDataType.cs" t="Include" />
+            <e p="Editor" t="Include">
+              <e p="AboutArdunity.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Reactor" t="Include">
+            <e p="AudioSourceReactor.cs" t="Include" />
+            <e p="ButtonReactor.cs" t="Include" />
+            <e p="CharacterReactor.cs" t="Include" />
+            <e p="ColliderReactor.cs" t="Include" />
+            <e p="DeviceRollReactor.cs" t="Include" />
+            <e p="DeviceRotationReactor.cs" t="Include" />
+            <e p="DialSliderReactor.cs" t="Include" />
+            <e p="DropdownReactor.cs" t="Include" />
+            <e p="Editor" t="Include">
+              <e p="AudioSourceReactorEditor.cs" t="Include" />
+              <e p="ButtonReactorEditor.cs" t="Include" />
+              <e p="CharacterReactorEditor.cs" t="Include" />
+              <e p="ColliderReactorEditor.cs" t="Include" />
+              <e p="DeviceRollReactorEditor.cs" t="Include" />
+              <e p="DeviceRotationReactorEditor.cs" t="Include" />
+              <e p="DialSliderReactorEditor.cs" t="Include" />
+              <e p="DropdownReactorEditor.cs" t="Include" />
+              <e p="ExplosionReactorEditor.cs" t="Include" />
+              <e p="ForceReactorEditor.cs" t="Include" />
+              <e p="LightColorReactorEditor.cs" t="Include" />
+              <e p="LightIntensityReactorEditor.cs" t="Include" />
+              <e p="MoveAxisReactorEditor.cs" t="Include" />
+              <e p="Rotation2DReactorEditor.cs" t="Include" />
+              <e p="RotationAxisReactorEditor.cs" t="Include" />
+              <e p="RotationReactorEditor.cs" t="Include" />
+              <e p="SliderReactorEditor.cs" t="Include" />
+              <e p="TextReactorEditor.cs" t="Include" />
+              <e p="ToggleReactorEditor.cs" t="Include" />
+              <e p="TorqueReactorEditor.cs" t="Include" />
+            </e>
+            <e p="ExplosionReactor.cs" t="Include" />
+            <e p="ForceReactor.cs" t="Include" />
+            <e p="LightColorReactor.cs" t="Include" />
+            <e p="LightIntensityReactor.cs" t="Include" />
+            <e p="MoveAxisReactor.cs" t="Include" />
+            <e p="Rotation2DReactor.cs" t="Include" />
+            <e p="RotationAxisReactor.cs" t="Include" />
+            <e p="RotationReactor.cs" t="Include" />
+            <e p="SliderReactor.cs" t="Include" />
+            <e p="TextReactor.cs" t="Include" />
+            <e p="ToggleReactor.cs" t="Include" />
+            <e p="TorqueReactor.cs" t="Include" />
+          </e>
+          <e p="Utility" t="Include">
+            <e p="ArdunityAppUI.cs" t="Include" />
+            <e p="CommBluetoothUI.cs" t="Include" />
+            <e p="CommSerialUI.cs" t="Include" />
+            <e p="CommSocketUI.cs" t="Include" />
+            <e p="CommWifiUI.cs" t="Include" />
+            <e p="DeviceCamera.cs" t="Include" />
+            <e p="DialSlider.cs" t="Include" />
+            <e p="Editor" t="Include">
+              <e p="ArdunityAppUIEditor.cs" t="Include" />
+              <e p="CommBluetoothUIEditor.cs" t="Include" />
+              <e p="CommSerialUIEditor.cs" t="Include" />
+              <e p="CommWifiUIEditor.cs" t="Include" />
+              <e p="DeviceCameraEditor.cs" t="Include" />
+              <e p="DialSliderEditor.cs" t="Include" />
+              <e p="HM10UIEditor.cs" t="Include" />
+              <e p="ListItemEditor.cs" t="Include" />
+              <e p="ListViewEditor.cs" t="Include" />
+              <e p="SliderSnapEditor.cs" t="Include" />
+              <e p="ToggleEventEditor.cs" t="Include" />
+            </e>
+            <e p="HM10UI.cs" t="Include" />
+            <e p="ListItem.cs" t="Include" />
+            <e p="ListView.cs" t="Include" />
+            <e p="SliderSnap.cs" t="Include" />
+            <e p="ToggleEvent.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="Assets\Btn_Map.cs" t="Include" />
+      <e p="Assets\Btn_Menu.cs" t="Include" />
+      <e p="Assets\Firebase" t="Include">
+        <e p="Editor" t="Include">
+          <e p="AppDependencies.xml" t="Include" />
+          <e p="AuthDependencies.xml" t="Include" />
+          <e p="FirebaseAuth_v4.5.2_manifest.txt" t="Include" />
+          <e p="FirebaseDatabase_v4.5.2_manifest.txt" t="Include" />
+        </e>
+        <e p="m2repository" t="Include">
+          <e p="com" t="Include">
+            <e p="google" t="Include">
+              <e p="Firebase" t="Include">
+                <e p="firebase-app-unity" t="Include">
+                  <e p="maven-metadata.xml" t="Include" />
+                </e>
+                <e p="firebase-auth-unity" t="Include">
+                  <e p="maven-metadata.xml" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="Plugins" t="Include">
+          <e p="Http" t="Include">
+            <e p="link.xml" t="Include" />
+          </e>
+          <e p="link.xml" t="Include" />
+        </e>
+      </e>
+      <e p="Assets\Materials" t="Include">
+        <e p="ToonShader.shader" t="Include" />
+      </e>
+      <e p="Assets\MORPH3D" t="Include">
+        <e p="README.txt" t="Include" />
+        <e p="Resources" t="Include">
+          <e p="Shaders" t="Include">
+            <e p="AlphaCombiner.shader" t="Include" />
+            <e p="EyeAndLash.shader" t="Include" />
+            <e p="Morph3DBasicSkin.shader" t="Include" />
+          </e>
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="Editor" t="Include">
+            <e p="CIClothingEditor.cs" t="Include" />
+            <e p="M3DCharacterManagerEditor.cs" t="Include" />
+            <e p="M3DMorphEditor.cs" t="Include" />
+            <e p="M3DResourceEditor.cs" t="Include" />
+            <e p="M3DToolsEditor.cs" t="Include" />
+            <e p="MaterialImporter.cs" t="Include" />
+            <e p="MorphDebugInfo.cs" t="Include" />
+            <e p="SearchableWindow.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Vendor" t="Include">
+          <e p="Unity" t="Include">
+            <e p="Shaders" t="Include">
+              <e p="Hair" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="HairShaderGUI.cs" t="Include" />
+                </e>
+                <e p="Hair_setup.cginc" t="Include" />
+                <e p="Hair_UnityStandardCore.cginc" t="Include" />
+                <e p="Hair_UnityStandardInput.cginc" t="Include" />
+                <e p="Hair_Universal.shader" t="Include" />
+                <e p="HairRenderer.cs" t="Include" />
+              </e>
+              <e p="Skin" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="VolundMultiStandardShaderGUI.cs" t="Include" />
+                </e>
+                <e p="MorphSkinDeferred.shader" t="Include" />
+                <e p="Volund_StandardSpecularCharacter.shader" t="Include" />
+                <e p="Volund_UnityStandardCore.cginc" t="Include" />
+                <e p="Volund_UnityStandardInput.cginc" t="Include" />
+              </e>
+              <e p="Standard" t="Include">
+                <e p="Standard-2pass-doublesided-half depth.shader" t="Include" />
+                <e p="Standard-2pass-doublesided.shader" t="Include" />
+                <e p="Standard-doublesided.shader" t="Include" />
+                <e p="StandardSpecular-doublesided.shader" t="Include" />
+              </e>
+              <e p="UniqueShadow" t="Include">
+                <e p="UniqueShadow.cs" t="Include" />
+                <e p="UniqueShadow_DepthOnly.shader" t="Include" />
+                <e p="UniqueShadow_ShadowSample.cginc" t="Include" />
+                <e p="UniqueShadowSun.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Assets\PlayServicesResolver" t="Include">
+        <e p="Editor" t="Include">
+          <e p="play-services-resolver_v1.2.64.0.txt" t="Include" />
+        </e>
+      </e>
+      <e p="Assets\race-track-lake" t="Include">
+        <e p="readmore.txt" t="Include" />
+      </e>
+      <e p="Assets\Raw Mocap Data" t="Include">
+        <e p="Animations" t="Include">
+          <e p="_CompleteAnimationList.txt" t="Include" />
+        </e>
+      </e>
+      <e p="Assets\Scripts" t="Include">
+        <e p="Btn.cs" t="Include" />
+        <e p="ButtonAct.cs" t="Include" />
+        <e p="ButtonSelect.cs" t="Include" />
+        <e p="die" t="Include">
+          <e p="DieDirector.cs" t="Include" />
+        </e>
+        <e p="Firebase" t="Include">
+          <e p="Login.cs" t="Include" />
+          <e p="RealTimeDB.cs" t="Include" />
+        </e>
+        <e p="M3DMale" t="Include">
+          <e p="RunController.cs" t="Include" />
+        </e>
+        <e p="M3DMaleController.cs" t="Include" />
+        <e p="Main" t="Include">
+          <e p="ExitButton.cs" t="Include" />
+          <e p="StartButton.cs" t="Include" />
+        </e>
+        <e p="MenuButton" t="Include">
+          <e p="ContinueBtn.cs" t="Include" />
+          <e p="ExitBtn.cs" t="Include" />
+          <e p="MapChoiceBtn.cs" t="Include" />
+        </e>
+        <e p="MenuButton.cs" t="Include" />
+        <e p="NavMover.cs" t="Include" />
+        <e p="NewBehaviourScript.cs" t="Include" />
+        <e p="PlayData" t="Include">
+          <e p="KcalTextController.cs" t="Include" />
+          <e p="PlaySpeedController.cs" t="Include" />
+          <e p="PlayTimeController.cs" t="Include" />
+          <e p="TotalDistantceController.cs" t="Include" />
+          <e p="TrackCountController.cs" t="Include" />
+        </e>
+        <e p="Player" t="Include">
+          <e p="ButtonBorderController.cs" t="Include" />
+          <e p="ButtonController.cs" t="Include" />
+          <e p="FPSController.cs" t="Include" />
+          <e p="HalfPointTrigger.cs" t="Include" />
+          <e p="Menu.cs" t="Include" />
+          <e p="PlayerController.cs" t="Include" />
+        </e>
+        <e p="Plugins" t="Include">
+          <e p="Android" t="Include">
+            <e p="Firebase" t="Include">
+              <e p="AndroidManifest.xml" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="WayPoint" t="Include">
+          <e p="Enemy.cs" t="Include" />
+          <e p="test.cs" t="Include" />
+          <e p="Zone.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Assets\Sound" t="Include">
+        <e p="BGM.cs" t="Include" />
+      </e>
+      <e p="Assets\Standard Assets" t="Include">
+        <e p="Environment" t="Include">
+          <e p="Water" t="Include">
+            <e p="DO_NOT_WORK_IN_VR.txt" t="Include" />
+            <e p="Water" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="Displace.cs" t="Include" />
+                <e p="GerstnerDisplace.cs" t="Include" />
+                <e p="MeshContainer.cs" t="Include" />
+                <e p="PlanarReflection.cs" t="Include" />
+                <e p="SpecularLighting.cs" t="Include" />
+                <e p="Water.cs" t="Include" />
+                <e p="WaterBase.cs" t="Include" />
+                <e p="WaterTile.cs" t="Include" />
+              </e>
+              <e p="Shaders" t="Include">
+                <e p="FXWaterPro.shader" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Water (Basic)" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="WaterBasic.cs" t="Include" />
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="FXWaterBasic.shader" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Assets\SteamVR" t="Include">
+        <e p="Editor" t="Include">
+          <e p="SteamVR_Editor.cs" t="Include" />
+          <e p="SteamVR_Preferences.cs" t="Include" />
+          <e p="SteamVR_RenderModelEditor.cs" t="Include" />
+          <e p="SteamVR_Settings.cs" t="Include" />
+          <e p="SteamVR_SkyboxEditor.cs" t="Include" />
+          <e p="SteamVR_Update.cs" t="Include" />
+        </e>
+        <e p="Extras" t="Include">
+          <e p="SteamVR_GazeTracker.cs" t="Include" />
+          <e p="SteamVR_LaserPointer.cs" t="Include" />
+          <e p="SteamVR_Teleporter.cs" t="Include" />
+          <e p="SteamVR_TestThrow.cs" t="Include" />
+          <e p="SteamVR_TestTrackedCamera.cs" t="Include" />
+          <e p="SteamVR_TrackedController.cs" t="Include" />
+        </e>
+        <e p="InteractionSystem" t="Include">
+          <e p="Core" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="BodyCollider.cs" t="Include" />
+              <e p="CircularDrive.cs" t="Include" />
+              <e p="ComplexThrowable.cs" t="Include" />
+              <e p="ControllerHoverHighlight.cs" t="Include" />
+              <e p="CustomEvents.cs" t="Include" />
+              <e p="DebugUI.cs" t="Include" />
+              <e p="DestroyOnDetachedFromHand.cs" t="Include" />
+              <e p="DestroyOnParticleSystemDeath.cs" t="Include" />
+              <e p="DestroyOnTriggerEnter.cs" t="Include" />
+              <e p="DistanceHaptics.cs" t="Include" />
+              <e p="DontDestroyOnLoad.cs" t="Include" />
+              <e p="EnumFlags.cs" t="Include" />
+              <e p="FallbackCameraController.cs" t="Include" />
+              <e p="Hand.cs" t="Include" />
+              <e p="HapticRack.cs" t="Include" />
+              <e p="HideOnHandFocusLost.cs" t="Include" />
+              <e p="IgnoreHovering.cs" t="Include" />
+              <e p="InputModule.cs" t="Include" />
+              <e p="Interactable.cs" t="Include" />
+              <e p="InteractableButtonEvents.cs" t="Include" />
+              <e p="InteractableHoverEvents.cs" t="Include" />
+              <e p="ItemPackage.cs" t="Include" />
+              <e p="ItemPackageReference.cs" t="Include" />
+              <e p="ItemPackageSpawner.cs" t="Include" />
+              <e p="LinearAnimation.cs" t="Include" />
+              <e p="LinearAnimator.cs" t="Include" />
+              <e p="LinearAudioPitch.cs" t="Include" />
+              <e p="LinearBlendshape.cs" t="Include" />
+              <e p="LinearDisplacement.cs" t="Include" />
+              <e p="LinearDrive.cs" t="Include" />
+              <e p="LinearMapping.cs" t="Include" />
+              <e p="Player.cs" t="Include" />
+              <e p="PlaySound.cs" t="Include" />
+              <e p="SeeThru.cs" t="Include" />
+              <e p="SleepOnAwake.cs" t="Include" />
+              <e p="SoundDeparent.cs" t="Include" />
+              <e p="SoundPlayOneshot.cs" t="Include" />
+              <e p="SpawnAndAttachAfterControllerIsTracking.cs" t="Include" />
+              <e p="SpawnAndAttachToHand.cs" t="Include" />
+              <e p="SpawnRenderModel.cs" t="Include" />
+              <e p="Throwable.cs" t="Include" />
+              <e p="UIElement.cs" t="Include" />
+              <e p="Unparent.cs" t="Include" />
+              <e p="Util.cs" t="Include" />
+              <e p="VelocityEstimator.cs" t="Include" />
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="SeeThru.shader" t="Include" />
+              <e p="Silhouette.shader" t="Include" />
+            </e>
+          </e>
+          <e p="Hints" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="ControllerButtonHints.cs" t="Include" />
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="ControllerButtonHints.shader" t="Include" />
+            </e>
+          </e>
+          <e p="Longbow" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="ArcheryTarget.cs" t="Include" />
+              <e p="Arrow.cs" t="Include" />
+              <e p="ArrowHand.cs" t="Include" />
+              <e p="ArrowheadRotation.cs" t="Include" />
+              <e p="Balloon.cs" t="Include" />
+              <e p="BalloonColliders.cs" t="Include" />
+              <e p="BalloonHapticBump.cs" t="Include" />
+              <e p="BalloonSpawner.cs" t="Include" />
+              <e p="ExplosionWobble.cs" t="Include" />
+              <e p="FireSource.cs" t="Include" />
+              <e p="Longbow.cs" t="Include" />
+              <e p="SoundBowClick.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Readme_InteractionSystem.txt" t="Include" />
+          <e p="Samples" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="ControllerHintsExample.cs" t="Include" />
+              <e p="InteractableExample.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Teleport" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="AllowTeleportWhileAttachedToHand.cs" t="Include" />
+              <e p="ChaperoneInfo.cs" t="Include" />
+              <e p="IgnoreTeleportTrace.cs" t="Include" />
+              <e p="Teleport.cs" t="Include" />
+              <e p="TeleportArc.cs" t="Include" />
+              <e p="TeleportArea.cs" t="Include" />
+              <e p="TeleportMarkerBase.cs" t="Include" />
+              <e p="TeleportPoint.cs" t="Include" />
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="Highlight.shader" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Plugins" t="Include">
+          <e p="openvr_api.cs" t="Include" />
+        </e>
+        <e p="README.txt" t="Include" />
+        <e p="Resources" t="Include">
+          <e p="SteamVR_AlphaOut.shader" t="Include" />
+          <e p="SteamVR_ClearAll.shader" t="Include" />
+          <e p="SteamVR_ColorOut.shader" t="Include" />
+          <e p="SteamVR_Fade.shader" t="Include" />
+          <e p="SteamVR_SphericalProjection.shader" t="Include" />
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="SteamVR.cs" t="Include" />
+          <e p="SteamVR_Camera.cs" t="Include" />
+          <e p="SteamVR_CameraFlip.cs" t="Include" />
+          <e p="SteamVR_CameraMask.cs" t="Include" />
+          <e p="SteamVR_Controller.cs" t="Include" />
+          <e p="SteamVR_ControllerManager.cs" t="Include" />
+          <e p="SteamVR_Ears.cs" t="Include" />
+          <e p="SteamVR_Events.cs" t="Include" />
+          <e p="SteamVR_ExternalCamera.cs" t="Include" />
+          <e p="SteamVR_Fade.cs" t="Include" />
+          <e p="SteamVR_Frustum.cs" t="Include" />
+          <e p="SteamVR_GameView.cs" t="Include" />
+          <e p="SteamVR_IK.cs" t="Include" />
+          <e p="SteamVR_LoadLevel.cs" t="Include" />
+          <e p="SteamVR_Menu.cs" t="Include" />
+          <e p="SteamVR_Overlay.cs" t="Include" />
+          <e p="SteamVR_PlayArea.cs" t="Include" />
+          <e p="SteamVR_Render.cs" t="Include" />
+          <e p="SteamVR_RenderModel.cs" t="Include" />
+          <e p="SteamVR_Skybox.cs" t="Include" />
+          <e p="SteamVR_SphericalProjection.cs" t="Include" />
+          <e p="SteamVR_Stats.cs" t="Include" />
+          <e p="SteamVR_TestController.cs" t="Include" />
+          <e p="SteamVR_TrackedCamera.cs" t="Include" />
+          <e p="SteamVR_TrackedObject.cs" t="Include" />
+          <e p="SteamVR_UpdatePoses.cs" t="Include" />
+          <e p="SteamVR_Utils.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Library" t="ExcludeRecursive" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Temp" t="ExcludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+      </e>
+      <e p="VRBicycle.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>

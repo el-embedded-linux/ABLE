@@ -17,6 +17,7 @@ public class TrackCountController : MonoBehaviour {
     public void updateCount(int num)
     {
         trackCount = num + "바퀴";
-        countText.text = num + "바퀴";
+		Debug.Log (trackCount);
+        //countText.text = num + "바퀴";
     }
 }

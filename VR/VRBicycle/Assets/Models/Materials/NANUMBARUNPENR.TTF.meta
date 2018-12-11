@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 477e4d23c57cd6648a0cd4da662aeec1
+timeCreated: 1534261846
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: NanumBarunpen
+  fontNames:
+  - NanumBarunpen
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 09c4f094d42d44a44b364afee747e854, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

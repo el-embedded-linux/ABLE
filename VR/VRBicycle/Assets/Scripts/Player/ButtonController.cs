@@ -10,4 +10,7 @@ public class ButtonController : MonoBehaviour {
 		SceneManager.LoadScene (3);
 	}
     
+	public void Track02(){
+		SceneManager.LoadScene (4);
+	}
 }

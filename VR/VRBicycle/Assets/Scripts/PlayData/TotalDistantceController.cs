@@ -9,6 +9,6 @@ public class TotalDistantceController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        dist.text = NewBehaviourScript.totalDist;
+        dist.text = NewBehaviourScript.totalDist2;
 	}
 }

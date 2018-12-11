@@ -23,9 +23,11 @@ public class FPSController : MonoBehaviour {
 	void Update () {
 		MoveCtrl ();
 		RotCtrl ();
+       
     }
+    
 
-	void MoveCtrl(){
+    void MoveCtrl(){
 		if (Input.GetKey (KeyCode.W)) {
 			this.transform.Translate (Vector3.forward * moveSpeed * Time.deltaTime);
 		}
